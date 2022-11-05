@@ -2,14 +2,20 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.7.13
+##      Mod version:  0.8.3
 ##  Works on FluxBB:  1.5.4, 1.5.3
-##     Release date:  2013-09-28
+##     Release date:  2013-11-15
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.8.3 ОБНОВЛЕНИЕ / UPDATE
+##                    Улучшена совместимость при работе форума по протоколу HTTPS.
+##                    Улучшена совместимость с моей модификацией "Highlight of search requests".
+##                    Compatibility with HTTPS is improved.
+##                    Compatibility with my mod "Highlight of search requests" is improved.
 ##
 ##                    v 0.7.13 ОБНОВЛЕНИЕ / UPDATE
 ##                    Проверяет наличие установленного Adobe Flash Player для отображения контента через <object>.

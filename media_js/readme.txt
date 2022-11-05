@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  2.2.0
+##      Mod version:  2.3.0
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-11-17
+##     Release date:  2020-12-29
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
@@ -12,8 +12,8 @@
 ##                    Modification on the party of the user replaces links to a media content.
 ##
 ##                    Поддерживает / It is supported
-##                    видео / video: YouTube, Vimeo, Rutube, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Twitch, Gamespot, OK.ru, LiveLeak.com, video.online.ua, www.aparat.com, izlesene.com, dumpert.nl, vlipsy.com и прямые ссылки на mp4, m4v, ogv, webm, webmv / and direct urls for mp4, m4v, ogv, webm, webmv;
-##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Mixcloud, Hulkshare, audiomack.com, hearthis.at и прямые ссылки на mp3, m4a, ogg, oga, webma, wav / and direct urls for mp3, m4a, ogg, oga, webma, wav;
+##                    видео / video: YouTube, Vimeo, Rutube, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Gamespot, OK.ru, LiveLeak.com, video.online.ua, www.aparat.com, izlesene.com, dumpert.nl, vlipsy.com и прямые ссылки на / and direct urls for mp4, m4v, ogv, webm, webmv;
+##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Mixcloud, Hulkshare, audiomack.com, hearthis.at и прямые ссылки на / and direct urls for mp3, m4a, ogg, oga, webma, wav, flac;
 ##                    карты / maps Google Maps, Yandex карты.
 ##
 ##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
@@ -38,7 +38,7 @@
 #---------[ 1. UPLOAD ]---------------------------------------------------------
 #
 
-folders js and swf to /
+folders /js/ to /
 
 #
 #---------[ 2. OPEN ]-----------------------------------------------------------

@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  2.0.0
+##      Mod version:  2.1.0
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-06-16
+##     Release date:  2019-07-10
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##

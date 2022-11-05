@@ -2,14 +2,22 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.6.0
+##      Mod version:  0.7.13
 ##  Works on FluxBB:  1.5.4, 1.5.3
-##     Release date:  2013-08-31
+##     Release date:  2013-09-28
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.7.13 ОБНОВЛЕНИЕ / UPDATE
+##                    Проверяет наличие установленного Adobe Flash Player для отображения контента через <object>.
+##                    Добавлена поддержка аудио файлов mp3, m4a, ogg, oga, webma, wav через тэг <audio> HTML5.
+##                    Добавлена поддержка видео файлов mp4, m4v, ogv, webm, webmv через тэг <video> HTML5.
+##                    Checks existence of installed Adobe Flash Player for content display through <object>.
+##                    Adds support of audio files mp3, m4a, ogg, oga, webma, wav through of tag <audio> HTML5.
+##                    Adds support of video files mp4, m4v, ogv, webm, webmv through of tag <video> HTML5.
 ##
 ##                    v 0.6.0 ОБНОВЛЕНИЕ / UPDATE
 ##                    Для IE изменен метод создания элементов <object>.

@@ -2,14 +2,18 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.8.3
-##  Works on FluxBB:  1.5.4, 1.5.3
-##     Release date:  2013-11-15
+##      Mod version:  0.9.5
+##  Works on FluxBB:  1.5.5, 1.5.4, 1.5.3
+##     Release date:  2013-11-27
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.9.5 ОБНОВЛЕНИЕ / UPDATE
+##                    Добавил видео вконтакте, аудио mixcloud.com и  hulkshare.com.
+##                    Adds video vk.com, audio of mixcloud.com and hulkshare.com.
 ##
 ##                    v 0.8.3 ОБНОВЛЕНИЕ / UPDATE
 ##                    Улучшена совместимость при работе форума по протоколу HTTPS.

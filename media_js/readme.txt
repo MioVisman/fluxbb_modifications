@@ -2,16 +2,16 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  1.0.0
-##  Works on FluxBB:  1.5.8, 1.5.7, 1.5.6, 1.5.5, 1.5.4, 1.5.3
-##     Release date:  2015-02-13
+##      Mod version:  1.1.0
+##  Works on FluxBB:  1.5.9, 1.5.8, 1.5.7, 1.5.6, 1.5.5, 1.5.4, 1.5.3
+##     Release date:  2015-12-19
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
 ##
-##                    v 1.0.0 ПОЛНАЯ ВЕРСИЯ / FULL VERSION
+##                    v 1.1.0 ПОЛНАЯ ВЕРСИЯ / FULL VERSION
 ##                    Поддерживает / It is supported
 ##                    видео / video from: YouTube, Vimeo, Rutube, Yandex, Mail.ru, Smotri, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Twitch, g4tv, Gamespot;
 ##                    аудио / audio from: SoundCloud, ZippyShare, PromoDJ, Pleer.com, Mixcloud, Hulkshare и прямые ссылки на mp3 / and direct urls on mp3;

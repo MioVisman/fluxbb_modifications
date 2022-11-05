@@ -2,14 +2,22 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.9.5
-##  Works on FluxBB:  1.5.5, 1.5.4, 1.5.3
-##     Release date:  2013-11-27
+##      Mod version:  0.9.9
+##  Works on FluxBB:  1.5.6, 1.5.5, 1.5.4, 1.5.3
+##     Release date:  2014-05-18
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.9.9 ОБНОВЛЕНИЕ / UPDATE
+##                    Для mail.ru используется новый плеер (через iframe), поддерживает новый формат ссылок на ролики.
+##                    Для Dailymotion поддерживает короткие ссылки через dai.ly.
+##                    Добавлена поддержка coub.com и vine.co.
+##                    For mail.ru the new player is used (through iframe), supports a new format of links to video.
+##                    For Dailymotion supports short links through dai.ly.
+##                    coub.com and vine.co support is added.
 ##
 ##                    v 0.9.5 ОБНОВЛЕНИЕ / UPDATE
 ##                    Добавил видео вконтакте, аудио mixcloud.com и  hulkshare.com.

@@ -2,14 +2,18 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.5.9
-##  Works on FluxBB:  1.5.3
-##     Release date:  2013-07-30
+##      Mod version:  0.5.10
+##  Works on FluxBB:  1.5.4, 1.5.3
+##     Release date:  2013-08-15
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.5.10 ОБНОВЛЕНИЕ / UPDATE
+##                    Добавлена поддержка плейлистов для Pleer.com
+##                    Adds support of playlists for Pleer.com
 ##
 ##                    v 0.5.9 ОБНОВЛЕНИЕ / UPDATE
 ##                    Введены менее жесткие правила для обрабатываемых ссылок.

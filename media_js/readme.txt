@@ -2,14 +2,18 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.5.7
+##      Mod version:  0.5.9
 ##  Works on FluxBB:  1.5.3
-##     Release date:  2013-07-27
+##     Release date:  2013-07-30
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.5.9 ОБНОВЛЕНИЕ / UPDATE
+##                    Введены менее жесткие правила для обрабатываемых ссылок.
+##                    It contains less strict rules for processed links.
 ##
 ##                    v 0.5.7 ПОЛНАЯ ВЕРСИЯ / FULL VERSION
 ##                    Поддерживает / It is supported
@@ -34,62 +38,6 @@
 ##
 ##
 
+1. install version 0.5.7 http://fluxbb.org/resources/mods/mediajs/releases/0.5.7/
 
-#
-#---------[ 1. UPLOAD ]---------------------------------------------------------
-#
-
-folders js and swf to /
-
-#
-#---------[ 2. OPEN ]-----------------------------------------------------------
-#
-
-/include/parser.php
-
-#
-#---------[ 3. FIND ]-----------------------------------------------------------
-#
-
-		return '<a href="'.$full_url.'" rel="nofollow">'.$link.'</a>';
-	}
-}
-
-#
-#---------[ 4. BEFORE, ADD ]----------------------------------------------------
-#
-
-		global $mediajs;
-		$mediajs = true;
-
-#
-#---------[ 5. SAVE ]-----------------------------------------------------------
-#
-
-/include/parser.php
-
-#
-#---------[ 6. OPEN ]-----------------------------------------------------------
-#
-
-footer.php
-
-#
-#---------[ 7. FIND ]-----------------------------------------------------------
-#
-
-// Display debug info (if enabled/defined)
-if (defined('PUN_DEBUG'))
-
-#
-#---------[ 8. BEFORE, ADD ]----------------------------------------------------
-#
-
-if (!empty($mediajs))
-	echo "\n".'<script type="text/javascript" src="js/media.min.js"></script>'."\n";
-
-#
-#---------[ 9. SAVE ]-----------------------------------------------------------
-#
-
-footer.php
+2. upload file media.min.js to folder js/ in your forum.

@@ -2,14 +2,24 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.5.10
+##      Mod version:  0.5.12
 ##  Works on FluxBB:  1.5.4, 1.5.3
-##     Release date:  2013-08-15
+##     Release date:  2013-08-23
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.5.12 ОБНОВЛЕНИЕ / UPDATE
+##                    Добавлена поддержка ign.com (http://www.ign.com/videos/[год]/[месяц]/[день]/[название видео])
+##                    Добавлена поддержка twitch.tv
+##                    Добавлена поддержка g4tv.com
+##                    Добавлена поддержка gamespot.com (http://www.gamespot.com/[название игры]/videos/[название ролика]-[номер ролика]/)
+##                    Adds support ign.com (_http://www.ign.com/videos/[year]/[month]/[day]/[name of video])
+##                    Adds support twitch.tv
+##                    Adds support g4tv.com
+##                    Adds support gamespot.com (_http://www.gamespot.com/[name of game]/videos/[name of video]-[number of video]/)
 ##
 ##                    v 0.5.10 ОБНОВЛЕНИЕ / UPDATE
 ##                    Добавлена поддержка плейлистов для Pleer.com

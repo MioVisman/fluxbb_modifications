@@ -2,14 +2,18 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  0.9.9
+##      Mod version:  0.9.10
 ##  Works on FluxBB:  1.5.6, 1.5.5, 1.5.4, 1.5.3
-##     Release date:  2014-05-18
+##     Release date:  2014-08-03
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
+##
+##                    v 0.9.10 ОБНОВЛЕНИЕ / UPDATE
+##                    Добавил поддержку видео фейсбука.
+##                    facebook.com support is added.
 ##
 ##                    v 0.9.9 ОБНОВЛЕНИЕ / UPDATE
 ##                    Для mail.ru используется новый плеер (через iframe), поддерживает новый формат ссылок на ролики.

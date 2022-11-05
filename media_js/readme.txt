@@ -2,23 +2,23 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  1.1.0
-##  Works on FluxBB:  1.5.9, 1.5.8, 1.5.7, 1.5.6, 1.5.5, 1.5.4, 1.5.3
-##     Release date:  2015-12-19
+##      Mod version:  1.2.0
+##  Works on FluxBB:  1.5.10, 1.5.9, 1.5.8, 1.5.7, 1.5.6, 1.5.5, 1.5.4, 1.5.3
+##     Release date:  2016-07-31
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
 ##      Description:  Мод на стороне пользователя заменяет ссылки на медиа-контент.
 ##                    Modification on the party of the user replaces links to a media content.
 ##
-##                    v 1.1.0 ПОЛНАЯ ВЕРСИЯ / FULL VERSION
+##                    v 1.2.0 ПОЛНАЯ ВЕРСИЯ / FULL VERSION
 ##                    Поддерживает / It is supported
-##                    видео / video from: YouTube, Vimeo, Rutube, Yandex, Mail.ru, Smotri, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Twitch, g4tv, Gamespot;
-##                    аудио / audio from: SoundCloud, ZippyShare, PromoDJ, Pleer.com, Mixcloud, Hulkshare и прямые ссылки на mp3 / and direct urls on mp3;
-##                    и / and Google Maps.
+##                    видео / video: YouTube, Vimeo, Rutube, Mail.ru, Smotri, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Twitch, g4tv, Gamespot, OK.ru и прямые ссылки на mp4, m4v, ogv, webm, webmv / and direct urls for mp4, m4v, ogv, webm, webmv;
+##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Pleer.com, Mixcloud, Hulkshare и прямые ссылки на mp3, m4a, ogg, oga, webma, wav / and direct urls for mp3, m4a, ogg, oga, webma, wav;
+##                    карты / maps Google Maps, Yandex карты.
 ##
-##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
-##                    http://fluxbb.org.ru/forum/viewforum.php?id=34
+##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    https://fluxbb.qb7.ru/forum/viewtopic.php?id=3801
 ##
 ##   Affected files:  /include/parser.php
 ##                    footer.php

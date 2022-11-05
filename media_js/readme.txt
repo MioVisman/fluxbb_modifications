@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  1.6.2
-##  Works on FluxBB:  1.5.10, 1.5.9, 1.5.8, 1.5.7, 1.5.6, 1.5.5, 1.5.4, 1.5.3
-##     Release date:  2018-11-06
+##      Mod version:  2.0.0
+##  Works on FluxBB:  1.5.11
+##     Release date:  2019-06-16
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
@@ -12,7 +12,7 @@
 ##                    Modification on the party of the user replaces links to a media content.
 ##
 ##                    Поддерживает / It is supported
-##                    видео / video: YouTube, Vimeo, Rutube, Mail.ru, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Twitch, Gamespot, OK.ru, LiveLeak.com, video.online.ua, www.aparat.com, izlesene.com, dumpert.nl и прямые ссылки на mp4, m4v, ogv, webm, webmv / and direct urls for mp4, m4v, ogv, webm, webmv;
+##                    видео / video: YouTube, Vimeo, Rutube, Dailymotion, Metacafe, Sibnet, Facebook, Coub, Vine, VK, IGN, Twitch, Gamespot, OK.ru, LiveLeak.com, video.online.ua, www.aparat.com, izlesene.com, dumpert.nl и прямые ссылки на mp4, m4v, ogv, webm, webmv / and direct urls for mp4, m4v, ogv, webm, webmv;
 ##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Mixcloud, Hulkshare, audiomack.com и прямые ссылки на mp3, m4a, ogg, oga, webma, wav / and direct urls for mp3, m4a, ogg, oga, webma, wav;
 ##                    карты / maps Google Maps, Yandex карты.
 ##

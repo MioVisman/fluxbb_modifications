@@ -34,7 +34,6 @@ function generate_pmsn_menu($page = '')
 				</ul>
 			</div>
 		</div>
-		<h2><span>&nbsp;</span></h2>
 <?php
 		if ($pun_user['g_pm_limit'] != 0)
 		{
@@ -48,7 +47,6 @@ function generate_pmsn_menu($page = '')
 				</ul>
 			</div>
 		</div>
-		<h2><span>&nbsp;</span></h2>
 <?php
     }
 ?>

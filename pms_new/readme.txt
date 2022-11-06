@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.2.0
+##      Mod version:  1.2.1
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-09-01
+##     Release date:  2010-09-04
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -19,7 +19,6 @@
 ##
 ##   Affected files:  viewtopic.php
 ##                    profile.php
-##                    header.php
 ##                    /include/functions.php
 ##                    /lang/[language]/common.php
 ##
@@ -310,40 +309,3 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 
 profile.php
 
-#
-#---------[ 29. OPEN ]--------------------------------------------
-#
-
-header.php
-
-#
-#---------[ 30. FIND ]-------------------------------------------------
-#
-
-if (defined('PUN_ADMIN_CONSOLE'))
-{
-	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/base_admin.css'))
-		echo '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/base_admin.css" />'."\n";
-	else
-		echo '<link rel="stylesheet" type="text/css" href="style/imports/base_admin.css" />'."\n";
-}
-
-#
-#---------[ 31. AFTER, ADD ]-------------------------------------------------
-#
-
-// New PMS
-if (defined('PUN_PMS_NEW'))
-{
-	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/newpms.css'))
-		echo '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/newpms.css" />'."\n";
-	else
-		echo '<link rel="stylesheet" type="text/css" href="style/imports/newpms.css" />'."\n";
-}
-// New PMS
-
-#
-#---------[ 32. SAVE ]---------------------------------------------------
-#
-
-header.php

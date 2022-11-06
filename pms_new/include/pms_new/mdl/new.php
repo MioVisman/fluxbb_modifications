@@ -35,7 +35,7 @@ if ($pmsn_kol_new == 0)
 		<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		<h2><span><?php echo $lang_pmsn['Info'] ?></span></h2>
 		<div class="box">
-				<div class="inform">
+				<div id="infono" class="inform">
 					<fieldset>
 						<legend></legend>
 						<div class="infldset">

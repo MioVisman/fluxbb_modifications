@@ -152,6 +152,11 @@ if ($pun_user['g_pm'] == 0 || $pun_user['messages_enable'] == 0 || ($pun_user['g
 else
   $pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post'.$sidamp.'">'.$lang_pmsn['New dialog'].'</a></span>';
 
+if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/newpms.css'))
+	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/newpms.css" />';
+else
+	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/imports/newpms.css" />';
+
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_pmsn['PM'], $lang_pmsn[$pmsn_modul]);
 define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';

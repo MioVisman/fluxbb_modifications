@@ -1,0 +1,27 @@
+/***************************
+New Private Messaging System
+***************************/
+
+#punpmsnew .pagepost {
+	overflow: hidden;
+}
+
+#punpmsnew .block2col .block .clearer {
+	clear: right;
+}
+
+#punpmsnew .block2col .blocktable {
+	margin-bottom: 0px;
+}
+
+#punpmsnew .block2col .blocktable .inbox, #punpmsnew .block2col .blockpost .inbox {
+	padding: 0;
+}
+
+#punpmsnew .block2col #posterror, #punpmsnew .block2col #postform {
+	margin-bottom: 6px;
+}
+
+#punpmsnew .block2col #infono {
+	padding-bottom: 0px;
+}

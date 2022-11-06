@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -17,7 +17,7 @@ else
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.5.5');
+define('PLUGIN_VERSION', '1.6.0');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 
 // If the "Show text" button was clicked
@@ -26,8 +26,8 @@ if (isset($_POST['show_text']))
 
 	$en_pms = isset($_POST['enable_pms']) ? intval($_POST['enable_pms']) : 0;
 	$en_pms = ($en_pms == 1) ? 1 : 0;
-	$g_limit = isset($_POST['g_limit']) ? array_map('trim', $_POST['g_limit']) : array();
-	$g_pm = isset($_POST['g_pm']) ? array_map('trim', $_POST['g_pm']) : array();
+	$g_limit = isset($_POST['g_limit']) ? array_map('pun_trim', $_POST['g_limit']) : array();
+	$g_pm = isset($_POST['g_pm']) ? array_map('pun_trim', $_POST['g_pm']) : array();
 	$min_kolvo = isset($_POST['min_kolvo']) ? intval($_POST['min_kolvo']) : 0;
 	$flash_pms = isset($_POST['flasher_pms']) ? intval($_POST['flasher_pms']) : 0;
 

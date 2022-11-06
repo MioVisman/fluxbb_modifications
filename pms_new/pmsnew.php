@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -12,7 +12,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/pms_new/common_pmsn.php';
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang_common['No view'], false, '403 Forbidden');
 
 // гостям нельзя
 if ($pun_user['is_guest'])
@@ -20,7 +20,7 @@ if ($pun_user['is_guest'])
 
 // если выключена совсем или выключена группа и нет новых сообщений
 if ($pun_config['o_pms_enabled'] != '1' || ($pun_user['g_pm'] == 0 && $pun_user['messages_new'] == 0))
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // если была отправка формы
 if (isset($_POST['csrf_hash']) || isset($_GET['csrf_hash']))
@@ -29,7 +29,7 @@ if (isset($_POST['csrf_hash']) || isset($_GET['csrf_hash']))
 	define('PUN_PMS_NEW_CONFIRM', 1);
 }
 
-$action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : '';
+$action = isset($_REQUEST['action']) ? pun_trim($_REQUEST['action']) : '';
 if ($action == 'onoff')
 {
 	if ($pun_user['messages_enable'] == 0 || ($pun_user['messages_enable'] == 1 && isset($_POST['action2']) && defined('PUN_PMS_NEW_CONFIRM')))
@@ -67,7 +67,7 @@ else if ($pun_user['messages_enable'] == 0 && $pun_user['messages_new'] == 0) //
 	$pmsn_modul = 'close';
 else
 {
-	$pmsn_modul = isset($_REQUEST['mdl']) ? trim($_REQUEST['mdl']) : 'new';
+	$pmsn_modul = isset($_REQUEST['mdl']) ? pun_trim($_REQUEST['mdl']) : 'new';
 	
 	if ($pun_user['g_pm'] == 0 || $pun_user['messages_enable'] == 0)
 		if (!in_array($pmsn_modul, array('new','topic','close','closeq')))
@@ -79,21 +79,15 @@ else
 
 // проверка модуля
 if (!preg_match('%^[a-z]+$%', $pmsn_modul))
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 if (!file_exists(PUN_ROOT.'include/pms_new/mdl/'.$pmsn_modul.'.php'))
-	message(sprintf($lang_pmsn['No modul message'], $pmsn_modul));
+	message(sprintf($lang_pmsn['No modul message'], $pmsn_modul), false, '404 Not Found');
 
-if (function_exists('csrf_hash'))
-	$pmsn_csrf_hash = csrf_hash();
-else
-	$pmsn_csrf_hash = '1';
+$pmsn_csrf_hash = (function_exists('csrf_hash')) ? csrf_hash() : '1';
 
 // запросы по папкам
-$pmsn_arr_list = array();
-$pmsn_arr_new = array();
-$pmsn_arr_save = array();
-
+$pmsn_arr_list = $pmsn_arr_new = $pmsn_arr_save = array();
 $sidamp = $sidvop = $siduser = '';
 
 $sid = isset($_GET['sid']) ? intval($_GET['sid']) : 0;
@@ -117,17 +111,9 @@ if ($sid == 0)
 while ($ttmp = $db->fetch_assoc($result))
 {
 	if ($sid && empty($siduser))
-	{
-		if ($ttmp['starter_id'] == $sid)
-			$siduser = pun_htmlspecialchars($ttmp['starter']);
-		else
-			$siduser = pun_htmlspecialchars($ttmp['to_user']);
-	}
-	
-	if ($ttmp['starter_id'] == $pun_user['id'])
-		$ftmp = $ttmp['topic_st'];
-	else
-		$ftmp = $ttmp['topic_to'];
+		$siduser = pun_htmlspecialchars(($ttmp['starter_id'] == $sid) ? $ttmp['starter'] : $ttmp['to_user']);
+
+	$ftmp = ($ttmp['starter_id'] == $pun_user['id']) ? $ttmp['topic_st'] : $ttmp['topic_to'];
 
 	if ($ftmp == 0)
 		$pmsn_arr_list[] = $ttmp['id'];

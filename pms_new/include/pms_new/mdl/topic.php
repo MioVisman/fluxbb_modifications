@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
  * Copyright (C) 2008-2010 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -212,12 +212,7 @@ while ($cur_post = $db->fetch_assoc($result))
 	}
 
 	if ($newpost)
-	{
 		$post_actions[] = '<li class="postquote"><span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.'&amp;qid='.$cur_post['id'].$sidamp.'">'.$lang_topic['Quote'].'</a></span></li>';
-		// быстрое цитирование - Visman
-//		if ($quickpost)
-//			$post_actions[] = '<li class="postquote"><span><a onmousedown="get_quote_text()" href="javascript:Quote(\''.pun_htmlspecialchars($cur_post['username']).'\')">'.$lang_topic['QQuote'].'</a></span></li>';
-	}
 
 	if ($pun_user['g_view_users'] == '1' && $cur_post['g_id'] != PUN_GUEST)
 		$username = '<a href="profile.php?id='.$cur_post['poster_id'].'">'.pun_htmlspecialchars($cur_post['username']).'</a>';
@@ -324,7 +319,7 @@ while ($cur_post = $db->fetch_assoc($result))
 				<div class="inbox">
 					<div class="postfoot clearb">
 						<div class="postfootleft"><p><?php echo $is_online; ?></p></div>
-<?php if (count($post_actions)) echo "\t\t\t\t\t\t".'<div class="postfootright">'."\n\t\t\t\t\t\t\t".'<ul>'."\n\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t\t\t", $post_actions)."\n\t\t\t\t\t\t\t".'</ul>'."\n\t\t\t\t\t\t".'</div>'."\n" ?>
+<?php if (count($post_actions)) echo "\t\t\t\t\t\t".'<div class="postfootright">'."\n\t\t\t\t\t\t\t".'<ul>'."\n\t\t\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t\t\t", $post_actions)."\n\t\t\t\t\t\t\t".'</ul>'."\n\t\t\t\t\t\t".'</div>'."\n" ?>
 					</div>
 				</div>
 			</div>
@@ -378,7 +373,8 @@ if ($quickpost)
 							<label><textarea name="req_message" rows="7" cols="75"  tabindex="<?php echo $cur_index++ ?>"></textarea></label>
 							<ul class="bblinks">
 								<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-								<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+								<li><span><a href="help.php#url" onclick="window.open(this.href); return false;"><?php echo $lang_common['url tag'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_user['g_post_links'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+								<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
 								<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang_common['Smilies'] ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
 							</ul>
 						</div>

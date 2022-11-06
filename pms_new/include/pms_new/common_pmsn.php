@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -93,19 +93,13 @@ function pmsn_user_update($user, $flag = false)
 
 	while ($ttmp = $db->fetch_assoc($result))
 	{
-		if ($ttmp['starter_id'] == $user)
-			$ftmp = $ttmp['topic_st'];
-		else
-			$ftmp = $ttmp['topic_to'];
+		$ftmp = ($ttmp['starter_id'] == $user) ? $ttmp['topic_st'] : $ftmp = $ttmp['topic_to'];
 
 		$mkol++;
 		$mnew += $ftmp;
 	}
 
-	if ($flag && $mnew > 0)
-		$tempf = 'messages_flag=1, ';
-	else
-		$tempf = '';
+	$tempf = ($flag && $mnew > 0) ? 'messages_flag=1, ' : '';
 
 	$db->query('UPDATE '.$db->prefix.'users SET '.$tempf.'messages_new='.$mnew.', messages_all='.$mkol.' WHERE id='.$user) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 }

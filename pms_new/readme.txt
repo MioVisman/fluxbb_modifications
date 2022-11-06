@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.0
+##      Mod version:  1.0.1
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-08-23
+##     Release date:  2010-08-29
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -284,19 +284,38 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 // New PMS
 
 #
-#---------[ 26. SAVE ]--------------------------------------------------------
+#---------[ 26. FIND ]--------------------------------------------------------
+#
+
+	// If we changed the username we have to update some stuff
+	if ($username_updated)
+	{
+
+#
+#---------[ 27. AFTER, ADD ]--------------------------------------------------
+#
+
+// New PMS
+		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET starter=\''.$db->escape($form['username']).'\' WHERE starter_id='.$id) or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET to_user=\''.$db->escape($form['username']).'\' WHERE to_id='.$id) or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'pms_new_posts SET poster=\''.$db->escape($form['username']).'\' WHERE poster_id='.$id) or error('Unable to update pms_new_posts', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'pms_new_block SET bl_user=\''.$db->escape($form['username']).'\' WHERE bl_user_id='.$id) or error('Unable to update ms_new_block', __FILE__, __LINE__, $db->error());
+// New PMS
+
+#
+#---------[ 28. SAVE ]--------------------------------------------------------
 #
 
 profile.php
 
 #
-#---------[ 27. OPEN ]--------------------------------------------
+#---------[ 29. OPEN ]--------------------------------------------
 #
 
 header.php
 
 #
-#---------[ 28. FIND ]-------------------------------------------------
+#---------[ 30. FIND ]-------------------------------------------------
 #
 
 if (defined('PUN_ADMIN_CONSOLE'))
@@ -308,7 +327,7 @@ if (defined('PUN_ADMIN_CONSOLE'))
 }
 
 #
-#---------[ 29. AFTER, ADD ]-------------------------------------------------
+#---------[ 31. AFTER, ADD ]-------------------------------------------------
 #
 
 // New PMS
@@ -322,7 +341,7 @@ if (defined('PUN_PMS_NEW'))
 // New PMS
 
 #
-#---------[ 30. SAVE ]---------------------------------------------------
+#---------[ 32. SAVE ]---------------------------------------------------
 #
 
 header.php

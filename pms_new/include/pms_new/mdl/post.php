@@ -96,7 +96,7 @@ if (isset($_GET['uid']))
 	$tmp_bl = $db->fetch_assoc($result);
 	if ($tmp_bl['bl_id'] == $pun_user['id'])
 		message($lang_pmsn['You block addr']);
-	else if ($tmp_bl['bl_id'] == $cur_user['id'])
+	else if ($pun_user['g_id'] != PUN_ADMIN && $tmp_bl['bl_id'] == $cur_user['id'])
 		message($lang_pmsn['Addr block you']);
 
 	$addressee = $cur_user['username'];
@@ -158,17 +158,17 @@ if (isset($_POST['csrf_hash']))
 				else if ($cur_addressee['messages_all'] >= $cur_addressee['g_pm_limit'] && $cur_addressee['g_pm_limit'] > 0)
 					$errors[] = $lang_pmsn['More maximum'];
 			}
-
-			$result = $db->query('SELECT bl_id FROM '.$db->prefix.'pms_new_block WHERE (bl_id='.$pun_user['id'].' AND bl_user_id='.$cur_addressee['id'].') OR (bl_id='.$cur_addressee['id'].' AND bl_user_id='.$pun_user['id'].')') or error('Unable to fetch pms_new_block', __FILE__, __LINE__, $db->error());
-				$tmp_bl = $db->fetch_assoc($result);
-			if ($tmp_bl['bl_id'] == $pun_user['id'])
-				$errors[] = $lang_pmsn['You block addr'];
-			else if ($tmp_bl['bl_id'] == $cur_addressee['id'])
-				$errors[] = $lang_pmsn['Addr block you'];
 		}
 
+		$result = $db->query('SELECT bl_id FROM '.$db->prefix.'pms_new_block WHERE (bl_id='.$pun_user['id'].' AND bl_user_id='.$cur_addressee['id'].') OR (bl_id='.$cur_addressee['id'].' AND bl_user_id='.$pun_user['id'].')') or error('Unable to fetch pms_new_block', __FILE__, __LINE__, $db->error());
+		$tmp_bl = $db->fetch_assoc($result);
+
+		if ($tmp_bl['bl_id'] == $pun_user['id'])
+			$errors[] = $lang_pmsn['You block addr'];
+		else if ($pun_user['g_id'] != PUN_ADMIN && $tmp_bl['bl_id'] == $cur_addressee['id'])
+			$errors[] = $lang_pmsn['Addr block you'];
 	}
-	else if ($pun_user['g_id'] != PUN_ADMIN && !isset($_POST['preview']))
+	else if (!isset($_POST['preview']))
 	{
 		if ($pun_user['id'] == $cur_topic['starter_id'])
 			$mid = $cur_topic['to_id'];
@@ -180,7 +180,7 @@ if (isset($_POST['csrf_hash']))
 
 		if (!isset($cur_addressee['id']))
 			$errors[] = $lang_pmsn['No addressee'];
-		else if (!isset($_POST['save']) && ($cur_addressee['messages_enable'] == 0 || $cur_addressee['g_pm'] == 0))
+		else if ($pun_user['g_id'] != PUN_ADMIN && !isset($_POST['save']) && ($cur_addressee['messages_enable'] == 0 || $cur_addressee['g_pm'] == 0))
 			$errors[] = $lang_pmsn['Off messages'];
 
 		if (isset($cur_addressee['id']))
@@ -189,7 +189,7 @@ if (isset($_POST['csrf_hash']))
 			$tmp_bl = $db->fetch_assoc($result);
 			if ($tmp_bl['bl_id'] == $pun_user['id'])
 				$errors[] = $lang_pmsn['You block addr'];
-			else if ($tmp_bl['bl_id'] == $cur_addressee['id'])
+			else if ($pun_user['g_id'] != PUN_ADMIN && $tmp_bl['bl_id'] == $cur_addressee['id'])
 				$errors[] = $lang_pmsn['Addr block you'];
 		}
 	}

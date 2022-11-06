@@ -155,7 +155,7 @@ function pmsn_user_delete($user, $mflag, $topics = array())
 
 	while ($cur_topic = $db->fetch_assoc($result))
 	{
-		if ($cur_topic['starter_id'] == $user && $cur_topic['see_to'] == 0)
+		if ($cur_topic['starter_id'] == $user && $cur_topic['see_to'] == 0 && $cur_topic['topic_to'] != 3)
 		{
 			$topic_full_st[] = $cur_topic['id'];
 			if (!in_array($cur_topic['to_id'], $user_up))

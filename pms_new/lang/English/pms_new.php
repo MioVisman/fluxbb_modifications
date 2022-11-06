@@ -31,7 +31,7 @@ $lang_pmsn = array(
 'Email on Red' => 'Sending of confirm on your E-mail is on. Redirecting …',
 'Email off Red' => 'Sending of confirm on your E-mail is off. Redirecting …',
 
-'Boxs' => 'Boxs',
+'Boxs' => 'Folders',
 'Storage' => 'Storage',
 'Options' => 'Options',
 

@@ -84,7 +84,7 @@ function ChekUncheck()
 					<tbody>
 <?php
 
-$result = $db->query('SELECT b.bl_user_id, b.bl_user, u.id, u.title, u.registered, g.g_id, g.g_user_title FROM '.$db->prefix.'pms_new_block AS b LEFT JOIN '.$db->prefix.'users AS u ON b.bl_user_id=u.id LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE bl_id='.$pun_user['id'].' ORDER BY b.bl_user LIMIT '.$start_from.','.$pun_user['disp_topics']) or error('Unable to fetch pms_new_block and users', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT b.bl_user_id, b.bl_user as username, u.id, u.title, u.registered, u.num_posts, g.g_id, g.g_user_title FROM '.$db->prefix.'pms_new_block AS b LEFT JOIN '.$db->prefix.'users AS u ON b.bl_user_id=u.id LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE bl_id='.$pun_user['id'].' ORDER BY b.bl_user LIMIT '.$start_from.','.$pun_user['disp_topics']) or error('Unable to fetch pms_new_block and users', __FILE__, __LINE__, $db->error());
 
 if ($db->num_rows($result))
 {
@@ -92,13 +92,13 @@ if ($db->num_rows($result))
 	{
 		if (!$user_data['id'])
 		{
-			$user_name_field = pun_htmlspecialchars($user_data['bl_user']);
+			$user_name_field = pun_htmlspecialchars($user_data['username']);
 			$user_title_field = '&nbsp;';
 			$user_data_field = '&nbsp;';
 		}
 		else
 		{
-			$user_name_field = '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['bl_user']).'</a>';
+			$user_name_field = '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>';
 			$user_title_field = get_title($user_data);
 			$user_data_field = format_time($user_data['registered'], true);
 		}

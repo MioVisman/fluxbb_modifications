@@ -90,6 +90,7 @@ else
 }
 
 $newpost = false;
+$quickpost = false;
 if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id'] == $cur_topic['starter_id'] && $cur_topic['see_to'] == 0))
 {
 	$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
@@ -109,7 +110,7 @@ if ($mmodul == 'save' && $cur_topic['starter_id'] == $pun_user['id'] && $cur_top
 require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
 // Determine the post offset (based on $_GET['p'])
-$num_pages = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
+$num_pages = ceil(($cur_topic['replies'] + 1) / $pun_user['disp_posts']);
 
 $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
 $start_from = $pun_user['disp_posts'] * ($p - 1);
@@ -270,7 +271,7 @@ while ($cur_post = $db->fetch_assoc($result))
 	$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 	
 ?>
-<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($cur_post['id'] == $cur_topic['first_post_id']) echo ' firstpost'; ?><?php if ($post_count == 1) echo ' blockpost1'; ?>">
+<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1'; ?>">
 	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="pmsnew.php?mdl=topic&amp;pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
 		<div class="inbox">
@@ -285,7 +286,6 @@ while ($cur_post = $db->fetch_assoc($result))
 					</dl>
 				</div>
 				<div class="postright">
-					<h3><?php if ($cur_post['id'] != $cur_topic['first_post_id']) echo $lang_topic['Re'].' '; ?><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></h3>
 					<div class="postmsg">
 						<?php echo $cur_post['message']."\n" ?>
 <?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>

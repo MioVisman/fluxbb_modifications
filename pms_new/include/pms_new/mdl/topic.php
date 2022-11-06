@@ -154,7 +154,6 @@ generate_pmsn_menu($pmsn_modul);
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		</div>
-		<div class="clearer"></div>
 <?php
 
 require PUN_ROOT.'include/parser.php';
@@ -325,7 +324,6 @@ while ($cur_post = $db->fetch_assoc($result))
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		</div>
-		<div class="clearer"></div>
 	</div>
 <?php
 

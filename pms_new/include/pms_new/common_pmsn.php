@@ -38,6 +38,7 @@ function generate_pmsn_menu($page = '')
 		if ($pun_user['g_pm_limit'] != 0)
 		{
 ?>
+		<br />
 		<h2><span><?php echo $lang_pmsn['Storage'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">
@@ -50,6 +51,7 @@ function generate_pmsn_menu($page = '')
 <?php
     }
 ?>
+		<br />
 		<h2><span><?php echo $lang_pmsn['Options'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">

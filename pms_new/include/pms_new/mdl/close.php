@@ -32,7 +32,7 @@ generate_pmsn_menu($pmsn_modul);
 	<div class="blockform">
 		<h2><span><?php echo $lang_pmsn['Info'] ?></span></h2>
 		<div class="box">
-				<div class="inform">
+				<div id="infono" class="inform">
 					<fieldset>
 						<legend></legend>
 						<div class="infldset">

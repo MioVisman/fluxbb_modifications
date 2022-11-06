@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.2.1
+##      Mod version:  1.2.2
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-09-04
+##     Release date:  2010-09-06
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -281,7 +281,7 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 
 		pmsn_user_delete($id, 2);
 
-		$db->query('DELETE FROM '.$db->prefix.'pms_new_block WHERE bl_id='.$id.'OR bl_user='.$id) or error('Unable to delete user in pms_new_block', __FILE__, __LINE__, $db->error());
+		$db->query('DELETE FROM '.$db->prefix.'pms_new_block WHERE bl_id='.$id.' OR bl_user='.$id) or error('Unable to delete user in pms_new_block', __FILE__, __LINE__, $db->error());
 // New PMS
 
 #

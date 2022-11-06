@@ -3,13 +3,13 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.4.1';
-$release_date   = '2010-11-27';
+$mod_version    = '1.4.2';
+$release_date   = '2011-01-31';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.4.2');
+$fluxbb_versions= array('1.4.3');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;
@@ -248,7 +248,7 @@ function restore()
 
 // Circumvent maintenance mode
 define('PUN_TURN_OFF_MAINT', 1);
-define('PUN_ROOT', './');
+define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
 // only admin

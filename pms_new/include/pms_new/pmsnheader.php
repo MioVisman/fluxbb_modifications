@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * Copyright (C) 2010 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 

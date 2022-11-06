@@ -4,7 +4,7 @@ $lang_admin_plugin_pms_new = array(
 
 'Plugin title'	=>	'PMS New - New Private Messaging System',
 'Explanation 1'			=>	'The plugin serves for adjustment of PMS for your forum.',
-'Explanation 2'			=>	'You can on or off PM at this forum,<br />limit quantity of messages in boxes of users (0 - cleans restriction).',
+'Explanation 2'			=>	'You can on or off PM at this forum, limit number of messages in boxes of users (Set to 0 to disable limit).',
 'Form title'	=>	'Options',
 'Show text button'		=>	'Save changes',
 'Plugin redirect' => 'Options updated. Redirecting …',

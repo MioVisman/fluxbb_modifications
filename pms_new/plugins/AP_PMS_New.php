@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * Copyright (C) 2010 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -59,7 +57,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.1</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.2</span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_pms_new['Explanation 1'] ?></p>

@@ -1,9 +1,9 @@
 <?php
 
 /**
+ * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
  * Copyright (C) 2008-2010 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * Copyright (C) 2010 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -17,7 +17,7 @@ if ($tid < 0)
 	message($lang_common['Bad request']);
 	
 // Проверка на минимум сообщений
-if ($pun_config['o_pms_min_kolvo'] > $pun_user['num_posts'])
+if ($pun_user['g_id'] != PUN_ADMIN && $pun_config['o_pms_min_kolvo'] > $pun_user['num_posts'])
 	message(sprintf($lang_pmsn['Min post'], $pun_config['o_pms_min_kolvo']));
 
 $to_user = array();
@@ -151,7 +151,7 @@ if (isset($_POST['csrf_hash']))
 		$result = $db->query('SELECT u.*, g.* FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE u.username=\''.$db->escape($addressee).'\'') or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 		$cur_addressee = $db->fetch_assoc($result);
 
-		if (!isset($cur_addressee['id']))
+		if (!isset($cur_addressee['id']) || $cur_addressee['id'] < 2)
 			$errors[] = $lang_pmsn['No addressee'];
 		else
 		{

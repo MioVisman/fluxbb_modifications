@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * Copyright (C) 2010 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
 if (!defined('PUN'))
 	exit;
 
-require PUN_ROOT.'lang/'.$pun_user['language'].'/pms_new.php';
+if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/pms_new.php'))
+	require PUN_ROOT.'lang/'.$pun_user['language'].'/pms_new.php';
+else
+	require PUN_ROOT.'lang/English/pms_new.php';
 
 function generate_pmsn_menu($page = '')
 {

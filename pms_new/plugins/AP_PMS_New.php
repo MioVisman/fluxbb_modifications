@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2013 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2015 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -17,7 +17,7 @@ else
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.7.1');
+define('PLUGIN_VERSION', '1.7.2');
 define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin='.$plugin));
 
 // If the "Show text" button was clicked
@@ -36,7 +36,7 @@ if (isset($_POST['show_text']))
 	if (isset($pun_config['o_pms_flasher']))
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$flash_pms.'\' WHERE conf_name=\'o_pms_flasher\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
 	else
-		$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_pms_flasher\', 0)') or error('Unable to insert into table '.$db->prefix.'config. Please check your configuration and try again.');
+		$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_pms_flasher\', \'0\')') or error('Unable to insert into table '.$db->prefix.'config. Please check your configuration and try again.');
 
 	$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 
@@ -83,7 +83,7 @@ else
 					<fieldset>
 						<legend><?php echo $lang_apmsn['Legend1'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<td>
 										<label><input type="checkbox" name="enable_pms" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_pms_enabled'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_apmsn['Q1'] ?></label>
@@ -101,7 +101,7 @@ if ($pun_config['o_pms_enabled'] == '1')
 					<fieldset>
 						<legend><?php echo $lang_apmsn['Legend3'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<td>
 										<span><input type="text" name="min_kolvo" value="<?php echo pun_htmlspecialchars($pun_config['o_pms_min_kolvo']) ?>"  tabindex="<?php echo ($cur_index++) ?>" size="10" maxlength="10" />&#160;&#160;<?php echo $lang_apmsn['Q3'] ?></span>
@@ -120,7 +120,7 @@ if ($pun_config['o_pms_enabled'] == '1')
 					<fieldset>
 						<legend><?php echo $lang_apmsn['Legend2'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 							<thead>
 								<tr>
 									<th class="tcl" scope="col"><?php echo $lang_apmsn['Group'] ?></th>

@@ -320,7 +320,7 @@ if (isset($_POST['csrf_hash']))
 			$mail_message = str_replace('<sender>', $pun_user['username'], $mail_message);
 			$mail_message = str_replace('<user>', $cur_addressee['username'], $mail_message);
 			$mail_message = str_replace('<board_title>', $pun_config['o_board_title'], $mail_message);
-			$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+			$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 			$mail_message = str_replace('<message_url>', $pun_config['o_base_url'].'/pmsnew.php'.( $new_pid ? '?mdl=topic&pid='.$new_pid.'#p'.$new_pid : ''), $mail_message);
 
 			require_once PUN_ROOT.'include/email.php';

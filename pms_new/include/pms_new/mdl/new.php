@@ -111,7 +111,10 @@ function ChekUncheck()
 					<tbody>
 <?php
 	$viewt = array_slice($pmsn_arr_new, $start_from, $pun_user['disp_topics']);
-	$result = $db->query('SELECT * FROM '.$db->prefix.'pms_new_topics WHERE id IN ('.implode(',', $viewt).') ORDER BY last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT t.*, s.group_id AS starter_gid, u.group_id AS to_user_gid FROM '.$db->prefix.'pms_new_topics AS t
+	LEFT JOIN '.$db->prefix.'users AS s ON (s.id = t.starter_id)
+	LEFT JOIN '.$db->prefix.'users AS u ON (u.id = t.to_id)
+	WHERE t.id IN ('.implode(',', $viewt).') ORDER BY t.last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
 	{
@@ -164,16 +167,15 @@ function ChekUncheck()
 				$subject .= !empty($subject_multipage) ? ' '.$subject_multipage : '';
 			}
 			
-			if ($pun_user['g_view_users'] == '1')
-			{
-				$user_st = '<a href="profile.php?id='.$cur_topic['starter_id'].'">'.pun_htmlspecialchars($cur_topic['starter']).'</a>';
-				$user_to = '<a href="profile.php?id='.$cur_topic['to_id'].'">'.pun_htmlspecialchars($cur_topic['to_user']).'</a>';
-			}
-			else
-			{
+			if ($pun_user['g_view_users'] != '1' || !$cur_topic['starter_gid'] || $cur_topic['starter_gid'] == PUN_GUEST)
 				$user_st = pun_htmlspecialchars($cur_topic['starter']);
+			else
+				$user_st = '<a href="profile.php?id='.$cur_topic['starter_id'].'">'.pun_htmlspecialchars($cur_topic['starter']).'</a>';
+
+			if ($pun_user['g_view_users'] != '1' || !$cur_topic['to_user_gid'] || $cur_topic['to_user_gid'] == PUN_GUEST)
 				$user_to = pun_htmlspecialchars($cur_topic['to_user']);
-			}
+			else
+				$user_to = '<a href="profile.php?id='.$cur_topic['to_id'].'">'.pun_htmlspecialchars($cur_topic['to_user']).'</a>';
 
 ?>
 						<tr class="<?php echo $item_status ?>">

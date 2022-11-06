@@ -36,7 +36,7 @@ generate_pmsn_menu($pmsn_modul);
 				<div class="inform">
 					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_pmsn['InfoQ close'] ?></p>
 						</div>

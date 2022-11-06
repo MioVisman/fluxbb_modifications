@@ -133,7 +133,7 @@ generate_pmsn_menu($pmsn_modul);
 					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 					<?php echo $mfm ?>
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo sprintf($mhm, pun_htmlspecialchars($cur_post['topic'])) ?></p>
 						</div>

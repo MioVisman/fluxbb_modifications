@@ -95,7 +95,7 @@ generate_pmsn_menu($pmsn_modul);
 					<input type="hidden" name="<?php echo $mfm ?>" value="1" />
 					<input type="hidden" name="p" value="<?php echo intval($_POST['p']) ?>" />
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $mhm ?></p>
 						</div>

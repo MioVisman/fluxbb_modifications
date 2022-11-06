@@ -94,7 +94,10 @@ if ($db->num_rows($result))
 		}
 		else
 		{
-			$user_name_field = '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>';
+			if ($pun_user['g_view_users'] == '1')
+				$user_name_field = '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>';
+			else
+				$user_name_field = pun_htmlspecialchars($user_data['username']);
 			$user_title_field = get_title($user_data);
 			$user_data_field = format_time($user_data['registered'], true);
 		}

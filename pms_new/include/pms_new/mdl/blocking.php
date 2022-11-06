@@ -80,7 +80,7 @@ generate_pmsn_menu($pmsn_modul);
 					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
 					<input type="hidden" name="uid" value="<?php echo $uid; ?>" />
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $mhm ?></p>
 						</div>

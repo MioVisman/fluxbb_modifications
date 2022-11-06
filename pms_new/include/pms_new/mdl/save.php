@@ -37,7 +37,7 @@ if ($pmsn_kol_save == 0)
 		<div class="box">
 				<div id="infono" class="inform">
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_pmsn['Info zero'] ?></p>
 						</div>

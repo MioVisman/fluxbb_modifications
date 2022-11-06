@@ -2,11 +2,11 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.7.2
-##  Works on FluxBB:  1.5.8
-##     Release date:  2015-01-25
+##      Mod version:  1.8.0
+##  Works on FluxBB:  1.5.9
+##     Release date:  2015-12-02
 ##      Review date:  YYYY-MM-DD (Leave unedited)
-##           Author:  Visman (visman@inbox.ru)
+##           Author:  Visman (mio.visman@yandex.ru)
 ##
 ##      Description:  Добавляет новую систему личных сообщений.
 ##                    Мод несовместим с системами личных сообщений от других авторов.
@@ -28,7 +28,7 @@
 ##            Notes:  Russian/English
 ##                    Спасибо artoodetoo за помощь.
 ##                    Thanks to artoodetoo for help.
-##                    Thanks to quy.
+##                    Thanks to quy for help.
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -235,7 +235,6 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET to_user=\''.$db->escape($form['username']).'\' WHERE to_id='.$id) or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 		$db->query('UPDATE '.$db->prefix.'pms_new_posts SET poster=\''.$db->escape($form['username']).'\' WHERE poster_id='.$id) or error('Unable to update pms_new_posts', __FILE__, __LINE__, $db->error());
 		$db->query('UPDATE '.$db->prefix.'pms_new_posts SET edited_by=\''.$db->escape($form['username']).'\' WHERE edited_by=\''.$db->escape($old_username).'\'') or error('Unable to update pms_new_posts', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'pms_new_block SET bl_user=\''.$db->escape($form['username']).'\' WHERE bl_user_id='.$id) or error('Unable to update pms_new_block', __FILE__, __LINE__, $db->error());
 // New PMS
 
 #

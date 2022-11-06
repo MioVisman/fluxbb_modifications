@@ -3,17 +3,24 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.7.2';
-$release_date   = '2015-01-15';
+$mod_version    = '1.8.0';
+$release_date   = '2015-12-02';
 $author         = 'Visman';
-$author_email   = 'visman@inbox.ru';
+$author_email   = 'mio.visman@yandex.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.5.8');
+$fluxbb_versions= array('1.5.9');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;
 
+function update()
+{
+	global $db;
+
+	$db->drop_field('pms_new_block', 'bl_user') or error('Unable to drop bl_user field', __FILE__, __LINE__, $db->error());
+	$db->drop_field('pms_new_posts', 'post_seen') or error('Unable to drop post_seen field', __FILE__, __LINE__, $db->error());
+}
 
 // This following function will be called when the user presses the "Install" button
 function install()
@@ -32,12 +39,7 @@ function install()
 				'datatype'		=> 'INT(10) UNSIGNED',
 				'allow_null'	=> false,
 				'default'		=> '0'
-			),
-			'bl_user'		=> array(
-				'datatype'		=> 'VARCHAR(200)',
-				'allow_null'	=> false,
-				'default'		=> '\'\''
-			),
+			)
 		),
 		'INDEXES'		=> array(
 			'bl_id_idx'	=> array('bl_id'),
@@ -88,11 +90,6 @@ function install()
 			'edited_by'		=> array(
 				'datatype'		=> 'VARCHAR(200)',
 				'allow_null'	=> true
-			),
-			'post_seen'		=> array(
-				'datatype'		=> 'TINYINT(1)',
-				'allow_null'	=> false,
-				'default'		=> '0'
 			),
 			'post_new'		=> array(
 				'datatype'		=> 'TINYINT(1)',
@@ -212,7 +209,7 @@ function install()
 	
 	while (list($conf_name, $conf_value) = @each($config))
 	{
-    if (!array_key_exists($conf_name, $pun_config))
+		if (!array_key_exists($conf_name, $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\''.$conf_name.'\', \''.$db->escape($conf_value).'\')')
 				or error('Unable to insert into table '.$db->prefix.'config. Please check your configuration and try again.');
 	}
@@ -256,7 +253,7 @@ require PUN_ROOT.'include/common.php';
 
 // only admin
 if ($pun_user['g_id'] != PUN_ADMIN)
-	redirect('login.php', $lang_common['Redirecting']);
+	message('****** For administrator ONLY!!! ******');
 
 // We want the complete error message if the script fails
 if (!defined('PUN_DEBUG'))
@@ -284,7 +281,24 @@ $style = (isset($pun_user)) ? $pun_user['style'] : $pun_config['o_default_style'
 
 if (isset($_POST['form_sent']))
 {
-	if (isset($_POST['install']))
+	if (isset($_POST['update']))
+	{
+		// Run the update function (defined above)
+		update();
+
+?>
+<div class="block">
+	<h2><span>Updating successful</span></h2>
+	<div class="box">
+		<div class="inbox">
+			<p>Your database has been successfully prepared for <?php echo pun_htmlspecialchars($mod_title) ?>. See update_172_to_180.txt for further instructions.</p>
+		</div>
+	</div>
+</div>
+<?php
+
+	}
+	else if (isset($_POST['install']))
 	{
 		// Run the install function (defined above)
 		install();
@@ -340,7 +354,7 @@ else
 				<p style="color: #a00"><strong>Warning:</strong> The mod you are about to install was not made specifically to support your current version of FluxBB (<?php echo $pun_config['o_cur_version']; ?>). This mod supports FluxBB versions: <?php echo pun_htmlspecialchars(implode(', ', $fluxbb_versions)); ?>. If you are uncertain about installing the mod due to this potential version conflict, contact the mod author.</p>
 <?php endif; ?>
 			</div>
-			<p class="buttons"><input type="submit" name="install" value="Install" /><?php if ($mod_restore): ?><input type="submit" name="restore" value="Restore" /><?php endif; ?></p>
+			<p class="buttons"><input type="submit" name="update" value="Update DB to v1.8.0" /><input type="submit" name="install" value="Install" /><?php if ($mod_restore): ?><input type="submit" name="restore" value="Restore" /><?php endif; ?></p>
 		</form>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2013 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2015 Visman (mio.visman@yandex.ru)
  * Copyright (C) 2008-2010 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -93,7 +93,7 @@ function ChekUncheck()
 		<div id="vf" class="blocktable">
 			<div class="box">
 				<div class="inbox">
-					<table cellspacing="0">
+					<table>
 					<thead>
 						<tr>
 							<th class="tcl" scope="col"><?php echo $lang_pmsn['tDialog'] ?></th>

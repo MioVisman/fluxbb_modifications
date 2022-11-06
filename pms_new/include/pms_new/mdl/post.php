@@ -325,7 +325,7 @@ if (isset($_POST['csrf_hash']))
 
 			require_once PUN_ROOT.'include/email.php';
 
-			pun_mail($cur_addressee['email'], $mail_subject, $mail_message, $pun_user['email'], $pun_user['username']);
+			pun_mail($cur_addressee['email'], $mail_subject, $mail_message); // , $pun_user['email'], $pun_user['username']);
 		}
 
 

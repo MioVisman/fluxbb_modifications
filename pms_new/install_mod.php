@@ -3,13 +3,13 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.4.3';
-$release_date   = '2011-02-03';
+$mod_version    = '1.5.0';
+$release_date   = '2011-03-25';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.4.4');
+$fluxbb_versions= array('1.4.5');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;
@@ -204,8 +204,9 @@ function install()
 
 	// Insert config data
 	$config = array(
-		'o_pms_enabled'			=> '1',
-		'o_pms_min_kolvo'		=> '0',
+		'o_pms_enabled'		=> '1',
+		'o_pms_min_kolvo'	=> '0',
+		'o_pms_flasher'		=> '0',
 	);
 	
 	while (list($conf_name, $conf_value) = @each($config))

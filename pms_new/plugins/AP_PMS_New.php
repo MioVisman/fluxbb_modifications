@@ -9,11 +9,16 @@
 if (!defined('PUN'))
 	exit;
 
-// Load the language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_pms_new.php';
+// Load language file
+if (file_exists(PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_pms_new.php'))
+	require PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_pms_new.php';
+else
+	require PUN_ROOT.'lang/English/admin_plugin_pms_new.php';
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
+define('PLUGIN_VERSION', '1.5.0');
+define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 
 // If the "Show text" button was clicked
 if (isset($_POST['show_text']))
@@ -24,9 +29,14 @@ if (isset($_POST['show_text']))
 	$g_limit = isset($_POST['g_limit']) ? array_map('trim', $_POST['g_limit']) : array();
 	$g_pm = isset($_POST['g_pm']) ? array_map('trim', $_POST['g_pm']) : array();
 	$min_kolvo = isset($_POST['min_kolvo']) ? intval($_POST['min_kolvo']) : 0;
+	$flash_pms = isset($_POST['flasher_pms']) ? intval($_POST['flasher_pms']) : 0;
 
 	$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$en_pms.'\' WHERE conf_name=\'o_pms_enabled\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
 	$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$min_kolvo.'\' WHERE conf_name=\'o_pms_min_kolvo\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+	if (isset($pun_config['o_pms_flasher']))
+		$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$flash_pms.'\' WHERE conf_name=\'o_pms_flasher\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+	else
+		$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_pms_flasher\', 0)') or error('Unable to insert into table '.$db->prefix.'config. Please check your configuration and try again.');
 
 	$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 
@@ -45,7 +55,7 @@ if (isset($_POST['show_text']))
 
 	generate_config_cache();
 
-	redirect(pun_htmlspecialchars('admin_loader.php?plugin=AP_PMS_New.php'), $lang_admin_plugin_pms_new['Plugin redirect']);
+	redirect(PLUGIN_URL, $lang_apmsn['Plugin redirect']);
 
 }
 else
@@ -57,26 +67,26 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.3</span></h2>
+		<h2><span><?php echo $lang_apmsn['Plugin title'].' v.'.PLUGIN_VERSION ?></span></h2>
 		<div class="box">
 			<div class="inbox">
-				<p><?php echo $lang_admin_plugin_pms_new['Explanation 1'] ?></p>
-				<p><?php echo $lang_admin_plugin_pms_new['Explanation 2'] ?></p>
+				<p><?php echo $lang_apmsn['Explanation 1'] ?></p>
+				<p><?php echo $lang_apmsn['Explanation 2'] ?></p>
 			</div>
 		</div>
 
-		<h2 class="block2"><span><?php echo $lang_admin_plugin_pms_new['Form title'] ?></span></h2>
+		<h2 class="block2"><span><?php echo $lang_apmsn['Form title'] ?></span></h2>
 		<div class="box">
-			<form id="example" method="post" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>&amp;foo=<?php echo time() ?>">
-				<p class="submittop"><input type="submit" name="show_text" value="<?php echo $lang_admin_plugin_pms_new['Show text button'] ?>" tabindex="<?php echo ($cur_index++) ?>" /></p>
+			<form id="example" method="post" action="<?php echo PLUGIN_URL.'&amp;'.time() ?>">
+				<p class="submittop"><input type="submit" name="show_text" value="<?php echo $lang_apmsn['Show text button'] ?>" tabindex="<?php echo ($cur_index++) ?>" /></p>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_plugin_pms_new['Legend1'] ?></legend>
+						<legend><?php echo $lang_apmsn['Legend1'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<td>
-										<span><input type="checkbox" name="enable_pms" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_pms_enabled'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_admin_plugin_pms_new['Q1'] ?></span>
+										<label><input type="checkbox" name="enable_pms" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_pms_enabled'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_apmsn['Q1'] ?></label>
 									</td>
 								</tr>
 							</table>
@@ -89,12 +99,17 @@ if ($pun_config['o_pms_enabled'] == '1')
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_plugin_pms_new['Legend3'] ?></legend>
+						<legend><?php echo $lang_apmsn['Legend3'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<td>
-										<span><input type="text" name="min_kolvo" value="<?php echo pun_htmlspecialchars($pun_config['o_pms_min_kolvo']) ?>"  tabindex="<?php echo ($cur_index++) ?>" size="10" maxlength="10" />&#160;&#160;<?php echo $lang_admin_plugin_pms_new['Q3'] ?></span>
+										<span><input type="text" name="min_kolvo" value="<?php echo pun_htmlspecialchars($pun_config['o_pms_min_kolvo']) ?>"  tabindex="<?php echo ($cur_index++) ?>" size="10" maxlength="10" />&#160;&#160;<?php echo $lang_apmsn['Q3'] ?></span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label><input type="checkbox" name="flasher_pms" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo (!empty($pun_config['o_pms_flasher'])) ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_apmsn['Q2'] ?></label>
 									</td>
 								</tr>
 							</table>
@@ -103,14 +118,14 @@ if ($pun_config['o_pms_enabled'] == '1')
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_plugin_pms_new['Legend2'] ?></legend>
+						<legend><?php echo $lang_apmsn['Legend2'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 							<thead>
 								<tr>
-									<th class="tcl" scope="col"><?php echo $lang_admin_plugin_pms_new['Group'] ?></th>
-									<th class="tc2" scope="col"><?php echo $lang_admin_plugin_pms_new['Allow'] ?></th>
-									<th scope="tcr"><?php echo $lang_admin_plugin_pms_new['Kolvo'] ?></th>
+									<th class="tcl" scope="col"><?php echo $lang_apmsn['Group'] ?></th>
+									<th class="tc2" scope="col"><?php echo $lang_apmsn['Allow'] ?></th>
+									<th scope="tcr"><?php echo $lang_apmsn['Kolvo'] ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -138,7 +153,7 @@ if ($pun_config['o_pms_enabled'] == '1')
 <?php
 }
 ?>
-				<p class="submitend"><input type="submit" name="show_text" value="<?php echo $lang_admin_plugin_pms_new['Show text button'] ?>" tabindex="<?php echo ($cur_index++) ?>" /></p>
+				<p class="submitend"><input type="submit" name="show_text" value="<?php echo $lang_apmsn['Show text button'] ?>" tabindex="<?php echo ($cur_index++) ?>" /></p>
 			</form>
 		</div>
 	</div>

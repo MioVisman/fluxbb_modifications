@@ -75,7 +75,7 @@ if (isset($_POST['action2']))
 
 		require_once PUN_ROOT.'include/email.php';
 
-		pun_mail($cur_user['email'], $mail_subject, $mail_message, $pun_user['email'], $pun_user['username']);
+		pun_mail($cur_user['email'], $mail_subject, $mail_message); // , $pun_user['email'], $pun_user['username']);
 	}
 
 	redirect('pmsnew.php?mdl=list'.$sidamp, $lang_pmsn['List redirect']);

@@ -1,6 +1,6 @@
 <?php
 
-$lang_admin_plugin_pms_new = array(
+$lang_apmsn = array(
 
 'Plugin title'	=>	'PMS New - New Private Messaging System',
 'Explanation 1'			=>	'The plugin serves for adjustment of PMS for your forum.',
@@ -16,5 +16,6 @@ $lang_admin_plugin_pms_new = array(
 'Legend3' => 'Additional options',
 'Q1' => 'To use PMS at this forum.',
 'Q3' => 'The user should have this number of messages to send PM.',
+'Q2' => 'Instead of a window warning about new PM to use <img style="border: 0 none; vertical-align: middle;" src="img/flasher.gif" alt="flasher" />',
 
 );

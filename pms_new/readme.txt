@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.4.3
-##  Works on FluxBB:  1.4.4
-##     Release date:  2011-02-03
+##      Mod version:  1.5.0
+##  Works on FluxBB:  1.4.5
+##     Release date:  2011-03-26
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -20,8 +20,8 @@
 ##   Affected files:  viewtopic.php
 ##                    profile.php
 ##                    header.php
-##                    /include/functions.php
 ##                    /lang/[language]/common.php
+##                    admin_users.php
 ##
 ##       Affects DB:  Yes
 ##
@@ -88,89 +88,17 @@ install_mod.php
 #---------[ 7. OPEN ]---------------------------------------------------------
 #
 
-/include/functions.php
-
-#
-#---------[ 8. FIND ]---------------------------------------------------------
-#
-
-	else
-	{
-		if (!$pun_user['is_admmod'])
-		{
-			if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
-				$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
-
-			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
-			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
-		}
-		else
-		{
-			$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
-			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
-			$links[] = '<li id="navadmin"'.((PUN_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a></li>';
-			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
-		}
-	}
-
-#
-#---------[ 9. REPLACE WITH ]-------------------------------------------------
-#
-
-	else
-	{
-// New PMS
-		if ($pun_config['o_pms_enabled'] == '1' && ($pun_user['g_pm'] == 1 || $pun_user['messages_new'] > 0))
-		{
-			$links_pmsn = '<li id="navpmsnew"'.(((PUN_ACTIVE_PAGE == 'pms_new') || ($pun_user['messages_new'] > 0)) ? ' class="isactive"' : '').'><a href="pmsnew.php">'.$lang_common['PM'].(($pun_user['messages_new'] > 0) ? ' ('.$pun_user['messages_new'].')' : '').'</a></li>';
-		}
-// New PMS
-		if (!$pun_user['is_admmod'])
-		{
-			if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
-				$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
-
-			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
-// New PMS
-			if (isset($links_pmsn))
-				$links[] = $links_pmsn;
-// New PMS
-			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
-		}
-		else
-		{
-			$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
-			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
-// New PMS
-			if (isset($links_pmsn))
-				$links[] = $links_pmsn;
-// New PMS
-			$links[] = '<li id="navadmin"'.((PUN_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a></li>';
-			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
-		}
-	}
-
-#
-#---------[ 10. SAVE ]--------------------------------------------------------
-#
-
-/include/functions.php
-
-#
-#---------[ 11. OPEN ]--------------------------------------------------------
-#
-
 viewtopic.php
 
 #
-#---------[ 12. FIND ]--------------------------------------------------------
+#---------[ 8. FIND ]---------------------------------------------------------
 #
 
 // Retrieve the posts (and their respective poster/online status)
 $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 13. REPLACE WITH ]------------------------------------------------
+#---------[ 9. REPLACE WITH ]-------------------------------------------------
 #
 
 // Retrieve the posts (and their respective poster/online status)
@@ -178,7 +106,7 @@ $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u
 $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, u.messages_enable, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, g.g_pm, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 14. FIND ]--------------------------------------------------------
+#---------[ 10. FIND ]--------------------------------------------------------
 #
 
 			if ($cur_post['url'] != '')
@@ -191,7 +119,7 @@ $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u
 		}
 
 #
-#---------[ 15. AFTER, ADD ]--------------------------------------------------
+#---------[ 11. AFTER, ADD ]--------------------------------------------------
 #
 
 // New PMS
@@ -203,32 +131,32 @@ $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u
 // New PMS
 
 #
-#---------[ 16. SAVE ]--------------------------------------------------------
+#---------[ 12. SAVE ]--------------------------------------------------------
 #
 
 viewtopic.php
 
 #
-#---------[ 17. OPEN ]--------------------------------------------------------
+#---------[ 13. OPEN ]--------------------------------------------------------
 #
 
 profile.php
 
 #
-#---------[ 18. FIND ]--------------------------------------------------------
+#---------[ 14. FIND ]--------------------------------------------------------
 #
 
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 19. REPLACE WITH ]------------------------------------------------
+#---------[ 15. REPLACE WITH ]------------------------------------------------
 #
 
 // add "g.g_pm, u.messages_enable," - New PMS
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.messages_enable, g.g_id, g.g_user_title, g.g_moderator, g.g_pm FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, u.messages_enable, g.g_id, g.g_user_title, g.g_moderator, g.g_pm FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 20. FIND ]--------------------------------------------------------
+#---------[ 16. FIND ]--------------------------------------------------------
 #
 
 	if ($email_field != '')
@@ -238,7 +166,7 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 	}
 
 #
-#---------[ 21. AFTER, ADD ]--------------------------------------------------
+#---------[ 17. AFTER, ADD ]--------------------------------------------------
 #
 
 // New PMS
@@ -251,7 +179,7 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 // New PMS
 
 #
-#---------[ 22. FIND ]--------------------------------------------------------
+#---------[ 18. FIND ]--------------------------------------------------------
 #
 
 			if ($pun_config['o_regs_verify'] == '1')
@@ -261,7 +189,7 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 		}
 
 #
-#---------[ 23. AFTER, ADD ]--------------------------------------------------
+#---------[ 19. AFTER, ADD ]--------------------------------------------------
 #
 
 // New PMS
@@ -271,14 +199,14 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 // New PMS
 
 #
-#---------[ 24. FIND ]--------------------------------------------------------
+#---------[ 20. FIND ]--------------------------------------------------------
 #
 
 		// Delete the user
 		$db->query('DELETE FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to delete user', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 25. AFTER, ADD ]--------------------------------------------------
+#---------[ 21. AFTER, ADD ]--------------------------------------------------
 #
 
 // New PMS
@@ -290,7 +218,7 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 // New PMS
 
 #
-#---------[ 26. FIND ]--------------------------------------------------------
+#---------[ 22. FIND ]--------------------------------------------------------
 #
 
 	// If we changed the username we have to update some stuff
@@ -298,7 +226,7 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 	{
 
 #
-#---------[ 27. AFTER, ADD ]--------------------------------------------------
+#---------[ 23. AFTER, ADD ]--------------------------------------------------
 #
 
 // New PMS
@@ -309,33 +237,77 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 // New PMS
 
 #
-#---------[ 28. SAVE ]--------------------------------------------------------
+#---------[ 24. SAVE ]--------------------------------------------------------
 #
 
 profile.php
 
 #
-#---------[ 29. OPEN ]--------------------------------------------------------
+#---------[ 25. OPEN ]--------------------------------------------------------
 #
 
 header.php
 
 #
-#---------[ 30. FIND ]--------------------------------------------------------
+#---------[ 26. FIND ]--------------------------------------------------------
 #
 
 echo implode("\n", $page_head)."\n";
 
 #
-#---------[ 31. BEFORE, ADD ]-------------------------------------------------
+#---------[ 27. BEFORE, ADD ]-------------------------------------------------
 #
 
 // New PMS
 require PUN_ROOT.'include/pms_new/pmsnheader.php';
 
 #
-#---------[ 32. SAVE ]--------------------------------------------------------
+#---------[ 28. FIND ]--------------------------------------------------------
+#
+
+	$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
+
+#
+#---------[ 29. REPLACE WITH ]------------------------------------------------
+#
+
+	$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
+// New PMS
+	if ($pun_config['o_pms_enabled'] == '1' && ($pun_user['g_pm'] == 1 || $pun_user['messages_new'] > 0))
+		$links[] = '<li id="navpmsnew"'.(((PUN_ACTIVE_PAGE == 'pms_new') || ($pun_user['messages_new'] > 0)) ? ' class="isactive"' : '').'><a href="pmsnew.php">'.$lang_common['PM'].(($pun_user['messages_new'] > 0) ? ' ('.$pun_user['messages_new'].(empty($pun_config['o_pms_flasher']) ? '' : '&nbsp;<img style="border: 0 none; vertical-align: middle;" src="img/flasher.gif" alt="flasher" />' ).')' : '').'</a></li>';
+// New PMS
+
+#
+#---------[ 30. SAVE ]--------------------------------------------------------
 #
 
 header.php
 
+#
+#---------[ 31. OPEN ]--------------------------------------------------------
+#
+
+admin_users.php
+
+#
+#---------[ 32. FIND ]--------------------------------------------------------
+#
+
+		redirect('admin_users.php', $lang_admin_users['Users delete redirect']);
+
+#
+#---------[ 33. BEFORE, ADD ]-------------------------------------------------
+#
+
+// New PMS
+		require PUN_ROOT.'include/pms_new/common_pmsn.php';
+		
+		foreach ($user_ids as $user_id)
+			pmsn_user_delete($user_id, 2);
+// New PMS
+
+#
+#---------[ 34. SAVE ]--------------------------------------------------------
+#
+
+admin_users.php

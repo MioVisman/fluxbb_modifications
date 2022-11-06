@@ -115,12 +115,9 @@ function pmsn_user_delete($user, $mflag, $topics = array())
 	global $db, $db_type;
 
 	$user_up = array($user);
-	$topic_full_st = array();
-	$topic_full_to = array();
-	$topic_move_st = array();
-	$topic_move_to = array();
+	$tf_st = $tf_to = $tm_st = $tm_to = array();
 
-	if (count($topics) == 0)
+	if (empty($topics))
 		$result = $db->query('SELECT id, starter_id, to_id, see_to, topic_st, topic_to  FROM '.$db->prefix.'pms_new_topics WHERE starter_id='.$user.' OR to_id='.$user) or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
 	else
 		$result = $db->query('SELECT id, starter_id, to_id, see_to, topic_st, topic_to  FROM '.$db->prefix.'pms_new_topics WHERE id IN ('.implode(',', $topics).')') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
@@ -129,36 +126,36 @@ function pmsn_user_delete($user, $mflag, $topics = array())
 	{
 		if ($cur_topic['starter_id'] == $user && $cur_topic['see_to'] == 0 && $cur_topic['topic_to'] != 3)
 		{
-			$topic_full_st[] = $cur_topic['id'];
+			$tf_st[] = $cur_topic['id'];
 			if (!in_array($cur_topic['to_id'], $user_up))
 				$user_up[] = $cur_topic['to_id'];
 		}
 		else if ($cur_topic['starter_id'] == $user)
 		{
 			if ($mflag == 2 && $cur_topic['topic_to'] == 2)
-				$topic_full_st[] = $cur_topic['id'];
+				$tf_st[] = $cur_topic['id'];
 			else
-				$topic_move_st[] = $cur_topic['id'];
+				$tm_st[] = $cur_topic['id'];
 		}
 		else if ($cur_topic['to_id'] == $user)
 		{
 			if ($mflag == 2 && $cur_topic['topic_st'] == 2)
-				$topic_full_to[] = $cur_topic['id'];
+				$tf_to[] = $cur_topic['id'];
 			else
-				$topic_move_to[] = $cur_topic['id'];
+				$tm_to[] = $cur_topic['id'];
 		}
 	}
 
-	if (count($topic_move_st) > 0)
-		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_st='.$mflag.' WHERE id IN ('.implode(',', $topic_move_st).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
+	if (!empty($tm_st))
+		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_st='.$mflag.' WHERE id IN ('.implode(',', $tm_st).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 
-	if (count($topic_move_to) > 0)
-		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_to='.$mflag.' WHERE id IN ('.implode(',', $topic_move_to).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
+	if (!empty($tm_to))
+		$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_to='.$mflag.' WHERE id IN ('.implode(',', $tm_to).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 
 	if ($mflag == 2)
 	{
-		$topic_full = $topic_full_st + $topic_full_to;
-		if (count($topic_full) > 0)
+		$topic_full = $tf_st + $tf_to;
+		if (!empty($topic_full))
 		{
 			$db->query('DELETE FROM '.$db->prefix.'pms_new_posts WHERE topic_id IN ('.implode(',', $topic_full).')') or error('Unable to remove posts in pms_new_posts', __FILE__, __LINE__, $db->error());;
 			$db->query('DELETE FROM '.$db->prefix.'pms_new_topics WHERE id IN ('.implode(',', $topic_full).')') or error('Unable to remove topics in pms_new_topics', __FILE__, __LINE__, $db->error());;
@@ -166,11 +163,11 @@ function pmsn_user_delete($user, $mflag, $topics = array())
 	}
 	else
 	{
-		if (count($topic_full_st) > 0)
-			$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_st='.$mflag.', topic_to=2 WHERE id IN ('.implode(',', $topic_full_st).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
+		if (!empty($tf_st))
+			$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_st='.$mflag.', topic_to=2 WHERE id IN ('.implode(',', $tf_st).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 
-		if (count($topic_full_to) > 0)
-			$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_to='.$mflag.', topic_st=2 WHERE id IN ('.implode(',', $topic_full_to).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
+		if (!empty($tf_to))
+			$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_to='.$mflag.', topic_st=2 WHERE id IN ('.implode(',', $tf_to).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 	}
 
 	// обновляем юзеров

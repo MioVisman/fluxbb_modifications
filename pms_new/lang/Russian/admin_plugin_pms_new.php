@@ -1,6 +1,6 @@
 <?php
 
-$lang_admin_plugin_pms_new = array(
+$lang_apmsn = array(
 
 'Plugin title'	=>	'PMS New - Новая служба личных сообщений',
 'Explanation 1'			=>	'Плагин служит для настройки системы личных сообщений вашего форума.',
@@ -16,5 +16,6 @@ $lang_admin_plugin_pms_new = array(
 'Legend3' => 'Дополнительные настройки',
 'Q1' => 'Использовать систему личных сообщений на форуме.',
 'Q3' => 'Количество сообщений, которое должен иметь юзер для возможности отправки ЛС.',
+'Q2' => 'Вместо окна предупреждающего о новых ЛС использовать <img style="border: 0 none; vertical-align: middle;" src="img/flasher.gif" alt="flasher" />',
 
 );

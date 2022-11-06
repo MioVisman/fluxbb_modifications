@@ -57,7 +57,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.2</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.3</span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_pms_new['Explanation 1'] ?></p>

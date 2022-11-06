@@ -15,6 +15,6 @@ $lang_admin_plugin_pms_new = array(
 'Legend2' => 'Group options',
 'Legend3' => 'Additional options',
 'Q1' => 'To use PMS at this forum.',
-'Q3' => 'The user should have this quantity of messages to send PM.',
+'Q3' => 'The user should have this number of messages to send PM.',
 
 );

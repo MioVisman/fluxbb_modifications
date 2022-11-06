@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##        Update versions 0.9-1.2.0 to version 1.2.3
+##        Update versions 0.9-1.2.0 to version 1.2.4
 ##
 
 

@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.8.0
+##      Mod version:  1.8.1
 ##  Works on FluxBB:  1.5.9
-##     Release date:  2015-12-02
+##     Release date:  2015-12-30
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
@@ -275,7 +275,7 @@ require PUN_ROOT.'include/pms_new/pmsnheader.php';
 	$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
 // New PMS
 	if ($pun_config['o_pms_enabled'] == '1' && ($pun_user['g_pm'] == 1 || $pun_user['messages_new'] > 0))
-		$links[] = '<li id="navpmsnew"'.(((PUN_ACTIVE_PAGE == 'pms_new') || ($pun_user['messages_new'] > 0)) ? ' class="isactive"' : '').'><a href="pmsnew.php">'.$lang_common['PM'].(($pun_user['messages_new'] > 0) ? ' ('.$pun_user['messages_new'].(empty($pun_config['o_pms_flasher']) ? '' : '&nbsp;<img style="border: 0 none; vertical-align: middle;" src="img/flasher.gif" alt="flasher" />' ).')' : '').'</a></li>';
+		$links[] = '<li id="navpmsnew"'.((PUN_ACTIVE_PAGE == 'pms_new' || $pun_user['messages_new'] > 0) ? ' class="isactive"' : '').'><a href="pmsnew.php">'.$lang_common['PM'].(($pun_user['messages_new'] > 0) ? ' (<span'.((empty($pun_config['o_pms_flasher']) || PUN_ACTIVE_PAGE == 'pms_new') ? '' : ' class="remflasher"' ).'>'.$pun_user['messages_new'].'</span>)' : '').'</a></li>';
 // New PMS
 
 #

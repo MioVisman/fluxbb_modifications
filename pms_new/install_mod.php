@@ -3,8 +3,8 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.8.0';
-$release_date   = '2015-12-02';
+$mod_version    = '1.8.1';
+$release_date   = '2015-12-30';
 $author         = 'Visman';
 $author_email   = 'mio.visman@yandex.ru';
 

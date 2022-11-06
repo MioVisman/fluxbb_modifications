@@ -1,0 +1,53 @@
+##
+##
+##        Mod title:  New Private Messaging System
+##
+##        Update version 1.8.0 to version 1.8.1
+##
+
+
+#
+#---------[ 1. UPLOAD ]-------------------------------------------------------
+#
+
+file pmsnew.php and all folders to /
+file install_mod.php to /
+
+#
+#---------[ 2. RUN ]----------------------------------------------------------
+#
+
+install_mod.php
+
+# Click "Update DB to v1.8.0"
+
+#
+#---------[ 3. DELETE ]-------------------------------------------------------
+#
+
+install_mod.php
+
+
+#
+#---------[ 4. OPEN ]---------------------------------------------------------
+#
+
+header.php
+
+#
+#---------[ 5. FIND ]---------------------------------------------------------
+#
+
+		$links[] = '<li id="navpmsnew"'.(((PUN_ACTIVE_PAGE == 'pms_new') || ($pun_user['messages_new'] > 0)) ? ' class="isactive"' : '').'><a href="pmsnew.php">'.$lang_common['PM'].(($pun_user['messages_new'] > 0) ? ' ('.$pun_user['messages_new'].(empty($pun_config['o_pms_flasher']) ? '' : '&nbsp;<img style="border: 0 none; vertical-align: middle;" src="img/flasher.gif" alt="flasher" />' ).')' : '').'</a></li>';
+
+#
+#---------[ 6. REPLACE WITH ]-------------------------------------------------
+#
+
+		$links[] = '<li id="navpmsnew"'.((PUN_ACTIVE_PAGE == 'pms_new' || $pun_user['messages_new'] > 0) ? ' class="isactive"' : '').'><a href="pmsnew.php">'.$lang_common['PM'].(($pun_user['messages_new'] > 0) ? ' (<span'.((empty($pun_config['o_pms_flasher']) || PUN_ACTIVE_PAGE == 'pms_new') ? '' : ' class="remflasher"' ).'>'.$pun_user['messages_new'].'</span>)' : '').'</a></li>';
+
+#
+#---------[ 7. SAVE ]---------------------------------------------------------
+#
+
+header.php

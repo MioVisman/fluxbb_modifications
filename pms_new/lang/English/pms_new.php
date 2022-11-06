@@ -2,7 +2,7 @@
 
 $lang_pmsn = array(
 
-'PM' => 'Private messages',
+'PM' => 'PM',
 'list' => 'My conversations',
 'listq' => 'Processing of dialogues',
 'new' => 'New messages',
@@ -18,6 +18,7 @@ $lang_pmsn = array(
 'topic' => 'Dialogue',
 'del' => 'Removal',
 'send' => 'Dialogue sending',
+'edit' => 'Edit post',
 
 'mNew' => 'New',
 'mList' => 'My conversations',
@@ -74,6 +75,7 @@ $lang_pmsn = array(
 'No new post' => 'It is impossible to add new message in the given dialogue.',
 'You block addr' => 'It is impossible to send the message. You have blocked the addressee.',
 'Addr block you' => 'It is impossible to send the message. The addressee has blocked you.',
+'No edit post' => 'This message is already read by the addressee.',
 
 'Info' => 'Info',
 'Info close' => 'You have switched off service of private messages.',

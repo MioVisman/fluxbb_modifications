@@ -402,13 +402,8 @@ else
 			<ul class="crumbs">
 				<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 				<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
+				<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul.$sidamp ?>"><?php echo $lang_pmsn[$mmodul].($sid ? $lang_pmsn['With'].$siduser : '') ?></a></li>
 <?php
-if ($sid)
-{
-?>
-				<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul.$sidamp ?>"><?php echo $lang_pmsn[$mmodul].$lang_pmsn['With'].$siduser ?></a></li>
-<?php
-}
 if (isset($to_user['id']) && $to_user['id'] != $sid)
 {
 ?>
@@ -431,7 +426,7 @@ if ($tid > 0)
 
 <?php
 
-generate_pmsn_menu($pmsn_modul); // , $to_user
+generate_pmsn_menu($pmsn_modul);
 
 // If there are errors, we display them
 if (!empty($errors))

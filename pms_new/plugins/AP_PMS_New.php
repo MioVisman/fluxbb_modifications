@@ -25,8 +25,10 @@ if (isset($_POST['show_text']))
 	$en_pms = ($en_pms == 1) ? 1 : 0;
 	$g_limit = isset($_POST['g_limit']) ? array_map('trim', $_POST['g_limit']) : array();
 	$g_pm = isset($_POST['g_pm']) ? array_map('trim', $_POST['g_pm']) : array();
+	$min_kolvo = isset($_POST['min_kolvo']) ? intval($_POST['min_kolvo']) : 0;
 
 	$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$en_pms.'\' WHERE conf_name=\'o_pms_enabled\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+	$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$min_kolvo.'\' WHERE conf_name=\'o_pms_min_kolvo\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
 
 	$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 
@@ -57,7 +59,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.3.2</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.0</span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_pms_new['Explanation 1'] ?></p>
@@ -87,6 +89,20 @@ else
 if ($pun_config['o_pms_enabled'] == '1')
 {
 ?>
+				<div class="inform">
+					<fieldset>
+						<legend><?php echo $lang_admin_plugin_pms_new['Legend3'] ?></legend>
+						<div class="infldset">
+							<table class="aligntop" cellspacing="0">
+								<tr>
+									<td>
+										<span><input type="text" name="min_kolvo" value="<?php echo pun_htmlspecialchars($pun_config['o_pms_min_kolvo']) ?>"  tabindex="<?php echo ($cur_index++) ?>" size="10" maxlength="10" />&#160;&#160;<?php echo $lang_admin_plugin_pms_new['Q3'] ?></span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</fieldset>
+				</div>
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_plugin_pms_new['Legend2'] ?></legend>

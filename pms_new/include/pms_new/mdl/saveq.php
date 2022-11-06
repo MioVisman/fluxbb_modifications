@@ -68,6 +68,7 @@ $mh2 = $lang_pmsn['InfoDeleteQ'];
 $mhm = $lang_pmsn['InfoDeleteQm'];
 $mfm = 'delete';
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">

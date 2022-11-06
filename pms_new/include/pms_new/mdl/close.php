@@ -12,6 +12,7 @@ if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 
 define('PUN_PMS_LOADED', 1);
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
@@ -34,7 +35,7 @@ generate_pmsn_menu($pmsn_modul);
 		<div class="box">
 				<div id="infono" class="inform">
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_pmsn['Info close'] ?></p>
 						</div>

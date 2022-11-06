@@ -55,6 +55,7 @@ if (isset($_POST['action2']))
 	redirect('pmsnew.php', $mbm);   // ???
 }
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">

@@ -12,6 +12,7 @@ if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 
 define('PUN_PMS_LOADED', 1);
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">

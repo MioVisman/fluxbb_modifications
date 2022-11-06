@@ -80,6 +80,7 @@ else
 	$mfm = 'save';
 }
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">

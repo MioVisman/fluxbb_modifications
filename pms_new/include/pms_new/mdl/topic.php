@@ -121,6 +121,7 @@ $paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.pa
 if ($pun_config['o_censoring'] == '1')
 	$cur_topic['topic'] = censor_words($cur_topic['topic']);
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">

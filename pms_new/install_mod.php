@@ -3,8 +3,8 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.3.2';
-$release_date   = '2010-11-16';
+$mod_version    = '1.4.0';
+$release_date   = '2010-11-24';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
@@ -205,6 +205,7 @@ function install()
 	// Insert config data
 	$config = array(
 		'o_pms_enabled'			=> '1',
+		'o_pms_min_kolvo'		=> '0',
 	);
 	
 	while (list($conf_name, $conf_value) = @each($config))

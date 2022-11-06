@@ -56,6 +56,7 @@ if (defined('PUN_PMS_NEW_CONFIRM'))
 else
 	message($lang_common['Bad referrer']);
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
@@ -83,7 +84,7 @@ generate_pmsn_menu($pmsn_modul);
 					<input type="hidden" name="delete" value="1" />
 					<input type="hidden" name="p" value="<?php echo intval($_POST['p']); ?>" />
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_pmsn['InfoReBlockingSQ'] ?></p>
 						</div>

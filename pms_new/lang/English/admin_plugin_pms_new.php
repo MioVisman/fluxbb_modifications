@@ -13,6 +13,8 @@ $lang_admin_plugin_pms_new = array(
 'Allow' => 'Allow',
 'Legend1' => 'Global options',
 'Legend2' => 'Group options',
+'Legend3' => 'Additional options',
 'Q1' => 'To use PMS at this forum.',
+'Q3' => 'The user should have this quantity of messages to send PM.',
 
 );

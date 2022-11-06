@@ -16,6 +16,10 @@ $tid = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 if ($tid < 0)
 	message($lang_common['Bad request']);
 	
+// Проверка на минимум сообщений
+if ($pun_config['o_pms_min_kolvo'] > $pun_user['num_posts'])
+	message(sprintf($lang_pmsn['Min post'], $pun_config['o_pms_min_kolvo']));
+
 $to_user = array();
 
 if ($tid > 0)
@@ -329,6 +333,9 @@ if (isset($_POST['csrf_hash']))
 	}
 }
 
+$required_fields = array('req_addressee' => $lang_pmsn['Addressee'], 'req_subject' => $lang_pmsn['Dialog head'], 'req_message' => $lang_common['Message']);
+$focus_element = array('post');
+
 // If a topic ID was specified in the url (it's a reply)
 if ($tid)
 {
@@ -384,6 +391,7 @@ if ($tid)
 		else
 			$quote = '> '.$q_poster.' '.$lang_common['wrote']."\n\n".'> '.$q_message."\n";
 	}
+	$focus_element[] = 'req_message';
 }
 else
 {
@@ -393,8 +401,16 @@ else
 		$form = '<form id="post" method="post" action="pmsnew.php?mdl=post" onsubmit="return process_form(this)">'."\n";
 	else
 		$form = '<form id="post" method="post" action="pmsnew.php?mdl=post'.$sidamp.'" onsubmit="return process_form(this)">'."\n";
+
+	if (!isset($addressee))
+		$focus_element[] = 'req_addressee';
+	else if (!isset($subject))
+		$focus_element[] = 'req_subject';
+	else
+		$focus_element[] = 'req_message';
 }
 
+require PUN_ROOT.'header.php';
 ?>
 
 	<div class="linkst">

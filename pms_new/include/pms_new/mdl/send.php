@@ -81,6 +81,7 @@ if (isset($_POST['action2']))
 	redirect('pmsnew.php?mdl=list'.$sidamp, $lang_pmsn['List redirect']);
 }
 
+require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
@@ -105,7 +106,7 @@ generate_pmsn_menu($pmsn_modul);
 				<div class="inform">
 					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 					<fieldset>
-						<legend></legend>
+						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo sprintf($lang_pmsn['InfoSendQ'], pun_htmlspecialchars($cur_user['username'])) ?></p>
 						</div>

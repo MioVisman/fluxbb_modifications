@@ -109,5 +109,6 @@ $lang_pmsn = array(
 
 'Modul failed message'	=>	'Загрузить модуль &rdquo;%s&rdquo; не удалось.',
 'No modul message'		=>	'Нет модуля с именем &rdquo;%s&rdquo;.',
+'Min post'		=>	'Вы должны иметь на форуме минимум %s сообщений, если хотите отправлять ЛС.',
 
 );

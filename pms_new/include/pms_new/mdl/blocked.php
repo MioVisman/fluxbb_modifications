@@ -45,6 +45,7 @@ $pmsn_f_savedel = '<input type="submit" name="delete" value="'.$lang_pmsn['Delet
 
 ?>
 <script language="JavaScript" type="text/JavaScript">
+/* <![CDATA[ */
 function ChekUncheck()
 {
 	var i;
@@ -58,14 +59,16 @@ function ChekUncheck()
 		}
 	}
 }
+/* ]]> */
 </script>
 
 	<form method="post" action="pmsnew.php?mdl=blockedq" name="usernumb">
 	<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
 	<input type="hidden" name="p" value="<?php echo $p; ?>" />
-	<div class="blockform">
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<h2><span>&#160;</span></h2>
+	<div class="blockpmsn">
+		<div class="pagepostpmsn">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
+		</div>
 		<div id="users1" class="blocktable">
 			<div class="box">
 				<div class="inbox">
@@ -123,8 +126,10 @@ else
 				</div>
 			</div>
 		</div>
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="postlink conr"><?php echo $pmsn_f_savedel ?></p>
+		<div class="pagepostpmsn">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
+			<p class="postlink conr"><?php echo $pmsn_f_savedel ?></p>
+		</div>
 	</div>
 	</form>
 <?php

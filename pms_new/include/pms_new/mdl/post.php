@@ -426,14 +426,16 @@ else if (isset($_POST['preview']))
 	$preview_message = parse_message($message, $hide_smilies);
 ?>
 
-	<div id="postpreview" class="blockpost">
-		<h2><span><?php echo $lang_post['Post preview'] ?></span></h2>
-		<div class="box">
-			<div class="inbox">
-				<div class="postbody">
-					<div class="postright">
-						<div class="postmsg">
-							<?php echo $preview_message."\n" ?>
+	<div class="blockpmsn">
+		<div id="postpreview" class="blockpost">
+			<h2><span><?php echo $lang_post['Post preview'] ?></span></h2>
+			<div class="box">
+				<div class="inbox">
+					<div class="postbody">
+						<div class="postright">
+							<div class="postmsg">
+								<?php echo $preview_message."\n" ?>
+							</div>
 						</div>
 					</div>
 				</div>

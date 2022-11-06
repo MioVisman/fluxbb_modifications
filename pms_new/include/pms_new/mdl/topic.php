@@ -137,11 +137,14 @@ if ($pun_config['o_censoring'] == '1')
 
 generate_pmsn_menu($pmsn_modul, $to_user);
 
+/*	<div class="blockform">
+*/
 ?>
-	<div class="blockform">
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
-		<h2><span>&#160;</span></h2>
+	<div class="blockpmsn">
+		<div class="pagepostpmsn">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
+			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
+		</div>
 <?php
 
 require PUN_ROOT.'include/parser.php';
@@ -274,7 +277,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			<div class="postbody">
 				<div class="postleft">
 					<dl>
-						<strong><?php echo $username ?></strong>
+						<dt><strong><?php echo $username ?></strong></dt>
 						<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
 <?php if ($user_avatar != '') echo "\t\t\t\t\t\t".'<dd class="postavatar">'.$user_avatar.'</dd>'."\n"; ?>
 <?php if (count($user_info)) echo "\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t", $user_info)."\n"; ?>
@@ -304,9 +307,11 @@ while ($cur_post = $db->fetch_assoc($result))
 }  // while
 
 ?>
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
-		<h2><span>&#160;</span></h2>
+		<div class="pagepostpmsn">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
+			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
+		</div>
+	</div>
 <?php
 
 if ($status)
@@ -333,33 +338,30 @@ if ($quickpost)
 	$cur_index = 1;
 
 ?>
-<div id="quickpost">
-	<h2><span><?php echo $lang_topic['Quick post'] ?></span></h2>
-	<div class="box">
-		<form id="quickpostform" method="post" action="pmsnew.php?mdl=post&amp;tid=<?php echo $tid ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_common['Write message legend'] ?></legend>
-					<div class="infldset txtarea">
-						<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
-						<label><textarea name="req_message" rows="7" cols="75"  tabindex="<?php echo $cur_index++ ?>"></textarea></label>
-						<ul class="bblinks">
-							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-							<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-							<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang_common['Smilies'] ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-						</ul>
-					</div>
-				</fieldset>
-			</div>
-			<p class="buttons"><input type="submit" name="submit" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /> <input type="submit" name="preview" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Preview'] ?>" accesskey="p" /></p>
-		</form>
+
+	<div id="quickpost" class="blockform">
+		<h2><span><?php echo $lang_topic['Quick post'] ?></span></h2>
+		<div class="box">
+			<form id="quickpostform" method="post" action="pmsnew.php?mdl=post&amp;tid=<?php echo $tid ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
+				<div class="inform">
+					<fieldset>
+						<legend><?php echo $lang_common['Write message legend'] ?></legend>
+						<div class="infldset txtarea">
+							<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+							<label><textarea name="req_message" rows="7" cols="75"  tabindex="<?php echo $cur_index++ ?>"></textarea></label>
+							<ul class="bblinks">
+								<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+								<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+								<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang_common['Smilies'] ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+							</ul>
+						</div>
+					</fieldset>
+				</div>
+				<p class="buttons"><input type="submit" name="submit" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /> <input type="submit" name="preview" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Preview'] ?>" accesskey="p" /></p>
+			</form>
+		</div>
 	</div>
-</div>
 <?php
 
 }
-
-?>
-	</div>
-<?php
 

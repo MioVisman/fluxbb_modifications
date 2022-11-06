@@ -68,6 +68,7 @@ else
 
 ?>
 <script language="JavaScript" type="text/JavaScript">
+/* <![CDATA[ */
 function ChekUncheck()
 {
 	var i;
@@ -81,15 +82,17 @@ function ChekUncheck()
 		}
 	}
 }
+/* ]]> */
 </script>
 
 	<form method="post" action="pmsnew.php?mdl=newq" name="posttopic">
 	<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
 	<input type="hidden" name="p" value="<?php echo $p; ?>" />
-	<div class="blockform">
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
-		<h2><span>&#160;</span></h2>
+	<div class="blockpmsn">
+		<div class="pagepostpmsn">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
+			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
+		</div>
 		<div id="vf" class="blocktable">
 			<div class="box">
 				<div class="inbox">
@@ -202,9 +205,10 @@ function ChekUncheck()
 				</div>
 			</div>
 		</div>
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="postlink conr"><?php echo $pmsn_f_savedel ?></p>
-
+		<div class="pagepostpmsn">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
+			<p class="postlink conr"><?php echo $pmsn_f_savedel ?></p>
+		</div>
 	</div>
 	</form>
 <?php

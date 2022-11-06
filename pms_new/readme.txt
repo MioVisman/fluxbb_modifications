@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  0.9 for TEST
+##      Mod version:  1.0
 ##  Works on FluxBB:  1.4.2
 ##     Release date:  2010-08-23
 ##      Review date:  YYYY-MM-DD (Leave unedited)
@@ -19,6 +19,7 @@
 ##
 ##   Affected files:  viewtopic.php
 ##                    profile.php
+##                    header.php
 ##                    /include/functions.php
 ##                    /lang/[language]/common.php
 ##
@@ -63,10 +64,13 @@ install_mod.php
 #
 
 'PM' => 'PM',
+'PMsend' => 'Send private message',
+'Preview ' => 'Preview',
 
 # For Russian
 # 'PM' => 'ЛС',
 # 'PMsend' => 'Отправить личное сообщение',
+# 'Preview' => 'Предпросмотр',
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------
@@ -310,7 +314,7 @@ if (defined('PUN_ADMIN_CONSOLE'))
 // New PMS
 if (defined('PUN_PMS_NEW'))
 {
-	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/base_admin.css'))
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/newpms.css'))
 		echo '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/newpms.css" />'."\n";
 	else
 		echo '<link rel="stylesheet" type="text/css" href="style/imports/newpms.css" />'."\n";

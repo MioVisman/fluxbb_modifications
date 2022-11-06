@@ -3,8 +3,8 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.2.6';
-$release_date   = '2010-10-07';
+$mod_version    = '1.3.0';
+$release_date   = '2010-11-01';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
@@ -195,6 +195,7 @@ function install()
 
 	$db->add_field('users', 'messages_enable', 'TINYINT(1)', false, 1) or error('Unable to add messages_enable field', __FILE__, __LINE__, $db->error());
 	$db->add_field('users', 'messages_email', 'TINYINT(1)', false, 0) or error('Unable to add messages_email field', __FILE__, __LINE__, $db->error());
+	$db->add_field('users', 'messages_flag', 'TINYINT(1)', false, 0) or error('Unable to add messages_flag field', __FILE__, __LINE__, $db->error());
 	$db->add_field('users', 'messages_new', 'INT(10) UNSIGNED', false, 0) or error('Unable to add messages_new field', __FILE__, __LINE__, $db->error());
 	$db->add_field('users', 'messages_all', 'INT(10) UNSIGNED', false, 0) or error('Unable to add messages_all field', __FILE__, __LINE__, $db->error());
 	$db->add_field('users', 'pmsn_last_post', 'INT(10) UNSIGNED', true) or error('Unable to add pmsn_last_post field', __FILE__, __LINE__, $db->error());
@@ -229,6 +230,7 @@ function restore()
 	$db->drop_field('groups', 'g_pm_limit') or error('Unable to drop g_pm_limit field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('users', 'messages_enable') or error('Unable to drop messages_enable field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('users', 'messages_email') or error('Unable to drop messages_email field', __FILE__, __LINE__, $db->error());
+	$db->drop_field('users', 'messages_flag') or error('Unable to drop messages_flag field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('users', 'messages_new') or error('Unable to drop messages_new field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('users', 'messages_all') or error('Unable to drop messages_all field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('users', 'pmsn_last_post') or error('Unable to drop pmsn_last_post field', __FILE__, __LINE__, $db->error());

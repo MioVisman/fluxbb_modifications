@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.2.6
+##      Mod version:  1.3.0
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-10-07
+##     Release date:  2010-11-01
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -19,6 +19,7 @@
 ##
 ##   Affected files:  viewtopic.php
 ##                    profile.php
+##                    header.php
 ##                    /include/functions.php
 ##                    /lang/[language]/common.php
 ##
@@ -67,11 +68,15 @@ install_mod.php
 'PM' => 'PM',
 'PMsend' => 'Send private message',
 'Preview' => 'Preview',
+'PMnew' => 'New private message',
+'PMmess' => 'You have new private messages (%s pcs.).',
 
 # For Russian
 # 'PM' => 'ЛС',
 # 'PMsend' => 'Отправить личное сообщение',
 # 'Preview' => 'Предпросмотр',
+# 'PMnew' => 'Новое личное сообщение',
+# 'PMmess' => 'У вас есть новые личные сообщения (%s шт.).',
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------
@@ -308,4 +313,30 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 #
 
 profile.php
+
+#
+#---------[ 29. OPEN ]--------------------------------------------------------
+#
+
+header.php
+
+#
+#---------[ 30. FIND ]--------------------------------------------------------
+#
+
+// JavaScript tricks for IE6 and older
+echo '<!--[if lte IE 6]><script type="text/javascript" src="js/minmax.js"></script><![endif]-->'."\n";
+
+#
+#---------[ 31. AFTER, ADD ]--------------------------------------------------
+#
+
+// New PMS
+require PUN_ROOT.'include/pms_new/pmsnheader.php';
+
+#
+#---------[ 32. SAVE ]--------------------------------------------------------
+#
+
+header.php
 

@@ -34,10 +34,10 @@ if (isset($_POST['show_text']))
 		if ($cur_group['g_id'] > PUN_ADMIN && $cur_group['g_id'] != PUN_GUEST)
 			if (isset($g_limit[$cur_group['g_id']]))
 			{
-        $g_lim = isset($g_limit[$cur_group['g_id']]) ? intval($g_limit[$cur_group['g_id']]) : 0;
-        $g_p = (isset($g_pm[$cur_group['g_id']]) || $cur_group['g_id'] == PUN_ADMIN) ? 1 : 0;
+				$g_lim = isset($g_limit[$cur_group['g_id']]) ? intval($g_limit[$cur_group['g_id']]) : 0;
+				$g_p = (isset($g_pm[$cur_group['g_id']]) || $cur_group['g_id'] == PUN_ADMIN) ? 1 : 0;
 
-        $db->query('UPDATE '.$db->prefix.'groups SET g_pm='.$g_p.', g_pm_limit='.$g_lim.' WHERE g_id='.$cur_group['g_id']) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'groups SET g_pm='.$g_p.', g_pm_limit='.$g_lim.' WHERE g_id='.$cur_group['g_id']) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
 			}
 
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))

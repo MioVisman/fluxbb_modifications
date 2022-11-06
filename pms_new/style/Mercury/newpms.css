@@ -21,3 +21,11 @@ New Private Messaging System
 #punpmsnew .block2col #infono {
 	padding-bottom: 0px;
 }
+
+* html #punpmsnew .block2col .pagepost {
+	margin-bottom: 2em;
+}
+
+* html #punpmsnew .block2col #quickpost {
+	margin-top: 3em;
+}

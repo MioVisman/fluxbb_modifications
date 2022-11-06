@@ -83,7 +83,7 @@ function generate_pmsn_menu($page = '')
 	}
 }
 
-function pmsn_user_update($user)
+function pmsn_user_update($user, $flag = false)
 {
 	global $db, $db_type;
 
@@ -101,7 +101,12 @@ function pmsn_user_update($user)
 		$mnew += $ftmp;
 	}
 
-	$db->query('UPDATE '.$db->prefix.'users SET messages_new='.$mnew.', messages_all='.$mkol.' WHERE id='.$user) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+	if ($flag && $mnew > 0)
+		$tempf = 'messages_flag=1, ';
+	else
+		$tempf = '';
+
+	$db->query('UPDATE '.$db->prefix.'users SET '.$tempf.'messages_new='.$mnew.', messages_all='.$mkol.' WHERE id='.$user) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 }
 
 function pmsn_user_delete($user, $mflag, $topics = array())

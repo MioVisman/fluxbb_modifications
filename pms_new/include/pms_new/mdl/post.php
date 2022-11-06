@@ -269,7 +269,7 @@ if (isset($_POST['csrf_hash']))
 
 			// обновляем информацию у получателя
 			if ($flag0 == 1)
-				pmsn_user_update($uaddr);
+				pmsn_user_update($uaddr, true);
 		}
 		else // new dialog
 		{
@@ -298,7 +298,7 @@ if (isset($_POST['csrf_hash']))
 
 			// обновляем информацию у получателя
 			if ($flag2 != 2)
-				pmsn_user_update($cur_addressee['id']);
+				pmsn_user_update($cur_addressee['id'], true);
 		}
 		
 		if ($cur_addressee['messages_email'] == 1 && isset($mbutsubmit) && $flag2 != 2)

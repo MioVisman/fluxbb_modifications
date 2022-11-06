@@ -55,7 +55,7 @@ if (isset($_POST['action2']))
 
 	$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_st=0, topic_to=1 WHERE id='.$tid) or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 	
-  pmsn_user_update($cur_user['id']);
+  pmsn_user_update($cur_user['id'], true);
   pmsn_user_update($pun_user['id']);
 
 	if ($cur_user['messages_email'] == 1)

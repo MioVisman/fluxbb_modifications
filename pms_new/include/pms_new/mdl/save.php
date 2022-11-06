@@ -156,6 +156,17 @@ function ChekUncheck()
 				$subject .= !empty($subject_multipage) ? ' '.$subject_multipage : '';
 			}
 
+			if ($pun_user['g_view_users'] == '1')
+			{
+				$user_st = '<a href="profile.php?id='.$cur_topic['starter_id'].'">'.pun_htmlspecialchars($cur_topic['starter']).'</a>';
+				$user_to = '<a href="profile.php?id='.$cur_topic['to_id'].'">'.pun_htmlspecialchars($cur_topic['to_user']).'</a>';
+			}
+			else
+			{
+				$user_st = pun_htmlspecialchars($cur_topic['starter']);
+				$user_to = pun_htmlspecialchars($cur_topic['to_user']);
+			}
+
 ?>
 						<tr class="<?php echo $item_status ?>">
 							<td class="tcl">
@@ -166,8 +177,8 @@ function ChekUncheck()
 									</div>
 								</div>
 							</td>
-							<td class="tc2"><a href="profile.php?id=<?php echo $cur_topic['starter_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['starter']) ?></a></td>
-							<td class="tc2"><a href="profile.php?id=<?php echo $cur_topic['to_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['to_user']) ?></a></td>
+							<td class="tc2"><?php echo $user_st ?></td>
+							<td class="tc2"><?php echo $user_to ?></td>
 							<td class="tc3"><?php echo forum_number_format($cur_topic['replies']) ?></td>
 							<td class="tc2"><?php echo $last_post ?></td>
 							<td style="width: 20px;"><input type="checkbox" name="post_topic[<?php echo $cur_topic['id']?>]" value="1"></td>

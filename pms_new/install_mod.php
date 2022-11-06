@@ -3,13 +3,13 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.6.2';
-$release_date   = '2013-08-21';
+$mod_version    = '1.7.0';
+$release_date   = '2013-11-20';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.5.4', '1.5.3');
+$fluxbb_versions= array('1.5.4', '1.5.5');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;
@@ -207,6 +207,7 @@ function install()
 		'o_pms_enabled'		=> '1',
 		'o_pms_min_kolvo'	=> '0',
 		'o_pms_flasher'		=> '0',
+		'o_crypto_pas'    => random_pass(25),
 	);
 	
 	while (list($conf_name, $conf_value) = @each($config))
@@ -238,6 +239,7 @@ function restore()
 	$db->drop_field('users', 'pmsn_last_post') or error('Unable to drop pmsn_last_post field', __FILE__, __LINE__, $db->error());
 
 	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_pms_%"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_crypto_pas"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 
 	forum_clear_cache();
 }

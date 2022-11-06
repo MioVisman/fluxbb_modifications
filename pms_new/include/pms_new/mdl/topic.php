@@ -15,13 +15,13 @@ define('PUN_PMS_LOADED', 1);
 $tid = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 $pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
 if ($tid < 1 && $pid < 1)
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 if ($pid)
 {
 	$result = $db->query('SELECT topic_id FROM '.$db->prefix.'pms_new_posts WHERE id='.$pid) or error('Unable to fetch pms_new_posts info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$tid = $db->result($result);
 
@@ -47,12 +47,12 @@ else if (in_array($tid, $pmsn_arr_list))
 else if (in_array($tid, $pmsn_arr_save))
 	$mmodul = 'save';
 else
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 $result = $db->query('SELECT t.*, u.num_posts, u.id AS userid, u.group_id FROM '.$db->prefix.'pms_new_topics AS t LEFT JOIN '.$db->prefix.'users AS u ON (u.id!='.$pun_user['id'].' AND (u.id=t.starter_id OR u.id=t.to_id)) WHERE t.id='.$tid) or error('Unable to fetch pms_new_topics info', __FILE__, __LINE__, $db->error());
 
 if (!$db->num_rows($result))
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_topic = $db->fetch_assoc($result);
 $to_user = array();
@@ -178,6 +178,7 @@ for ($i = 0;$cur_post_id = $db->result($result, $i);$i++)
 	$post_ids[] = $cur_post_id;
 	
 $post_view_new = array();
+$a_token = array();
 
 $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, p.post_seen, p.post_new, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'pms_new_posts AS p LEFT JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch pms_new_posts info', __FILE__, __LINE__, $db->error());
 while ($cur_post = $db->fetch_assoc($result))
@@ -201,7 +202,12 @@ while ($cur_post = $db->fetch_assoc($result))
 			$post_view_new[] = $cur_post['id'];
 
 		if ($cur_post['g_id'] != PUN_GUEST && $cur_post['g_id'] != PUN_ADMIN)
-			$post_actions[] = '<li class="postreport"><span><a href="pmsnew.php?mdl=blocking&amp;uid='.$cur_post['poster_id'].'">'.$lang_pmsn['Block'].'</a></span></li>';
+		{
+			if (!isset($a_token[$cur_post['poster_id']]))
+				$a_token[$cur_post['poster_id']] = pun_hash($pun_user['id'].pun_hash($pun_config['o_crypto_pas'].$cur_post['poster_id']).PUN_ROOT);
+
+			$post_actions[] = '<li class="postreport"><span><a href="pmsnew.php?mdl=blocking&amp;uid='.$cur_post['poster_id'].'&amp;csrf_token='.$a_token[$cur_post['poster_id']].'">'.$lang_pmsn['Block'].'</a></span></li>';
+		}
 	}
 	else if ($cur_post['post_new'] == 1 && $newpost)
 	{

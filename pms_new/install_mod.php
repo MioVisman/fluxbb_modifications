@@ -3,8 +3,8 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.7.0';
-$release_date   = '2013-11-20';
+$mod_version    = '1.7.1';
+$release_date   = '2013-12-07';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
@@ -213,7 +213,7 @@ function install()
 	while (list($conf_name, $conf_value) = @each($config))
 	{
     if (!array_key_exists($conf_name, $pun_config))
-			$db->query('INSERT INTO '.$db->prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)")
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\''.$conf_name.'\', \''.$db->escape($conf_value).'\')')
 				or error('Unable to insert into table '.$db->prefix.'config. Please check your configuration and try again.');
 	}
 
@@ -238,8 +238,8 @@ function restore()
 	$db->drop_field('users', 'messages_all') or error('Unable to drop messages_all field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('users', 'pmsn_last_post') or error('Unable to drop pmsn_last_post field', __FILE__, __LINE__, $db->error());
 
-	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_pms_%"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
-	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_crypto_pas"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE \'o_pms_%\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE \'o_crypto_pas\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 
 	forum_clear_cache();
 }

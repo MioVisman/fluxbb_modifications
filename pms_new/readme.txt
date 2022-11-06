@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.7.0
+##      Mod version:  1.7.1
 ##  Works on FluxBB:  1.5.4, 1.5.5
-##     Release date:  2013-11-20
+##     Release date:  2013-12-07
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##

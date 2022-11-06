@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2015 Visman (mio.visman@yandex.ru)
+ * Copyright (C) 2010-2021 Visman (mio.visman@yandex.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -41,7 +41,7 @@ if ($action == 'onoff')
 		// удаляем сообщения пользователя
 		if ($pun_user['messages_enable'] == 1)
 			pmsn_user_delete($pun_user['id'], 2);
-			
+
 		$pun_user['messages_enable'] = ($pun_user['messages_enable'] == 0) ? 1 : 0;
 		$db->query('UPDATE '.$db->prefix.'users SET messages_enable='.$pun_user['messages_enable'].' WHERE id='.$pun_user['id']) or error('Unable to update users table', __FILE__, __LINE__, $db->error());
 
@@ -76,7 +76,7 @@ else if ($pun_user['messages_enable'] == 0 && $pun_user['messages_new'] == 0) //
 else
 {
 	$pmsn_modul = pmsn_get_var('mdl', 'new');
-	
+
 	if ($pun_user['g_pm'] == 0 || $pun_user['messages_enable'] == 0)
 		if (!in_array($pmsn_modul, array('new','topic','close','closeq')))
 			message($lang_common['No permission'], false, '403 Forbidden');
@@ -86,7 +86,7 @@ else
 }
 
 // проверка модуля
-if (!preg_match('%^[a-z]+$%', $pmsn_modul))
+if (preg_match('%[^a-z]%', $pmsn_modul))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 if (!file_exists(PUN_ROOT.'include/pms_new/mdl/'.$pmsn_modul.'.php'))
@@ -102,10 +102,13 @@ $sid = isset($_GET['sid']) ? intval($_GET['sid']) : 0;
 if ($sid < 2)
 	$sid = 0;
 
+$ttmp = null;
 if ($sid)
 {
 	$result = $db->query('SELECT id, starter, to_user, starter_id, topic_st, topic_to FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st != 2 AND to_id='.$sid.') OR (to_id = '.$pun_user['id'].' AND topic_to != 2 AND starter_id='.$sid.') ORDER BY last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	$ttmp = $db->fetch_assoc($result);
+
+	if (!$ttmp)
 		$sid = 0;
 	else
 	{
@@ -114,9 +117,12 @@ if ($sid)
 	}
 }
 if ($sid == 0)
+{
 	$result = $db->query('SELECT id, starter, to_user, starter_id, topic_st, topic_to FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st != 2) OR (to_id = '.$pun_user['id'].' AND topic_to != 2) ORDER BY last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
+	$ttmp = $db->fetch_assoc($result);
+}
 
-while ($ttmp = $db->fetch_assoc($result))
+while ($ttmp)
 {
 	if ($sid && empty($siduser))
 		$siduser = pun_htmlspecialchars(($ttmp['starter_id'] == $sid) ? $ttmp['starter'] : $ttmp['to_user']);
@@ -132,6 +138,8 @@ while ($ttmp = $db->fetch_assoc($result))
 		$pmsn_arr_new[] = $ttmp['id'];
 		$pmsn_arr_list[] = $ttmp['id'];
 	}
+
+	$ttmp = $db->fetch_assoc($result);
 }
 
 $pmsn_kol_list = count($pmsn_arr_list);
@@ -146,7 +154,7 @@ else
 
 if (!isset($page_head))
 	$page_head = array();
-	
+
 if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/newpms.css'))
 	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/newpms.css" />';
 else

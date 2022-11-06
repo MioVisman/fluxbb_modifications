@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2015 Visman (mio.visman@yandex.ru)
+ * Copyright (C) 2010-2018 Visman (mio.visman@yandex.ru)
  * Copyright (C) 2008-2010 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -17,7 +17,7 @@ if ($uid < 2)
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 $csrf_token = pmsn_csrf_token($uid);
-if (!pun_hash_equals($csrf_token, pmsn_get_var('csrf_token', '')))
+if (!hash_equals($csrf_token, pmsn_get_var('csrf_token', '')))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 $result = $db->query('SELECT id, group_id, username FROM '.$db->prefix.'users WHERE id='.$uid) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
@@ -31,7 +31,7 @@ else if ($cur_user['group_id'] == PUN_ADMIN)
 	message($lang_pmsn['No block admin']);
 
 $result = $db->query('SELECT bl_id FROM '.$db->prefix.'pms_new_block WHERE bl_id='.$pun_user['id'].' AND bl_user_id='.$uid) or error('Unable to fetch block information', __FILE__, __LINE__, $db->error());
-if (!$db->num_rows($result))
+if (!$db->result($result))
 {
 	$mh2 = $lang_pmsn['InfoBlocking'].' '.pun_htmlspecialchars($cur_user['username']);
 	$mhm = $lang_pmsn['InfoBlockingm'];
@@ -58,14 +58,13 @@ if (isset($_POST['action2']))
 		if (isset($_POST['delete_dlg'])) // удаление диалогов
 		{
 			$result = $db->query('SELECT id FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st < 2 AND to_id='.$uid.') OR (to_id = '.$pun_user['id'].' AND topic_to < 2 AND starter_id='.$uid.')') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
-			{
-				$ts = array();
-				for ($i = 0;$ctid = $db->result($result, $i);$i++)
-					$ts[] = $ctid;
 
+			$ts = array();
+			while ($ctid = $db->fetch_row($result))
+				$ts[] = $ctid[0];
+
+			if (!empty($ts))
 				pmsn_user_delete($pun_user['id'], 2, $ts);
-			}
 		}
 	}
 	else
@@ -118,4 +117,3 @@ generate_pmsn_menu($pmsn_modul);
 		</div>
 	</div>
 <?php
-

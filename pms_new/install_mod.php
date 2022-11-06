@@ -3,13 +3,13 @@
 
 // Some info about your mod.
 $mod_title      = 'New Private Messaging System';
-$mod_version    = '1.8.1';
-$release_date   = '2015-12-30';
+$mod_version    = '1.9.0';
+$release_date   = '2021-01-27';
 $author         = 'Visman';
 $author_email   = 'mio.visman@yandex.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.5.9');
+$fluxbb_versions= array('1.5.11');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;
@@ -27,7 +27,7 @@ function install()
 {
 	global $db, $db_type, $pun_config;
 
-	
+
 	$schema = array(
 		'FIELDS'		=> array(
 			'bl_id'		=> array(
@@ -204,10 +204,10 @@ function install()
 		'o_pms_enabled'		=> '1',
 		'o_pms_min_kolvo'	=> '0',
 		'o_pms_flasher'		=> '0',
-		'o_crypto_pas'    => random_pass(25),
+		'o_crypto_pas'		=> random_pass(25),
 	);
-	
-	while (list($conf_name, $conf_value) = @each($config))
+
+	foreach ($config as $conf_name => $conf_value)
 	{
 		if (!array_key_exists($conf_name, $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\''.$conf_name.'\', \''.$db->escape($conf_value).'\')')

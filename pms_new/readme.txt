@@ -2,15 +2,15 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.8.1
-##  Works on FluxBB:  1.5.9
-##     Release date:  2015-12-30
+##      Mod version:  1.9.0
+##  Works on FluxBB:  1.5.11+ from https://github.com/fluxbb/fluxbb
+##     Release date:  2021-01-27
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
 ##      Description:  Добавляет новую систему личных сообщений.
 ##                    Мод несовместим с системами личных сообщений от других авторов.
-##                    Adds New Private Messaging System. 
+##                    Adds New Private Messaging System.
 ##                    This mod is incompatible with Private Messaging System from other authors.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
@@ -31,7 +31,7 @@
 ##                    Thanks to quy for help.
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
-##                    FluxBB. Installation of this modification is done at 
+##                    FluxBB. Installation of this modification is done at
 ##                    your own risk. Backup your forum database and any and
 ##                    all applicable files before proceeding.
 ##
@@ -149,14 +149,14 @@ profile.php
 #---------[ 14. FIND ]--------------------------------------------------------
 #
 
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 #
 #---------[ 15. REPLACE WITH ]------------------------------------------------
 #
 
 // add "g.g_pm, u.messages_enable," - New PMS
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, u.messages_enable, g.g_id, g.g_user_title, g.g_moderator, g.g_pm FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, u.messages_enable, g.g_id, g.g_user_title, g.g_moderator, g.g_pm FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 #
 #---------[ 16. FIND ]--------------------------------------------------------
@@ -302,7 +302,7 @@ admin_users.php
 
 // New PMS
 		require PUN_ROOT.'include/pms_new/common_pmsn.php';
-		
+
 		foreach ($user_ids as $user_id)
 			pmsn_user_delete($user_id, 2);
 // New PMS

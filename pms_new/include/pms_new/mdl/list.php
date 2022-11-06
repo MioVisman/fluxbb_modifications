@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2015 Visman (mio.visman@yandex.ru)
+ * Copyright (C) 2010-2021 Visman (mio.visman@yandex.ru)
  * Copyright (C) 2008-2010 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -68,18 +68,15 @@ else
 	$pmsn_f_savedel .= '<input type="submit" name="delete" value="'.$lang_pmsn['Delete'].'" />';
 
 ?>
-<script language="JavaScript" type="text/JavaScript">
+<script type="text/javascript">
 /* <![CDATA[ */
-function ChekUncheck()
+function ChekUncheck(el)
 {
-	var i;
-	for (i = 0; i < document.posttopic.elements.length; i++)
+	var i, form = el.form;
+	for (i = 0; i < form.elements.length; i++)
 	{
-		if(document.posttopic.chek.checked==true)
-		{
-			document.posttopic.elements[i].checked = true;
-		} else {
-			document.posttopic.elements[i].checked = false;
+		if (form.elements[i].type && form.elements[i].type === "checkbox") {
+			form.elements[i].checked = el.checked;
 		}
 	}
 }
@@ -91,10 +88,10 @@ function ChekUncheck()
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		</div>
-		<form method="post" action="pmsnew.php?mdl=listq<?php echo $sidamp ?>" name="posttopic">
-		<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
-		<input type="hidden" name="p" value="<?php echo $p ?>" />
+		<form method="post" action="pmsnew.php?mdl=listq<?php echo $sidamp ?>">
 		<div id="vf" class="blocktable">
+			<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
+			<input type="hidden" name="p" value="<?php echo $p ?>" />
 			<div class="box">
 				<div class="inbox">
 					<table>
@@ -105,7 +102,7 @@ function ChekUncheck()
 							<th class="tc2" scope="col"><?php echo $lang_pmsn['tTo'] ?></th>
 							<th class="tc3" scope="col"><?php echo $lang_pmsn['tReplies'] ?></th>
 							<th class="tc2" scope="col"><?php echo $lang_pmsn['tLast'] ?></th>
-							<th class="tce" scope="col"><input name="chek" type="checkbox" value="" onclick="ChekUncheck()" /></th>
+							<th class="tce" scope="col"><input name="chek" type="checkbox" value="" onclick="ChekUncheck(this)" /></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -115,11 +112,12 @@ function ChekUncheck()
 	LEFT JOIN '.$db->prefix.'users AS s ON (s.id = t.starter_id)
 	LEFT JOIN '.$db->prefix.'users AS u ON (u.id = t.to_id)
 	WHERE t.id IN ('.implode(',', $viewt).') ORDER BY t.last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
+	$cur_topic = $db->fetch_assoc($result);
 
-	if ($db->num_rows($result))
+	if (is_array($cur_topic))
 	{
 		$topic_count = 0;
-		while ($cur_topic = $db->fetch_assoc($result))
+		do
 		{
 			++$topic_count;
 			$status_text = array();
@@ -195,6 +193,7 @@ function ChekUncheck()
 						</tr>
 <?php
 		}
+		while ($cur_topic = $db->fetch_assoc($result));
 	}
 	else
 	{

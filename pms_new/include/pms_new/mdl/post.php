@@ -134,7 +134,7 @@ if (isset($_POST['csrf_hash']))
 
 	// Flood protection
 	if (!isset($_POST['preview']) && $pun_user['pmsn_last_post'] != '' && ($now - $pun_user['pmsn_last_post']) < $pun_user['g_post_flood'])
-		$errors[] = $lang_post['Flood start'].' '.$pun_user['g_post_flood'].' '.$lang_post['flood end'];
+		$errors[] = sprintf($lang_post['Flood start'], $pun_user['g_post_flood'], $pun_user['g_post_flood'] - ($now - $pun_user['pmsn_last_post']));
 
 	if ($tid == 0)
 	{

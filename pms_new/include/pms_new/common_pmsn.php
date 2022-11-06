@@ -29,9 +29,9 @@ function generate_pmsn_menu($page = '')
 		<div class="box">
 			<div class="inbox">
 				<ul>
-					<li<?php if ($page == 'new')  echo ' class="isactive"'; ?>><a href="pmsnew.php<?php echo $sidvop ?>"><?php echo $lang_pmsn['mNew'].(($pmsn_kol_new==0) ? '' : '&nbsp;('.$pmsn_kol_new.')') ?></a></li>
-					<li<?php if ($page == 'list') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=list<?php echo $sidamp ?>"><?php echo $lang_pmsn['mList'].'&nbsp;('.$pmsn_kol_list.')' ?></a></li>
-					<li<?php if ($page == 'save') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=save<?php echo $sidamp ?>"><?php echo $lang_pmsn['mSave'].(($pmsn_kol_save==0) ? '' : '&nbsp;('.$pmsn_kol_save.')') ?></a></li>
+					<li<?php if ($page == 'new')  echo ' class="isactive"'; ?>><a href="pmsnew.php<?php echo $sidvop ?>"><?php echo $lang_pmsn['mNew'].(($pmsn_kol_new==0) ? '' : '&#160;('.$pmsn_kol_new.')') ?></a></li>
+					<li<?php if ($page == 'list') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=list<?php echo $sidamp ?>"><?php echo $lang_pmsn['mList'].'&#160;('.$pmsn_kol_list.')' ?></a></li>
+					<li<?php if ($page == 'save') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=save<?php echo $sidamp ?>"><?php echo $lang_pmsn['mSave'].(($pmsn_kol_save==0) ? '' : '&#160;('.$pmsn_kol_save.')') ?></a></li>
 				</ul>
 			</div>
 		</div>

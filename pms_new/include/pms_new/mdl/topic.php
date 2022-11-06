@@ -226,7 +226,7 @@ while ($cur_post = $db->fetch_assoc($result))
 
 	if ($cur_post['g_id'] == PUN_GUEST)
 	{
-		$is_online = '&nbsp;';
+		$is_online = '&#160;';
 	}
 	else
 	{

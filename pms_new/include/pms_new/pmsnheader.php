@@ -23,7 +23,7 @@ if (!$pun_user['is_guest'] && $pun_user['messages_flag'] == 1 && $pun_config['o_
 		$te = '<div id="reminderpmsnew" class="reminder" style="z-index: 101;">'."\n";
 		$te.= '	<div class="remhandle">'."\n";
 		$te.= '		'.$lang_common['PMnew']."\n";
-		$te.= '		<div class="remcontrols" onclick="document.getElementById(\'reminderpmsnew\').style.display=\'none\';"><img title="Close" src="img/close.gif"></div>'."\n";
+		$te.= '		<div class="remcontrols" onclick="document.getElementById(\'reminderpmsnew\').style.display=\'none\';"><img title="Close" src="img/close.gif" /></div>'."\n";
 		$te.= '	</div>'."\n";
 		$te.= '	<div class="remcontent">'."\n";
 		$te.= '		<p>'.sprintf($lang_common['PMmess'], $pun_user['messages_new']).'</p>'."\n";

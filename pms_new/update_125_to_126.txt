@@ -1,0 +1,55 @@
+##
+##
+##        Mod title:  New Private Messaging System
+##
+##        Update version 1.2.5 to version 1.2.6
+##
+
+
+#
+#---------[ 1. UPLOAD ]-------------------------------------------------------
+#
+
+all files *.php and folders to /
+
+#
+#---------[ 2. DELETE ]-------------------------------------------------------
+#
+
+install_mod.php
+
+#
+#---------[ 3. OPEN ]--------------------------------------------------------
+#
+
+profile.php
+
+#
+#---------[ 4. FIND ]--------------------------------------------------------
+#
+
+// New PMS
+		require PUN_ROOT.'include/pms_new/common_pmsn.php';
+
+		pmsn_user_delete($id, 2);
+
+		$db->query('DELETE FROM '.$db->prefix.'pms_new_block WHERE bl_id='.$id.' OR bl_user='.$id) or error('Unable to delete user in pms_new_block', __FILE__, __LINE__, $db->error());
+// New PMS
+
+#
+#---------[ 5. REPLACE WITH ]------------------------------------------------
+#
+
+// New PMS
+		require PUN_ROOT.'include/pms_new/common_pmsn.php';
+
+		pmsn_user_delete($id, 2);
+
+		$db->query('DELETE FROM '.$db->prefix.'pms_new_block WHERE bl_id='.$id.' OR bl_user_id='.$id) or error('Unable to delete user in pms_new_block', __FILE__, __LINE__, $db->error());
+// New PMS
+
+#
+#---------[ 6. SAVE ]--------------------------------------------------------
+#
+
+profile.php

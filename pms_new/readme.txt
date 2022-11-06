@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.0.1
+##      Mod version:  1.0.2
 ##  Works on FluxBB:  1.4.2
 ##     Release date:  2010-08-29
 ##      Review date:  YYYY-MM-DD (Leave unedited)
@@ -65,7 +65,7 @@ install_mod.php
 
 'PM' => 'PM',
 'PMsend' => 'Send private message',
-'Preview ' => 'Preview',
+'Preview' => 'Preview',
 
 # For Russian
 # 'PM' => 'หั',

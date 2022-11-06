@@ -37,6 +37,6 @@ New Private Messaging System
 	width: 206px;
 }
 
-#punpmsnew #quickpost {
+#punpmsnew #quickpost, #punpmsnew .blockpmsn .blocktable, #punpmsnew .blockpmsn .blockpost {
 	clear: right;
 }

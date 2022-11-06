@@ -216,6 +216,8 @@ if (isset($_POST['csrf_hash']))
 	// posting
 	if (empty($errors) && !isset($_POST['preview']))
 	{
+		$flag2 = 0;
+		
 		if ($tid) // new post
 		{
 			// создаем новое сообщение
@@ -283,7 +285,7 @@ if (isset($_POST['csrf_hash']))
 				pmsn_user_update($cur_addressee['id']);
 		}
 		
-		if ($cur_addressee['messages_email'] == 1 && $mbutsubmit == 1 && $flag2 != 2)
+		if ($cur_addressee['messages_email'] == 1 && isset($mbutsubmit) && $flag2 != 2)
 		{
 			$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$cur_addressee['language'].'/mail_templates/form_pmsn.tpl'));
 

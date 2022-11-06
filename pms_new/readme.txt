@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.3.0
+##      Mod version:  1.3.1
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-11-01
+##     Release date:  2010-11-16
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -69,7 +69,8 @@ install_mod.php
 'PMsend' => 'Send private message',
 'Preview' => 'Preview',
 'PMnew' => 'New private message',
-'PMmess' => 'You have new private messages (%s pcs.).',
+'PMmess' => 'You have new private messages (%s msgs.).',
+'Show' => 'Show',
 
 # For Russian
 # 'PM' => 'ЛС',
@@ -77,6 +78,7 @@ install_mod.php
 # 'Preview' => 'Предпросмотр',
 # 'PMnew' => 'Новое личное сообщение',
 # 'PMmess' => 'У вас есть новые личные сообщения (%s шт.).',
+# 'Show' => 'Показать',
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------

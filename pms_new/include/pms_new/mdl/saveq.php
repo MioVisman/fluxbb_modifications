@@ -75,7 +75,7 @@ $mfm = 'delete';
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul].($sid ? $lang_pmsn['With'].$siduser : '') ?></strong></li>
 		</ul>
 		<div class="pagepost"></div>
 		<div class="clearer"></div>
@@ -89,12 +89,12 @@ generate_pmsn_menu($pmsn_modul);
 	<div class="blockform">
 		<h2><span><?php echo $mh2 ?></span></h2>
 		<div class="box">
-			<form method="post" action="pmsnew.php?mdl=saveq">
+			<form method="post" action="pmsnew.php?mdl=saveq<?php echo $sidamp ?>">
 				<div class="inform">
-					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 					<input type="hidden" name="topics" value="<?php echo implode(',', $topics) ?>" />
 					<input type="hidden" name="<?php echo $mfm ?>" value="1" />
-					<input type="hidden" name="p" value="<?php echo intval($_POST['p']); ?>" />
+					<input type="hidden" name="p" value="<?php echo intval($_POST['p']) ?>" />
 					<fieldset>
 						<legend></legend>
 						<div class="infldset">

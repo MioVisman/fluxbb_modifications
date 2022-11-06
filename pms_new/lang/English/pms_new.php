@@ -1,16 +1,15 @@
 <?php
 
-// Language definitions for frequently used strings
 $lang_pmsn = array(
 
 'PM' => 'Private messages',
-'list' => 'Correspondence',
+'list' => 'My conversations',
 'listq' => 'Processing of dialogues',
 'new' => 'New messages',
 'newq' => 'Processing of dialogues',
 'close' => 'Are turned off',
 'closeq' => 'Confirm turning off',
-'save' => 'Saved messages',
+'save' => 'Archival messages',
 'saveq' => 'Removal of dialogues',
 'post' => 'New post',
 'blocking' => 'Blocking of sender',
@@ -21,8 +20,8 @@ $lang_pmsn = array(
 'send' => 'Dialogue sending',
 
 'mNew' => 'New',
-'mList' => 'List',
-'mSave' => 'Save',
+'mList' => 'My conversations',
+'mSave' => 'Archive',
 
 'Off' => 'To switch off PM',
 'On' => 'To switch on PM',
@@ -35,7 +34,7 @@ $lang_pmsn = array(
 'Storage' => 'Storage',
 'Options' => 'Options',
 
-'tDialog' => 'Dialogue theme',
+'tDialog' => 'Dialogue topic',
 'tStarter' => 'Starter',
 'tTo' => 'To',
 'tReplies' => 'Replies',
@@ -44,18 +43,18 @@ $lang_pmsn = array(
 'Info zero' => 'In given folder there are no messages.',
 'Post new topic' => 'Create new dialogue',
 'New dialog' => 'New dialogue',
-'Addressee' => 'Addressee',
-'Dialog head' => 'Dialogue head',
-'Save_' => 'Save',
+'Addressee' => 'To',
+'Dialog head' => 'Dialogue subject',
+'Save_' => 'To Archive',
+'Save_Later' => 'To Archive (Send later)',
 'Delete' => 'Delete',
 'Add Reply' => 'Add Reply',
-'Interlocutor' => 'Interlocutor',
-'Last read' => 'Last read: ',
 'Block' => 'Block',
 'Send d' => 'Send dialogue',
 
 'Deleted' => 'Deleted:',
 'Yes' => ' Yes ',
+'With' => ' With ',
 
 'No subject' => 'Topics must contain a subject.',
 'Too long message' => 'Posts cannot be longer that 65535 bytes.',
@@ -63,8 +62,8 @@ $lang_pmsn = array(
 'No for itself' => 'It is impossible to send the message to itself.',
 'Off messages' => 'At addressee private messages are off.',
 'More maximum' => 'At addressee overflow of messages.',
-'More maximum user' => 'Messages is overflowed for saved folder at you.',
-'More maximum list' => 'At you overflow of messages.',
+'More maximum user' => 'You have overflow in a folder Archive.',
+'More maximum list' => 'You have overflow in a folder My conversations.',
 'Empty' => 'Empty.',
 'No dialogs' => 'You haven\'t chosen any dialogue for processing.',
 'Err1' => 'Dialogues which don\'t belong to you are chosen.',
@@ -86,7 +85,7 @@ $lang_pmsn = array(
 'InfoDeleteQ' => 'Confirm deleting',
 'InfoSaveQ' => 'Confirm saving',
 'InfoDeleteQm' => 'Attention!!!<br />You agree removal of the chosen dialogues?',
-'InfoSaveQm' => 'Attention!!!<br />You agree carrying over of the chosen dialogues in Saved?',
+'InfoSaveQm' => 'Attention!!!<br />You agree carrying over of the chosen dialogues in Archive?',
 'InfoBlocking' => 'To block the user',
 'InfoReBlocking' => 'To remove blocking from the user',
 'InfoReBlockingS' => 'To remove blocking from the users',
@@ -103,7 +102,7 @@ $lang_pmsn = array(
 'InfoDeleteQMes' => 'Confirm of removal of the message',
 'InfoDeleteQTop' => 'Confirm of removal of the dialogue',
 'InfoSend' => 'Sending dialogue &rdquo;%s&rdquo;',
-'InfoSendQ' => 'To send dialogue to the addressee?',
+'InfoSendQ' => 'To send dialogue to user <strong>%s</strong>?',
 
 
 'Modul failed message'	=>	'To load the module &rdquo;%s&rdquo; it was not possible.',

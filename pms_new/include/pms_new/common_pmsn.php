@@ -16,37 +16,15 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/pms_new.php';
 //
 // Display navigation menu
 //
-function generate_pmsn_menu($page = '', $to_user = array())
+function generate_pmsn_menu($page = '')
 {
 	global $pun_config, $pun_user, $lang_pmsn, $lang_common, $pmsn_kol_list, $pmsn_kol_new, $pmsn_kol_save;
+	global $sidamp, $sidvop;
 
 ?>
-<div id="profile" class="block2col">
+<div class="block2col">
 	<div class="blockmenu">
 <?php
-	if (isset($to_user['id']))
-	{
-?>
-		<h2><span><?php echo $lang_pmsn['Interlocutor'] ?></span></h2>
-		<div class="box">
-			<div class="inbox">
-				<ul>
-					<li><a href="profile.php?id=<?php echo $to_user['id'] ?>"><?php echo pun_htmlspecialchars($to_user['username']) ?></a></li>
-<?php
-		if (isset($to_user['time']))
-		{
-?>
-					<li><div style="font-size: 75%;"><?php echo $lang_pmsn['Last read'].(($to_user['time'] > 0) ? format_time($to_user['time']) : $lang_common['Never']) ?></div></li>
-					<li><a href="pmsnew.php?mdl=blocking&amp;uid=<?php echo $to_user['id'] ?>"><?php echo $lang_pmsn['Block'] ?></a></li>
-<?php
-		}
-?>
-				</ul>
-			</div>
-		</div>
-		<h2><span>&nbsp;</span></h2>
-<?php
-	}
 	if ($pun_user['messages_enable'] == 1)
 	{
 ?>
@@ -54,9 +32,9 @@ function generate_pmsn_menu($page = '', $to_user = array())
 		<div class="box">
 			<div class="inbox">
 				<ul>
-					<li<?php if ($page == 'new')  echo ' class="isactive"'; ?>><a href="pmsnew.php"><?php echo $lang_pmsn['mNew'].(($pmsn_kol_new==0) ? '' : '&nbsp;('.$pmsn_kol_new.')') ?></a></li>
-					<li<?php if ($page == 'list') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=list"><?php echo $lang_pmsn['mList'].'&nbsp;('.$pmsn_kol_list.')' ?></a></li>
-					<li<?php if ($page == 'save') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=save"><?php echo $lang_pmsn['mSave'].(($pmsn_kol_save==0) ? '' : '&nbsp;('.$pmsn_kol_save.')') ?></a></li>
+					<li<?php if ($page == 'new')  echo ' class="isactive"'; ?>><a href="pmsnew.php<?php echo $sidvop ?>"><?php echo $lang_pmsn['mNew'].(($pmsn_kol_new==0) ? '' : '&nbsp;('.$pmsn_kol_new.')') ?></a></li>
+					<li<?php if ($page == 'list') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=list<?php echo $sidamp ?>"><?php echo $lang_pmsn['mList'].'&nbsp;('.$pmsn_kol_list.')' ?></a></li>
+					<li<?php if ($page == 'save') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=save<?php echo $sidamp ?>"><?php echo $lang_pmsn['mSave'].(($pmsn_kol_save==0) ? '' : '&nbsp;('.$pmsn_kol_save.')') ?></a></li>
 				</ul>
 			</div>
 		</div>
@@ -82,7 +60,7 @@ function generate_pmsn_menu($page = '', $to_user = array())
 		<div class="box">
 			<div class="inbox">
 				<ul>
-					<li><a href="pmsnew.php?action=onoff"><?php echo $lang_pmsn['Off']; ?></a></li>
+					<li><a href="pmsnew.php?action=onoff"><?php echo $lang_pmsn['Off'] ?></a></li>
 					<li><a href="pmsnew.php?action=email"><?php echo (($pun_user['messages_email'] == 1) ? $lang_pmsn['Email on'] : $lang_pmsn['Email off']) ?></a></li>
 					<li<?php if ($page == 'blocked') echo ' class="isactive"'; ?>><a href="pmsnew.php?mdl=blocked"><?php echo $lang_pmsn['blocked'] ?></a></li>
 				</ul>
@@ -99,7 +77,7 @@ function generate_pmsn_menu($page = '', $to_user = array())
 		<div class="box">
 			<div class="inbox">
 				<ul>
-					<li><a href="pmsnew.php?action=onoff"><?php echo $lang_pmsn['On']; ?></a></li>
+					<li><a href="pmsnew.php?action=onoff"><?php echo $lang_pmsn['On'] ?></a></li>
 				</ul>
 			</div>
 		</div>

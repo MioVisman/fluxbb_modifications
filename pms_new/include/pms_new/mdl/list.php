@@ -19,7 +19,7 @@ define('PUN_PMS_LOADED', 1);
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul].($sid ? $lang_pmsn['With'].$siduser : '') ?></strong></li>
 		</ul>
 		<div class="pagepost"></div>
 		<div class="clearer"></div>
@@ -58,7 +58,7 @@ else
 	$start_from = $pun_user['disp_topics'] * ($p - 1);
 
 	// Generate paging links
-	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'pmsnew.php?mdl=list');
+	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'pmsnew.php?mdl=list'.$sidamp);
 
   if ($pun_user['g_pm_limit'] != 0 && $pmsn_kol_save >= $pun_user['g_pm_limit'])
 		$pmsn_f_savedel = '';
@@ -85,14 +85,15 @@ function ChekUncheck()
 /* ]]> */
 </script>
 
-	<form method="post" action="pmsnew.php?mdl=listq" name="posttopic">
-	<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
-	<input type="hidden" name="p" value="<?php echo $p; ?>" />
-	<div class="blockpmsn">
-		<div class="pagepostpmsn">
+	<div class="block">
+		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		</div>
+		<div class="clearer"></div>
+		<form method="post" action="pmsnew.php?mdl=listq<?php echo $sidamp ?>" name="posttopic">
+		<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
+		<input type="hidden" name="p" value="<?php echo $p ?>" />
 		<div id="vf" class="blocktable">
 			<div class="box">
 				<div class="inbox">
@@ -129,19 +130,19 @@ function ChekUncheck()
 
 			if (($cur_topic['starter_id'] == $pun_user['id'] && $cur_topic['topic_to'] > 1) || ($cur_topic['to_id'] == $pun_user['id'] && $cur_topic['topic_st'] > 1))
 			{
-				$subject = '<a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['topic']).'</a>';
+				$subject = '<a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].$sidamp.'">'.pun_htmlspecialchars($cur_topic['topic']).'</a>';
 				$status_text[] = '<span class="closedtext">'.$lang_pmsn['Deleted'].'</span>';
 				$item_status .= ' iclosed';
 			}
 			else
-				$subject = '<a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['topic']).'</a>';
+				$subject = '<a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].$sidamp.'">'.pun_htmlspecialchars($cur_topic['topic']).'</a>';
 
 			if (($cur_topic['starter_id'] == $pun_user['id'] && $cur_topic['topic_st'] == 1) || ($cur_topic['to_id'] == $pun_user['id'] && $cur_topic['topic_to'] == 1))
 			{
 				$item_status .= ' inew';
 				$icon_type = 'icon icon-new';
 				$subject = '<strong>'.$subject.'</strong>';
-				$subject_new_posts = '<span class="newtext">[ <a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
+				$subject_new_posts = '<span class="newtext">[ <a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].$sidamp.'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 			}
 			else
 				$subject_new_posts = null;
@@ -152,7 +153,7 @@ function ChekUncheck()
 			$num_pages_topic = ceil(($cur_topic['replies'] + 1) / $pun_user['disp_posts']);
 
 			if ($num_pages_topic > 1)
-				$subject_multipage = '<span class="pagestext">[ '.paginate($num_pages_topic, -1, 'pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id']).' ]</span>';
+				$subject_multipage = '<span class="pagestext">[ '.paginate($num_pages_topic, -1, 'pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].$sidamp).' ]</span>';
 			else
 				$subject_multipage = null;
 
@@ -205,11 +206,12 @@ function ChekUncheck()
 				</div>
 			</div>
 		</div>
-		<div class="pagepostpmsn">
+		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink conr"><?php echo $pmsn_f_savedel ?></p>
 		</div>
+		<div class="clearer"></div>
+		</form>
 	</div>
-	</form>
 <?php
 }

@@ -81,18 +81,18 @@ if (isset($_POST['action2']))
 		if ($muser)
 			pmsn_user_update($muser);
 
-		redirect('pmsnew.php?mdl=topic&amp;tid='.$cur_post['tid'], $lang_pmsn['DelMes redirect']);
+		redirect('pmsnew.php?mdl=topic&amp;tid='.$cur_post['tid'].$sidamp, $lang_pmsn['DelMes redirect']);
 	}
 	else
 	{
 		pmsn_user_delete($pun_user['id'], 2, array($cur_post['tid']));
 		
 		if (in_array($cur_post['tid'], $pmsn_arr_new))
-			redirect('pmsnew.php?mdl=new'.$mred, $lang_pmsn['DelTop redirect']);
+			redirect('pmsnew.php?mdl=new'.$sidamp, $lang_pmsn['DelTop redirect']);
 		else if (in_array($cur_post['tid'], $pmsn_arr_save))
-			redirect('pmsnew.php?mdl=save'.$mred, $lang_pmsn['DelTop redirect']);
+			redirect('pmsnew.php?mdl=save'.$sidamp, $lang_pmsn['DelTop redirect']);
 		else
-			redirect('pmsnew.php?mdl=list'.$mred, $lang_pmsn['DelTop redirect']);
+			redirect('pmsnew.php?mdl=list'.$sidamp, $lang_pmsn['DelTop redirect']);
 	}
 }
 
@@ -115,7 +115,7 @@ else
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul].($sid ? $lang_pmsn['With'].$siduser : '') ?></strong></li>
 		</ul>
 		<div class="pagepost"></div>
 		<div class="clearer"></div>
@@ -129,9 +129,9 @@ generate_pmsn_menu($pmsn_modul);
 	<div class="blockform">
 		<h2><span><?php echo $mh2 ?></span></h2>
 		<div class="box">
-			<form method="post" action="pmsnew.php?mdl=del">
+			<form method="post" action="pmsnew.php?mdl=del<?php echo $sidamp ?>">
 				<div class="inform">
-					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 					<?php echo $mfm ?>
 					<fieldset>
 						<legend></legend>

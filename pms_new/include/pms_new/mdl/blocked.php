@@ -62,13 +62,14 @@ function ChekUncheck()
 /* ]]> */
 </script>
 
-	<form method="post" action="pmsnew.php?mdl=blockedq" name="usernumb">
-	<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
-	<input type="hidden" name="p" value="<?php echo $p; ?>" />
-	<div class="blockpmsn">
-		<div class="pagepostpmsn">
+	<div class="block">
+		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 		</div>
+		<div class="clearer"></div>
+		<form method="post" action="pmsnew.php?mdl=blockedq" name="usernumb">
+		<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+		<input type="hidden" name="p" value="<?php echo $p; ?>" />
 		<div id="users1" class="blocktable">
 			<div class="box">
 				<div class="inbox">
@@ -126,10 +127,11 @@ else
 				</div>
 			</div>
 		</div>
-		<div class="pagepostpmsn">
+		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink conr"><?php echo $pmsn_f_savedel ?></p>
 		</div>
+		<div class="clearer"></div>
+		</form>
 	</div>
-	</form>
 <?php

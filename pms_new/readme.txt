@@ -2,14 +2,14 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.0.2
+##      Mod version:  1.1.0
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-08-29
+##     Release date:  2010-08-30
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
-##      Description:  Добавляет новую систему личных сообщений.
-##                    Мод несовместим с системами личных сообщений от других авторов.
+##      Description:  Р”РѕР±Р°РІР»СЏРµС‚ РЅРѕРІСѓСЋ СЃРёСЃС‚РµРјСѓ Р»РёС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№.
+##                    РњРѕРґ РЅРµСЃРѕРІРјРµСЃС‚РёРј СЃ СЃРёСЃС‚РµРјР°РјРё Р»РёС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ РѕС‚ РґСЂСѓРіРёС… Р°РІС‚РѕСЂРѕРІ.
 ##                    Adds New Private Messaging System. 
 ##                    This mod is incompatible with Private Messaging System from other authors.
 ##
@@ -26,6 +26,8 @@
 ##       Affects DB:  Yes
 ##
 ##            Notes:  Russian/English
+##                    РЎРїР°СЃРёР±Рѕ artoodetoo Р·Р° РїРѕРјРѕС‰СЊ.
+##                    Thanks to artoodetoo for help.
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -68,9 +70,9 @@ install_mod.php
 'Preview' => 'Preview',
 
 # For Russian
-# 'PM' => 'ЛС',
-# 'PMsend' => 'Отправить личное сообщение',
-# 'Preview' => 'Предпросмотр',
+# 'PM' => 'Р›РЎ',
+# 'PMsend' => 'РћС‚РїСЂР°РІРёС‚СЊ Р»РёС‡РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ',
+# 'Preview' => 'РџСЂРµРґРїСЂРѕСЃРјРѕС‚СЂ',
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------

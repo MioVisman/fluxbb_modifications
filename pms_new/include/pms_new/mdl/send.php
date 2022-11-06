@@ -82,7 +82,7 @@ if (isset($_POST['action2']))
 		pun_mail($cur_user['email'], $mail_subject, $mail_message, $pun_user['email'], $pun_user['username']);
 	}
 
-	redirect('pmsnew.php?mdl=list', $lang_pmsn['List redirect']);
+	redirect('pmsnew.php?mdl=list'.$sidamp, $lang_pmsn['List redirect']);
 }
 
 ?>
@@ -91,7 +91,7 @@ if (isset($_POST['action2']))
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang_pmsn[$pmsn_modul].($sid ? $lang_pmsn['With'].$siduser : '') ?></strong></li>
 		</ul>
 		<div class="pagepost"></div>
 		<div class="clearer"></div>
@@ -105,13 +105,13 @@ generate_pmsn_menu($pmsn_modul);
 	<div class="blockform">
 		<h2><span><?php echo sprintf($lang_pmsn['InfoSend'], pun_htmlspecialchars($cur_topic['topic'])) ?></span></h2>
 		<div class="box">
-			<form method="post" action="pmsnew.php?mdl=send&amp;tid=<?php echo $tid?>">
+			<form method="post" action="pmsnew.php?mdl=send&amp;tid=<?php echo $tid.$sidamp ?>">
 				<div class="inform">
-					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+					<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 					<fieldset>
 						<legend></legend>
 						<div class="infldset">
-							<p><?php echo $lang_pmsn['InfoSendQ'] ?></p>
+							<p><?php echo sprintf($lang_pmsn['InfoSendQ'], pun_htmlspecialchars($cur_user['username'])) ?></p>
 						</div>
 					</fieldset>
 				</div>

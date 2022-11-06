@@ -62,7 +62,7 @@ if ($cur_topic['starter_id'] == $pun_user['id'])
 {
 	$to_user['id'] = $cur_topic['to_id'];
 	$to_user['username'] = $cur_topic['to_user'];
-	$to_user['time'] = $cur_topic['see_to'];
+//	$to_user['time'] = $cur_topic['see_to'];
 
 	if ($cur_topic['topic_st'] < 2)
 	{
@@ -77,7 +77,7 @@ else
 {
 	$to_user['id'] = $cur_topic['starter_id'];
 	$to_user['username'] = $cur_topic['starter'];
-	$to_user['time'] = $cur_topic['see_st'];
+//	$to_user['time'] = $cur_topic['see_st'];
 
 	if ($cur_topic['topic_to'] < 2)
 	{
@@ -93,7 +93,7 @@ $newpost = false;
 $quickpost = false;
 if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id'] == $cur_topic['starter_id'] && $cur_topic['see_to'] == 0))
 {
-	$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
+	$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
 	$newpost = true;
 
 	if ($pun_config['o_quickpost'] == '1')
@@ -101,11 +101,11 @@ if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id
 	else
 		$quickpost = false;
 }
-$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=del&amp;tid='.$tid.'">'.$lang_pmsn['Delete'].'</a></span>'.$pmsn_f_cnt;
+$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=del&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Delete'].'</a></span>'.$pmsn_f_cnt;
 
 if ($mmodul == 'save' && $cur_topic['starter_id'] == $pun_user['id'] && $cur_topic['see_to'] == 0)
 	if ($pun_user['g_pm_limit'] == 0 || $pmsn_kol_list < $pun_user['g_pm_limit'])
-		$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=send&amp;tid='.$tid.'">'.$lang_pmsn['Send d'].'</a></span>'.$pmsn_f_cnt;
+		$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=send&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Send d'].'</a></span>'.$pmsn_f_cnt;
 
 require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
@@ -116,7 +116,7 @@ $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : in
 $start_from = $pun_user['disp_posts'] * ($p - 1);
 
 // Generate paging links
-$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'pmsnew.php?mdl=topic&amp;tid='.$tid);
+$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'pmsnew.php?mdl=topic&amp;tid='.$tid.$sidamp);
 
 if ($pun_config['o_censoring'] == '1')
 	$cur_topic['topic'] = censor_words($cur_topic['topic']);
@@ -127,7 +127,15 @@ if ($pun_config['o_censoring'] == '1')
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
-			<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul ?>"><?php echo $lang_pmsn[$mmodul] ?></a></li>
+			<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul.$sidamp ?>"><?php echo $lang_pmsn[$mmodul].($sid ? $lang_pmsn['With'].$siduser : '') ?></a></li>
+<?php
+if (isset($to_user['id']) && $to_user['id'] != $sid)
+{
+?>
+			<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul.'&amp;sid='.$to_user['id'] ?>"><?php echo pun_htmlspecialchars($to_user['username']) ?></a></li>
+<?php
+}
+?>
 			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_topic['topic']) ?></strong></li>
 		</ul>
 		<div class="pagepost"></div>
@@ -136,16 +144,17 @@ if ($pun_config['o_censoring'] == '1')
 </div>
 <?php
 
-generate_pmsn_menu($pmsn_modul, $to_user);
+generate_pmsn_menu($pmsn_modul); // , $to_user
 
 /*	<div class="blockform">
 */
 ?>
-	<div class="blockpmsn">
-		<div class="pagepostpmsn">
+	<div class="block">
+		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		</div>
+		<div class="clearer"></div>
 <?php
 
 require PUN_ROOT.'include/parser.php';
@@ -177,20 +186,25 @@ while ($cur_post = $db->fetch_assoc($result))
 		$cur_post['g_id'] = PUN_GUEST;
 	}
 	
-	if ($cur_post['post_new'] == 1 && $pun_user['id'] != $cur_post['poster_id'])
-		$post_view_new[] = $cur_post['id'];
+	if ($pun_user['id'] != $cur_post['poster_id'])
+	{
+		if ($cur_post['post_new'] == 1)
+			$post_view_new[] = $cur_post['id'];
 
-	if ($cur_post['poster_id'] == $pun_user['id'] && $cur_post['post_new'] == 1)
+		if ($cur_post['g_id'] != PUN_GUEST && $cur_post['g_id'] != PUN_ADMIN)
+			$post_actions[] = '<li class="postreport"><span><a href="pmsnew.php?mdl=blocking&amp;uid='.$cur_post['poster_id'].'">'.$lang_pmsn['Block'].'</a></span></li>';
+	}
+	else if ($cur_post['post_new'] == 1)
 	{
 		if ($pun_user['g_delete_posts'] == '1')
-			$post_actions[] = '<li class="postdelete"><span><a href="pmsnew.php?mdl=del&amp;pid='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a></span></li>';
+			$post_actions[] = '<li class="postdelete"><span><a href="pmsnew.php?mdl=del&amp;pid='.$cur_post['id'].$sidamp.'">'.$lang_topic['Delete'].'</a></span></li>';
 		if ($pun_user['g_edit_posts'] == '1')
-			$post_actions[] = '<li class="postedit"><span><a href="pmsnew.php?mdl=edit&amp;pid='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a></span></li>';
+			$post_actions[] = '<li class="postedit"><span><a href="pmsnew.php?mdl=edit&amp;pid='.$cur_post['id'].$sidamp.'">'.$lang_topic['Edit'].'</a></span></li>';
 	}
 
 	if ($newpost)
 	{
-		$post_actions[] = '<li class="postquote"><span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a></span></li>';
+		$post_actions[] = '<li class="postquote"><span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.'&amp;qid='.$cur_post['id'].$sidamp.'">'.$lang_topic['Quote'].'</a></span></li>';
 		// быстрое цитирование - Visman
 //		if ($quickpost)
 //			$post_actions[] = '<li class="postquote"><span><a onmousedown="get_quote_text()" href="javascript:Quote(\''.pun_htmlspecialchars($cur_post['username']).'\')">'.$lang_topic['QQuote'].'</a></span></li>';
@@ -271,46 +285,47 @@ while ($cur_post = $db->fetch_assoc($result))
 	$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 	
 ?>
-<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1'; ?>">
-	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="pmsnew.php?mdl=topic&amp;pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
-	<div class="box">
-		<div class="inbox">
-			<div class="postbody">
-				<div class="postleft">
-					<dl>
-						<dt><strong><?php echo $username ?></strong></dt>
-						<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
-<?php if ($user_avatar != '') echo "\t\t\t\t\t\t".'<dd class="postavatar">'.$user_avatar.'</dd>'."\n"; ?>
-<?php if (count($user_info)) echo "\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t", $user_info)."\n"; ?>
-<?php if (count($user_contacts)) echo "\t\t\t\t\t\t".'<dd class="usercontacts">'.implode(' ', $user_contacts).'</dd>'."\n"; ?>
-					</dl>
-				</div>
-				<div class="postright">
-					<div class="postmsg">
-						<?php echo $cur_post['message']."\n" ?>
-<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+		<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1'; ?>">
+			<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="pmsnew.php?mdl=topic&amp;pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
+			<div class="box">
+				<div class="inbox">
+					<div class="postbody">
+						<div class="postleft">
+							<dl>
+								<dt><strong><?php echo $username ?></strong></dt>
+								<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
+<?php if ($user_avatar != '') echo "\t\t\t\t\t\t\t\t".'<dd class="postavatar">'.$user_avatar.'</dd>'."\n"; ?>
+<?php if (count($user_info)) echo "\t\t\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t\t\t", $user_info)."\n"; ?>
+<?php if (count($user_contacts)) echo "\t\t\t\t\t\t\t\t".'<dd class="usercontacts">'.implode(' ', $user_contacts).'</dd>'."\n"; ?>
+							</dl>
+						</div>
+						<div class="postright">
+							<div class="postmsg">
+								<?php echo $cur_post['message']."\n" ?>
+<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+							</div>
+<?php if ($signature != '') echo "\t\t\t\t\t\t\t".'<div class="postsignature postmsg"><hr />'.$signature.'</div>'."\n"; ?>
+						</div>
 					</div>
-<?php if ($signature != '') echo "\t\t\t\t\t".'<div class="postsignature postmsg"><hr />'.$signature.'</div>'."\n"; ?>
+				</div>
+				<div class="inbox">
+					<div class="postfoot clearb">
+						<div class="postfootleft"><?php if ($cur_post['poster_id'] > 1) echo '<p>'.$is_online.'</p>'; ?></div>
+<?php if (count($post_actions)) echo "\t\t\t\t\t\t".'<div class="postfootright">'."\n\t\t\t\t\t\t\t".'<ul>'."\n\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t\t\t", $post_actions)."\n\t\t\t\t\t\t\t".'</ul>'."\n\t\t\t\t\t\t".'</div>'."\n" ?>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="inbox">
-			<div class="postfoot clearb">
-				<div class="postfootleft"><?php if ($cur_post['poster_id'] > 1) echo '<p>'.$is_online.'</p>'; ?></div>
-<?php if (count($post_actions)) echo "\t\t\t\t".'<div class="postfootright">'."\n\t\t\t\t\t".'<ul>'."\n\t\t\t\t\t\t".implode("\n\t\t\t\t\t\t", $post_actions)."\n\t\t\t\t\t".'</ul>'."\n\t\t\t\t".'</div>'."\n" ?>
-			</div>
-		</div>
-	</div>
-</div>
 <?php
 
 }  // while
 
 ?>
-		<div class="pagepostpmsn">
+		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 			<p class="postlink actions conr"><?php echo $pmsn_f_cnt ?></p>
 		</div>
+		<div class="clearer"></div>
 	</div>
 <?php
 
@@ -342,12 +357,12 @@ if ($quickpost)
 	<div id="quickpost" class="blockform">
 		<h2><span><?php echo $lang_topic['Quick post'] ?></span></h2>
 		<div class="box">
-			<form id="quickpostform" method="post" action="pmsnew.php?mdl=post&amp;tid=<?php echo $tid ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
+			<form id="quickpostform" method="post" action="pmsnew.php?mdl=post&amp;tid=<?php echo $tid.$sidamp ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_common['Write message legend'] ?></legend>
 						<div class="infldset txtarea">
-							<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+							<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 							<label><textarea name="req_message" rows="7" cols="75"  tabindex="<?php echo $cur_index++ ?>"></textarea></label>
 							<ul class="bblinks">
 								<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>

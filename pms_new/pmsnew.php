@@ -92,10 +92,37 @@ else
 $pmsn_arr_list = array();
 $pmsn_arr_new = array();
 $pmsn_arr_save = array();
-$result = $db->query('SELECT id, starter_id, topic_st, topic_to  FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st != 2) OR (to_id = '.$pun_user['id'].' AND topic_to != 2) ORDER BY last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
+
+$sidamp = $sidvop = $siduser = '';
+
+$sid = isset($_GET['sid']) ? intval($_GET['sid']) : 0;
+if ($sid < 2)
+	$sid = 0;
+
+if ($sid)
+{
+	$result = $db->query('SELECT id, starter, to_user, starter_id, topic_st, topic_to  FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st != 2 AND to_id='.$sid.') OR (to_id = '.$pun_user['id'].' AND topic_to != 2 AND starter_id='.$sid.') ORDER BY last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
+	if (!$db->num_rows($result))
+		$sid = 0;
+	else
+	{
+		$sidamp = '&amp;sid='.$sid;
+		$sidvop = '?sid='.$sid;
+	}
+}
+if ($sid == 0)
+	$result = $db->query('SELECT id, starter, to_user, starter_id, topic_st, topic_to  FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st != 2) OR (to_id = '.$pun_user['id'].' AND topic_to != 2) ORDER BY last_posted DESC') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
 
 while ($ttmp = $db->fetch_assoc($result))
 {
+	if ($sid && empty($siduser))
+	{
+		if ($ttmp['starter_id'] == $sid)
+			$siduser = pun_htmlspecialchars($ttmp['starter']);
+		else
+			$siduser = pun_htmlspecialchars($ttmp['to_user']);
+	}
+	
 	if ($ttmp['starter_id'] == $pun_user['id'])
 		$ftmp = $ttmp['topic_st'];
 	else
@@ -120,7 +147,7 @@ $pmsn_kol_save = count($pmsn_arr_save);
 if ($pun_user['g_pm'] != 1 || $pun_user['messages_enable'] == 0 || ($pun_user['g_pm_limit'] != 0 && $pmsn_kol_list >= $pun_user['g_pm_limit'] && $pmsn_kol_save >= $pun_user['g_pm_limit']))
   $pmsn_f_cnt = '';
 else
-  $pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post">'.$lang_pmsn['New dialog'].'</a></span>';
+  $pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post'.$sidamp.'">'.$lang_pmsn['New dialog'].'</a></span>';
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_pmsn['PM'], $lang_pmsn[$pmsn_modul]);
 define('PUN_ACTIVE_PAGE', 'pms_new');

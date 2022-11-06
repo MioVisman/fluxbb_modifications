@@ -1,32 +1,12 @@
-/*****************************************************************
+/***************************
 New Private Messaging System
-*****************************************************************/
+***************************/
 
-.pun .block2col .blockpmsn {
-	margin-left: 15em;
+#punpmsnew .pagepost {
+	overflow: hidden;
 }
 
-* html .pun .pagepostpmsn {
-	display: inline-block;
-}
-
-.pun .pagepostpmsn {
-	min-height: 1px;
-	position: relative;
-	width: 100%;
-	float: right;
-}
-
-.pun .pagepostpmsn:after {
-	content: " ";
-	display: block;
-	height: 0;
-	font-size: 0;
-	clear: both;
-	visibility: hidden;
-}
-
-#punpmsnew .blockpmsn .blockpost dt {
+#punpmsnew .block .blockpost dt {
 	display: block;
 	position: absolute;
 	padding: 0.538em 0 0.538em 12px;
@@ -35,8 +15,4 @@ New Private Messaging System
 	left: 0;
 	overflow: hidden;
 	width: 206px;
-}
-
-#punpmsnew #quickpost, #punpmsnew .blockpmsn .blocktable, #punpmsnew .blockpmsn .blockpost {
-	clear: right;
 }

@@ -23,6 +23,7 @@ if ($tid < 0)
 $to_user = array();
 
 if ($tid > 0)
+{
 	if (!in_array($tid, $pmsn_arr_list) && !in_array($tid, $pmsn_arr_save))
 		message($lang_common['Bad request']);
 	else
@@ -59,6 +60,12 @@ if ($tid > 0)
 			$to_user['username'] = $cur_topic['starter'];
 		}
 	}
+
+	if (in_array($tid, $pmsn_arr_list))
+		$mmodul = 'list';
+	else
+		$mmodul = 'save';
+}
 else
 {
 	if ($pun_user['g_pm_limit'] != 0 && $pmsn_kol_list >= $pun_user['g_pm_limit'] && $pmsn_kol_save >= $pun_user['g_pm_limit'] )
@@ -69,11 +76,16 @@ else
 
 	if ($pun_user['g_pm_limit'] == 0 || $pmsn_kol_save < $pun_user['g_pm_limit'])
 		$mbutsave = 1;
+
+	$mmodul = 'list';
 }
 
-if (isset($_GET['uid']))
+if (!isset($_POST['req_addressee']) && (isset($_GET['uid']) || $sid))
 {
-	$uid = intval($_GET['uid']);
+  if ($sid)
+		$uid = $sid;
+	else
+		$uid = intval($_GET['uid']);
 	if ($uid < 2)
 		message($lang_common['Bad request']);
 
@@ -141,7 +153,12 @@ if (isset($_POST['csrf_hash']))
 
 		if (!isset($cur_addressee['id']))
 			$errors[] = $lang_pmsn['No addressee'];
-		else if ($cur_addressee['id'] == $pun_user['id'])
+		else
+		{
+			$to_user['id'] = $cur_addressee['id'];
+			$to_user['username'] = $cur_addressee['username'];
+		}
+		if ($cur_addressee['id'] == $pun_user['id'])
 			$errors[] = $lang_pmsn['No for itself'];
 
 		if ($pun_user['g_id'] != PUN_ADMIN && !isset($_POST['preview']) && isset($cur_addressee['id']))
@@ -160,13 +177,16 @@ if (isset($_POST['csrf_hash']))
 			}
 		}
 
-		$result = $db->query('SELECT bl_id FROM '.$db->prefix.'pms_new_block WHERE (bl_id='.$pun_user['id'].' AND bl_user_id='.$cur_addressee['id'].') OR (bl_id='.$cur_addressee['id'].' AND bl_user_id='.$pun_user['id'].')') or error('Unable to fetch pms_new_block', __FILE__, __LINE__, $db->error());
-		$tmp_bl = $db->fetch_assoc($result);
+		if (isset($cur_addressee['id']))
+		{
+			$result = $db->query('SELECT bl_id FROM '.$db->prefix.'pms_new_block WHERE (bl_id='.$pun_user['id'].' AND bl_user_id='.$cur_addressee['id'].') OR (bl_id='.$cur_addressee['id'].' AND bl_user_id='.$pun_user['id'].')') or error('Unable to fetch pms_new_block', __FILE__, __LINE__, $db->error());
+			$tmp_bl = $db->fetch_assoc($result);
 
-		if ($tmp_bl['bl_id'] == $pun_user['id'])
-			$errors[] = $lang_pmsn['You block addr'];
-		else if ($pun_user['g_id'] != PUN_ADMIN && $tmp_bl['bl_id'] == $cur_addressee['id'])
-			$errors[] = $lang_pmsn['Addr block you'];
+			if ($tmp_bl['bl_id'] == $pun_user['id'])
+				$errors[] = $lang_pmsn['You block addr'];
+			else if ($pun_user['g_id'] != PUN_ADMIN && $tmp_bl['bl_id'] == $cur_addressee['id'])
+				$errors[] = $lang_pmsn['Addr block you'];
+    }
 	}
 	else if (!isset($_POST['preview']))
 	{
@@ -309,7 +329,7 @@ if (isset($_POST['csrf_hash']))
 		}
 
 
-		redirect('pmsnew.php?mdl=topic&amp;pid='.$new_pid.'#p'.$new_pid, $lang_post['Post redirect']);
+		redirect('pmsnew.php?mdl=topic'.$sidamp.'&amp;pid='.$new_pid.'#p'.$new_pid, $lang_post['Post redirect']);
 	}
 }
 
@@ -318,7 +338,10 @@ if ($tid)
 {
 	$action1 = $lang_post['Post a reply'];
 	$action0 =  $lang_pmsn[$pmsn_modul];
-	$form = '<form id="post" method="post" action="pmsnew.php?mdl=post&amp;tid='.$tid.'" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">';
+	if (isset($to_user['id']) && $to_user['id'] != $sid)
+		$form = '<form id="post" method="post" action="pmsnew.php?mdl=post&amp;tid='.$tid.'" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">'."\n";
+	else
+		$form = '<form id="post" method="post" action="pmsnew.php?mdl=post&amp;tid='.$tid.$sidamp.'" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">'."\n";
 
 	// If a quote ID was specified in the url
 	if (isset($_GET['qid']))
@@ -370,7 +393,10 @@ else
 {
 	$action1 = $lang_pmsn['Post new topic'];
 	$action0 =  $lang_pmsn['New dialog'];
-	$form = '<form id="post" method="post" action="pmsnew.php?mdl=post" onsubmit="return process_form(this)">';
+	if (isset($to_user['id']) && $to_user['id'] != $sid)
+		$form = '<form id="post" method="post" action="pmsnew.php?mdl=post" onsubmit="return process_form(this)">'."\n";
+	else
+		$form = '<form id="post" method="post" action="pmsnew.php?mdl=post'.$sidamp.'" onsubmit="return process_form(this)">'."\n";
 }
 
 ?>
@@ -381,10 +407,22 @@ else
 				<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 				<li><span>»&#160;</span><a href="pmsnew.php"><?php echo $lang_pmsn['PM'] ?></a></li>
 <?php
+if ($sid)
+{
+?>
+				<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul.$sidamp ?>"><?php echo $lang_pmsn[$mmodul].$lang_pmsn['With'].$siduser ?></a></li>
+<?php
+}
+if (isset($to_user['id']) && $to_user['id'] != $sid)
+{
+?>
+				<li><span>»&#160;</span><a href="pmsnew.php?mdl=<?php echo $mmodul.'&amp;sid='.$to_user['id'] ?>"><?php echo pun_htmlspecialchars($to_user['username']) ?></a></li>
+<?php
+}
 if ($tid > 0)
 {
 ?>
-				<li><span>»&#160;</span><a href="pmsnew.php?mdl=topic&amp;tid=<?php echo $tid; ?>"><?php echo pun_htmlspecialchars($cur_topic['topic']) ?></a></li>
+				<li><span>»&#160;</span><a href="pmsnew.php?mdl=topic&amp;tid=<?php echo $tid.$sidamp ?>"><?php echo pun_htmlspecialchars($cur_topic['topic']) ?></a></li>
 <?php
 }
 ?>
@@ -397,7 +435,7 @@ if ($tid > 0)
 
 <?php
 
-generate_pmsn_menu($pmsn_modul, $to_user);
+generate_pmsn_menu($pmsn_modul); // , $to_user
 
 // If there are errors, we display them
 if (!empty($errors))
@@ -428,7 +466,7 @@ else if (isset($_POST['preview']))
 	$preview_message = parse_message($message, $hide_smilies);
 ?>
 
-	<div class="blockpmsn">
+	<div class="block">
 		<div id="postpreview" class="blockpost">
 			<h2><span><?php echo $lang_post['Post preview'] ?></span></h2>
 			<div class="box">
@@ -456,12 +494,12 @@ $cur_index = 1;
 	<div id="postform" class="blockform">
 		<h2><span><?php echo $action1 ?></span></h2>
 		<div class="box">
-			<?php echo $form; ?>
+			<?php echo $form ?>
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_common['Write message legend'] ?></legend>
 						<div class="infldset txtarea">
-							<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash; ?>" />
+							<input type="hidden" name="csrf_hash" value="<?php echo $pmsn_csrf_hash ?>" />
 <?php
 if ($tid==0)
 {
@@ -503,7 +541,7 @@ if (!empty($checkboxes))
 }
 ?>
 				</div>
-				<p class="buttons"><?php echo ((isset($mbutsubmit)) ? '<input type="submit" name="submit" value="'.$lang_common['Submit'].'" tabindex="'.($cur_index++).'" accesskey="s" /> ' : ''); ?><?php echo ((isset($mbutsave)) ? ' <input type="submit" name="save" value="'.$lang_pmsn['Save_'].'" tabindex="'.($cur_index++).'" accesskey="a" />' : ''); ?><input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+				<p class="buttons"><?php echo ((isset($mbutsubmit)) ? '<input type="submit" name="submit" value="'.$lang_common['Submit'].'" tabindex="'.($cur_index++).'" accesskey="s" /> ' : ''); ?><?php echo ((isset($mbutsave)) ? ' <input type="submit" name="save" value="'.$lang_pmsn['Save_Later'].'" tabindex="'.($cur_index++).'" accesskey="a" />' : ''); ?><input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 			</form>
 		</div>
 	</div>

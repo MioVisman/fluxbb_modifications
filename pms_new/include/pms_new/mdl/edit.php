@@ -101,6 +101,7 @@ if (isset($_POST['csrf_hash']))
 
 $required_fields = array('req_message' => $lang_common['Message']);
 $focus_element = array('edit','req_message');
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 

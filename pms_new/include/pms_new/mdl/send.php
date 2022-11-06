@@ -81,6 +81,7 @@ if (isset($_POST['action2']))
 	redirect('pmsnew.php?mdl=list'.$sidamp, $lang_pmsn['List redirect']);
 }
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">

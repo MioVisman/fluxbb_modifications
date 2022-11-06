@@ -55,6 +55,7 @@ if (isset($_POST['action2']))
 	redirect('pmsnew.php', $mbm);   // ???
 }
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">

@@ -56,6 +56,7 @@ if (defined('PUN_PMS_NEW_CONFIRM'))
 else
 	message($lang_common['Bad referrer']);
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">

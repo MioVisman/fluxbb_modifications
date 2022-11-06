@@ -21,7 +21,7 @@ define('PUN_PLUGIN_LOADED', 1);
 if (isset($_POST['show_text']))
 {
 
-	$en_pms = intval($_POST['enable_pms']);
+	$en_pms = isset($_POST['enable_pms']) ? intval($_POST['enable_pms']) : 0;
 	$en_pms = ($en_pms == 1) ? 1 : 0;
 	$g_limit = isset($_POST['g_limit']) ? array_map('trim', $_POST['g_limit']) : array();
 	$g_pm = isset($_POST['g_pm']) ? array_map('trim', $_POST['g_pm']) : array();
@@ -59,7 +59,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.0</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_pms_new['Plugin title'] ?> v.1.4.1</span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_pms_new['Explanation 1'] ?></p>

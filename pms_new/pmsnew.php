@@ -158,7 +158,6 @@ else
 	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/imports/newpms.css" />';
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_pmsn['PM'], $lang_pmsn[$pmsn_modul]);
-define('PUN_ACTIVE_PAGE', 'pms_new');
 
 include PUN_ROOT.'include/pms_new/mdl/'.$pmsn_modul.'.php';
 

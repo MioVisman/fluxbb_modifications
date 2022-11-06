@@ -110,5 +110,6 @@ $lang_pmsn = array(
 'Modul failed message'	=>	'To load the module &rdquo;%s&rdquo; it was not possible.',
 'No modul message'		=>	'There is no module with a name &rdquo;%s&rdquo;.',
 'Min post'		=>	'You should have minimum %s messages at forum, if want to send PM.',
+'Warn' => '<b>Attention!!!</b><br />You don\'t receive the answer to the message, while the addressee won\'t have at forum at least %s messages.',
 
 );

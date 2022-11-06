@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.4.0
+##      Mod version:  1.4.1
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2010-11-24
+##     Release date:  2010-11-27
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -327,7 +327,7 @@ header.php
 #
 
 // JavaScript tricks for IE6 and older
-echo '<!--[if lte IE 6]><script type="text/javascript" src="js/minmax.js"></script><![endif]-->'."\n";
+echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->'."\n";
 
 #
 #---------[ 31. AFTER, ADD ]--------------------------------------------------

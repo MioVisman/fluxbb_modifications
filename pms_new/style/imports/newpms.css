@@ -16,3 +16,20 @@ New Private Messaging System
 	overflow: hidden;
 	width: 206px;
 }
+
+#punpmsnew .psmnwarn {
+	border-style: solid;
+	border-width: 0 0 0 3px;
+	border-color: #e99;
+	margin: 0.75em 1em 0em 2em;
+	padding: 0 0.75em;
+}
+
+#punpmsnew .psmnwarn:before {
+	content: "!";
+	position: absolute;
+	margin-left: -2em;
+	font-size: 150%;
+	font-weight: bold;
+	color: #e99;
+}

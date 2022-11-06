@@ -35,7 +35,7 @@ header.php
 #
 
 // JavaScript tricks for IE6 and older
-echo '<!--[if lte IE 6]><script type="text/javascript" src="js/minmax.js"></script><![endif]-->'."\n";
+echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->'."\n";
 
 #
 #---------[ 6. AFTER, ADD ]--------------------------------------------------

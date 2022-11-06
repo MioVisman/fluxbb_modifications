@@ -80,6 +80,7 @@ else
 	$mfm = 'save';
 }
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">

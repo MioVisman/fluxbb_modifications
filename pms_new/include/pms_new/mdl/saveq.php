@@ -68,6 +68,7 @@ $mh2 = $lang_pmsn['InfoDeleteQ'];
 $mhm = $lang_pmsn['InfoDeleteQm'];
 $mfm = 'delete';
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">

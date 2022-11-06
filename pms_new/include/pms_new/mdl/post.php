@@ -410,6 +410,7 @@ else
 		$focus_element[] = 'req_message';
 }
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 

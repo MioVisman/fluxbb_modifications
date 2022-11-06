@@ -108,6 +108,7 @@ else
 	$mfm = '<input type="hidden" name="tid" value="'.$cur_post['tid'].'" />'."\n";
 }
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">

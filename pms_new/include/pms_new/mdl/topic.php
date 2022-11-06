@@ -49,7 +49,7 @@ else if (in_array($tid, $pmsn_arr_save))
 else
 	message($lang_common['Bad request']);
 
-$result = $db->query('SELECT * FROM '.$db->prefix.'pms_new_topics WHERE id='.$tid) or error('Unable to fetch pms_new_topics info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT t.*, u.num_posts, u.id AS userid FROM '.$db->prefix.'pms_new_topics AS t LEFT JOIN '.$db->prefix.'users AS u ON (u.id!='.$pun_user['id'].' AND (u.id=t.starter_id OR u.id=t.to_id)) WHERE t.id='.$tid) or error('Unable to fetch pms_new_topics info', __FILE__, __LINE__, $db->error());
 
 if (!$db->num_rows($result))
 	message($lang_common['Bad request']);
@@ -95,7 +95,7 @@ if ($pun_user['messages_enable'] == 1 && $pun_user['g_pm'] == 1)
 		$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
 		$newpost = true;
 
-		if ($pun_config['o_quickpost'] == '1')
+		if ($pun_config['o_quickpost'] == '1' && $pun_config['o_pms_min_kolvo'] <= $pun_user['num_posts'])
 			$quickpost = true;
 		else
 			$quickpost = false;
@@ -106,6 +106,11 @@ if ($pun_user['messages_enable'] == 1 && $pun_user['g_pm'] == 1)
 		if ($pun_user['g_pm_limit'] == 0 || $pmsn_kol_list < $pun_user['g_pm_limit'])
 			$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=send&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Send d'].'</a></span>'.$pmsn_f_cnt;
 }
+
+if ($cur_topic['num_posts'] < $pun_config['o_pms_min_kolvo'] && $cur_topic['userid'] > 1 && $cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2)
+	$psmnwarn = "\t\t\t\t\t\t\t".'<div class="psmnwarn">'."\n\t\t\t\t\t\t\t\t".sprintf($lang_pmsn['Warn'], $pun_config['o_pms_min_kolvo'])."\n\t\t\t\t\t\t\t".'</div>'."\n";
+else
+	$psmnwarn = '';
 
 require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
@@ -121,6 +126,7 @@ $paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.pa
 if ($pun_config['o_censoring'] == '1')
 	$cur_topic['topic'] = censor_words($cur_topic['topic']);
 
+define('PUN_ACTIVE_PAGE', 'pms_new');
 require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
@@ -307,6 +313,7 @@ while ($cur_post = $db->fetch_assoc($result))
 								<?php echo $cur_post['message']."\n" ?>
 <?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
 							</div>
+<?php if ($cur_post['poster_id'] == $pun_user['id']) echo $psmnwarn; ?>
 <?php if ($signature != '') echo "\t\t\t\t\t\t\t".'<div class="postsignature postmsg"><hr />'.$signature.'</div>'."\n"; ?>
 						</div>
 					</div>

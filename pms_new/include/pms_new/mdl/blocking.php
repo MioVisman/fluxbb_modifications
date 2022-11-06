@@ -48,7 +48,22 @@ if (isset($_POST['action2']))
 		message($lang_common['Bad referrer']);
 
 	if ($mfl)
-		$db->query('INSERT INTO '.$db->prefix.'pms_new_block (bl_id, bl_user_id, bl_user) VALUES('.$pun_user['id'].', '.$uid.', \''.$db->escape($cur_user['username']).'\')') or error('Unable to create pms_new_block', __FILE__, __LINE__, $db->error());
+	{
+		$db->query('INSERT INTO '.$db->prefix.'pms_new_block (bl_id, bl_user_id, bl_user) VALUES('.$pun_user['id'].', '.$uid.', \''.$db->escape($cur_user['username']).'\')') or error('Unable to create line in pms_new_block', __FILE__, __LINE__, $db->error());
+
+		if (isset($_POST['delete_dlg']) && $_POST['delete_dlg'] == '1') // удаление диалогов
+		{
+			$result = $db->query('SELECT id FROM '.$db->prefix.'pms_new_topics WHERE (starter_id = '.$pun_user['id'].' AND topic_st < 2 AND to_id='.$uid.') OR (to_id = '.$pun_user['id'].' AND topic_to < 2 AND starter_id='.$uid.')') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
+			if ($db->num_rows($result))
+			{
+				$ts = array();
+				for ($i = 0;$ctid = $db->result($result, $i);$i++)
+					$ts[] = $ctid;
+
+				pmsn_user_delete($pun_user['id'], 2, $ts);
+			}
+		}
+	}
 	else
 		$db->query('DELETE FROM '.$db->prefix.'pms_new_block WHERE bl_id='.$pun_user['id'].' AND bl_user_id='.$uid) or error('Unable to remove line in pms_new_block', __FILE__, __LINE__, $db->error());;
 
@@ -85,10 +100,15 @@ generate_pmsn_menu($pmsn_modul);
 						<legend><?php echo $lang_pmsn['Attention'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $mhm ?></p>
+<?php if ($mfl): ?>
+							<div class="rbox">
+								<label><input type="checkbox" name="delete_dlg" value="1" /><?php echo $lang_pmsn['Delete dialog'] ?><br /></label>
+							</div>
+<?php endif; ?>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="action2" value="<?php echo $lang_pmsn['Yes'] ?>" /></p>
+				<p class="buttons"><input type="submit" name="action2" value="<?php echo $lang_pmsn['Yes'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 			</form>
 		</div>
 	</div>

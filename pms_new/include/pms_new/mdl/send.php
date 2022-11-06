@@ -71,7 +71,7 @@ if (isset($_POST['action2']))
 		$mail_message = str_replace('<user>', $cur_user['username'], $mail_message);
 		$mail_message = str_replace('<board_title>', $pun_config['o_board_title'], $mail_message);
 		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
-		$mail_message = str_replace('<message_url>', $pun_config['o_base_url'].'/pmsnew.php?mdl=topic&tid='.$tid, $mail_message);
+		$mail_message = str_replace('<message_url>', get_base_url().'/pmsnew.php?mdl=topic&tid='.$tid, $mail_message);
 
 		require_once PUN_ROOT.'include/email.php';
 
@@ -113,7 +113,7 @@ generate_pmsn_menu($pmsn_modul);
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="action2" value="<?php echo $lang_common['Submit'] ?>" /></p>
+				<p class="buttons"><input type="submit" name="action2" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 			</form>
 		</div>
 	</div>

@@ -115,7 +115,7 @@ generate_pmsn_menu($pmsn_modul);
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="action2" value="<?php echo $lang_pmsn['Yes'] ?>" /></p>
+				<p class="buttons"><input type="submit" name="action2" value="<?php echo $lang_pmsn['Yes'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 			</form>
 		</div>
 	</div>

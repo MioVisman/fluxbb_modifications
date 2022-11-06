@@ -105,7 +105,8 @@ $lang_pmsn = array(
 'InfoDeleteQTop' => 'Подтверждение удаления диалога',
 'InfoSend' => 'Отправка диалога &rdquo;%s&rdquo;',
 'InfoSendQ' => 'Отправить диалог пользователю <strong>%s</strong>?',
-'Attention' =>  'Внимание!!!',
+'Attention' => 'Внимание!!!',
+'Delete dialog' => 'Удалить диалоги между вами и этим пользователем',
 
 'Modul failed message'	=>	'Загрузить модуль &rdquo;%s&rdquo; не удалось.',
 'No modul message'		=>	'Нет модуля с именем &rdquo;%s&rdquo;.',

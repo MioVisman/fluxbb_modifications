@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.6.1
-##  Works on FluxBB:  1.5.1
-##     Release date:  2012-11-21
+##      Mod version:  1.6.2
+##  Works on FluxBB:  1.5.4, 1.5.3
+##     Release date:  2013-08-21
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -117,12 +117,7 @@ $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u
 #---------[ 10. FIND ]--------------------------------------------------------
 #
 
-			if ($cur_post['url'] != '')
-			{
-				if ($pun_config['o_censoring'] == '1')
-					$cur_post['url'] = censor_words($cur_post['url']);
-						
-				$user_contacts[] = '<span class="website"><a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a></span>';
+				$user_contacts[] = '<span class="website"><a href="'.pun_htmlspecialchars($cur_post['url']).'" rel="nofollow">'.$lang_topic['Website'].'</a></span>';
 			}
 		}
 
@@ -190,8 +185,6 @@ $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.
 #---------[ 18. FIND ]--------------------------------------------------------
 #
 
-			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.sprintf($lang_profile['Email info'], $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang_common['Email'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}

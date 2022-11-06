@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2013 Visman (visman@inbox.ru)
  * Copyright (C) 2008-2010 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -261,7 +261,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			if ($pun_user['id'] != $cur_post['poster_id'])
 			{
 				if (($cur_post['email_setting'] == '0' || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')
-					$user_contacts[] = '<span class="email"><a href="mailto:'.$cur_post['email'].'">'.$lang_common['Email'].'</a></span>';
+					$user_contacts[] = '<span class="email"><a href="mailto:'.pun_htmlspecialchars($cur_post['email']).'">'.$lang_common['Email'].'</a></span>';
 				else if ($cur_post['email_setting'] == '1' && $pun_user['g_send_email'] == '1')
 					$user_contacts[] = '<span class="email"><a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['Email'].'</a></span>';
 			}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2013 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -39,8 +39,7 @@ function generate_pmsn_menu($page = '')
 		if ($pun_user['g_pm_limit'] != 0)
 		{
 ?>
-		<br />
-		<h2><span><?php echo $lang_pmsn['Storage'] ?></span></h2>
+		<h2 class="block2"><span><?php echo $lang_pmsn['Storage'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<ul>
@@ -52,8 +51,7 @@ function generate_pmsn_menu($page = '')
 <?php
     }
 ?>
-		<br />
-		<h2><span><?php echo $lang_pmsn['Options'] ?></span></h2>
+		<h2 class="block2"><span><?php echo $lang_pmsn['Options'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<ul>

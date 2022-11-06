@@ -6,5 +6,5 @@ Hello, <user>!
 The message is located at  <message_url>
 
 -- 
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

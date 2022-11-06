@@ -101,7 +101,7 @@ function ChekUncheck()
 							<th class="tc2" scope="col"><?php echo $lang_pmsn['tTo'] ?></th>
 							<th class="tc3" scope="col"><?php echo $lang_pmsn['tReplies'] ?></th>
 							<th class="tc2" scope="col"><?php echo $lang_pmsn['tLast'] ?></th>
-							<th scope="col" style="width: 20px;"><input name="chek" type="checkbox" value="" onClick="ChekUncheck()"></th>
+							<th class="tce" scope="col"><input name="chek" type="checkbox" value="" onClick="ChekUncheck()"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -183,7 +183,7 @@ function ChekUncheck()
 							<td class="tc2"><?php echo $user_to ?></td>
 							<td class="tc3"><?php echo forum_number_format($cur_topic['replies']) ?></td>
 							<td class="tc2"><?php echo $last_post ?></td>
-							<td style="width: 20px;"><input type="checkbox" name="post_topic[<?php echo $cur_topic['id']?>]" value="1"></td>
+							<td class="tce"><input type="checkbox" name="post_topic[<?php echo $cur_topic['id']?>]" value="1"></td>
 						</tr>
 <?php
 		}

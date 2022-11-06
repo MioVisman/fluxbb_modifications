@@ -12,6 +12,9 @@ if (!$pun_user['is_guest'] && $pun_user['messages_flag'] == 1 && $pun_config['o_
 {
 	if (PUN_ACTIVE_PAGE != 'pms_new' && empty($pun_config['o_pms_flasher']))
 	{
+		if (!isset($page_head))
+			$page_head = array();
+
 		if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/reminder.css'))
 			$page_head['reminderstyle'] = '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/reminder.css" />';
 		else

@@ -76,7 +76,7 @@ function ChekUncheck()
 							<th class="tcl" scope="col"><?php echo $lang_common['Username'] ?></th>
 							<th class="tc2" scope="col"><?php echo $lang_common['Title'] ?></th>
 							<th class="tcr" scope="col"><?php echo $lang_common['Registered'] ?></th>
-							<th scope="col" style="width: 20px;"><input name="chek" type="checkbox" value="" onClick="ChekUncheck()"></th>
+							<th class="tce" scope="col"><input name="chek" type="checkbox" value="" onClick="ChekUncheck()"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -109,7 +109,7 @@ if ($db->num_rows($result))
 							<td class="tcl"><?php echo $user_name_field ?></td>
 							<td class="tc2"><?php echo $user_title_field ?></td>
 							<td class="tcr"><?php echo $user_data_field ?></td>
-							<td style="width: 20px;"><input type="checkbox" name="user_numb[<?php echo $user_data['bl_user_id']?>]" value="1"></td>
+							<td class="tce"><input type="checkbox" name="user_numb[<?php echo $user_data['bl_user_id']?>]" value="1"></td>
 						</tr>
 <?php
 

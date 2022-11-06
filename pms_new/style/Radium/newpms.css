@@ -46,3 +46,12 @@ New Private Messaging System
 	font-weight: bold;
 	color: #e99;
 }
+
+#punpmsnew .tce {
+	width: 20px;
+	padding: 3px;
+}
+
+#punpmsnew .tce input {
+	margin: 0px 0px 0px 0px;
+}

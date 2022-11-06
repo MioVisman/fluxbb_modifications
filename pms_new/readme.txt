@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.5.2
-##  Works on FluxBB:  1.4.5
-##     Release date:  2011-05-16
+##      Mod version:  1.5.3
+##  Works on FluxBB:  1.4.6
+##     Release date:  2011-08-31
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -41,7 +41,7 @@
 #---------[ 1. UPLOAD ]-------------------------------------------------------
 #
 
-all files *.php and folders to /
+install_mod.php, pmsnew.php and all folders to /
 
 #
 #---------[ 2. RUN ]----------------------------------------------------------
@@ -252,7 +252,7 @@ header.php
 #---------[ 26. FIND ]--------------------------------------------------------
 #
 
-echo implode("\n", $page_head)."\n";
+// JavaScript tricks for IE6 and older
 
 #
 #---------[ 27. BEFORE, ADD ]-------------------------------------------------

@@ -87,8 +87,7 @@ function pmsn_user_update($user)
 {
 	global $db, $db_type;
 
-	$mkol = 0;
-	$mnew = 0;
+	$mkol = $mnew = 0;
 	$result = $db->query('SELECT id, starter_id, topic_st, topic_to FROM '.$db->prefix.'pms_new_topics WHERE (starter_id='.$user.' AND topic_st<2) OR (to_id='.$user.' AND topic_to<2)') or error('Unable to fetch pms topics IDs', __FILE__, __LINE__, $db->error());
 
 	while ($ttmp = $db->fetch_assoc($result))
@@ -98,18 +97,11 @@ function pmsn_user_update($user)
 		else
 			$ftmp = $ttmp['topic_to'];
 
-		if ($ftmp == 0)
-			$mkol++;
-		else
-		{
-			$mkol++;
-			$mnew++;
-		}
+		$mkol++;
+		$mnew += $ftmp;
 	}
 
-	// update users
 	$db->query('UPDATE '.$db->prefix.'users SET messages_new='.$mnew.', messages_all='.$mkol.' WHERE id='.$user) or error('Unable to update user', __FILE__, __LINE__, $db->error());
-
 }
 
 function pmsn_user_delete($user, $mflag, $topics = array())
@@ -175,8 +167,7 @@ function pmsn_user_delete($user, $mflag, $topics = array())
 			$db->query('UPDATE '.$db->prefix.'pms_new_topics SET topic_to='.$mflag.', topic_st=2 WHERE id IN ('.implode(',', $topic_full_to).')') or error('Unable to update pms_new_topics', __FILE__, __LINE__, $db->error());
 	}
 
-	// обновляем информацию юзеров
+	// обновляем юзеров
 	foreach ($user_up as $i => $s)
 		pmsn_user_update($user_up[$i]);
-
 }

@@ -65,7 +65,7 @@ if ($tid > 0)
 else
 {
 	if ($pun_user['g_pm_limit'] != 0 && $pmsn_kol_list >= $pun_user['g_pm_limit'] && $pmsn_kol_save >= $pun_user['g_pm_limit'] )
-		message($lang_common['Full folders']);
+		message($lang_pmsn['Full folders']);
 		
 	if ($pun_user['g_pm_limit'] == 0 || $pmsn_kol_list < $pun_user['g_pm_limit'])
 		$mbutsubmit = 1;

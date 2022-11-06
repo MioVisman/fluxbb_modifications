@@ -1,0 +1,14 @@
+##
+##
+##        Mod title:  New Private Messaging System
+##
+##        Update version 1.5.0 to version 1.5.2
+##
+
+
+#
+#---------[ 1. UPLOAD ]-------------------------------------------------------
+#
+
+file pmsnew.php and all folders to /
+

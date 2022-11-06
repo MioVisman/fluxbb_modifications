@@ -90,13 +90,16 @@ $newpost = false;
 $quickpost = false;
 if ($pun_user['messages_enable'] == 1 && $pun_user['g_pm'] == 1)
 {
-	if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id'] == $cur_topic['starter_id'] && $cur_topic['see_to'] == 0))
+	if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id'] == $cur_topic['starter_id'] && $cur_topic['topic_st'] == 3 && $cur_topic['topic_to'] == 2))
 	{
 		$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
 		$newpost = true;
 
 		if ($pun_config['o_quickpost'] == '1' && ($pun_config['o_pms_min_kolvo'] <= $pun_user['num_posts'] || $pun_user['g_id'] == PUN_ADMIN))
+		{
 			$quickpost = true;
+			$required_fields = array('req_message' => $lang_common['Message']);
+		}
 		else
 			$quickpost = false;
 	}
@@ -200,7 +203,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		if ($cur_post['g_id'] != PUN_GUEST && $cur_post['g_id'] != PUN_ADMIN)
 			$post_actions[] = '<li class="postreport"><span><a href="pmsnew.php?mdl=blocking&amp;uid='.$cur_post['poster_id'].'">'.$lang_pmsn['Block'].'</a></span></li>';
 	}
-	else if ($cur_post['post_new'] == 1)
+	else if ($cur_post['post_new'] == 1 && $newpost)
 	{
 		if ($pun_user['g_delete_posts'] == '1')
 			$post_actions[] = '<li class="postdelete"><span><a href="pmsnew.php?mdl=del&amp;pid='.$cur_post['id'].$sidamp.'">'.$lang_topic['Delete'].'</a></span></li>';

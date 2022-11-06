@@ -44,8 +44,8 @@ function generate_pmsn_menu($page = '')
 		<div class="box">
 			<div class="inbox">
 				<ul>
-					<li<?php if ($pmsn_kol_list >= $pun_user['g_pm_limit']) echo ' class="isactive"'; ?>><?php echo $lang_pmsn['mList'].': '.intval($pmsn_kol_list/$pun_user['g_pm_limit']*100).'%' ?></li>
-					<li<?php if ($pmsn_kol_save >= $pun_user['g_pm_limit']) echo ' class="isactive"'; ?>><?php echo $lang_pmsn['mSave'].': '.intval($pmsn_kol_save/$pun_user['g_pm_limit']*100).'%' ?></li>
+					<li<?php if ($pmsn_kol_list + 1 >= $pun_user['g_pm_limit']) echo ' style="color: red;"'; ?>><?php echo $lang_pmsn['mList'].': '.intval($pmsn_kol_list/$pun_user['g_pm_limit']*100).'%' ?></li>
+					<li<?php if ($pmsn_kol_save + 1 >= $pun_user['g_pm_limit']) echo ' style="color: red;"'; ?>><?php echo $lang_pmsn['mSave'].': '.intval($pmsn_kol_save/$pun_user['g_pm_limit']*100).'%' ?></li>
 				</ul>
 			</div>
 		</div>

@@ -21,7 +21,7 @@ if ($pun_user['is_guest'])
 	redirect('login.php', $lang_common['Redirecting']);
 
 // если выключена совсем или выключена группа и нет новых сообщений
-if ($pun_config['o_pms_enabled'] != '1' || ($pun_user['g_pm'] != 1 && $pun_user['messages_new'] == 0))
+if ($pun_config['o_pms_enabled'] != '1' || ($pun_user['g_pm'] == 0 && $pun_user['messages_new'] == 0))
 	message($lang_common['No permission']);
 
 // если была отправка формы
@@ -67,11 +67,14 @@ else if ($action == 'email')
 }
 else if ($pun_user['messages_enable'] == 0 && $pun_user['messages_new'] == 0) // вдруг сообщение от админа придет
 	$pmsn_modul = 'close';
-else if ($pun_user['g_pm'] != 1 && $pun_user['messages_new'] > 0) // вдруг сообщение от админа придет
-	$pmsn_modul = 'new';
 else
 {
 	$pmsn_modul = isset($_REQUEST['mdl']) ? trim($_REQUEST['mdl']) : 'new';
+	
+	if ($pun_user['g_pm'] == 0 || $pun_user['messages_enable'] == 0)
+		if (!in_array($pmsn_modul, array('new','topic','close','closeq')))
+			message($lang_common['No permission']);
+
 	if ($pmsn_modul == 'new' && $pun_user['messages_new'] == 0)
 		$pmsn_modul = 'list';
 }
@@ -144,7 +147,7 @@ $pmsn_kol_new = count($pmsn_arr_new);
 $pmsn_kol_save = count($pmsn_arr_save);
 
 // можно ли создать новый диалог
-if ($pun_user['g_pm'] != 1 || $pun_user['messages_enable'] == 0 || ($pun_user['g_pm_limit'] != 0 && $pmsn_kol_list >= $pun_user['g_pm_limit'] && $pmsn_kol_save >= $pun_user['g_pm_limit']))
+if ($pun_user['g_pm'] == 0 || $pun_user['messages_enable'] == 0 || ($pun_user['g_pm_limit'] != 0 && $pmsn_kol_list >= $pun_user['g_pm_limit'] && $pmsn_kol_save >= $pun_user['g_pm_limit']))
   $pmsn_f_cnt = '';
 else
   $pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post'.$sidamp.'">'.$lang_pmsn['New dialog'].'</a></span>';

@@ -7,7 +7,6 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
 if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 	exit;
 
@@ -95,4 +94,3 @@ generate_pmsn_menu($pmsn_modul);
 		</div>
 	</div>
 <?php
-

@@ -7,14 +7,10 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
 if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 	exit;
 
 define('PUN_PMS_LOADED', 1);
-
-if ($pun_user['g_pm'] != 1 || $pun_user['messages_enable'] == 0)
-	message($lang_common['Bad request']);
 
 $tid = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 if ($tid < 0)
@@ -46,7 +42,7 @@ if ($tid > 0)
 		if ($pun_user['id'] == $cur_topic['starter_id'])
 		{
 			if ($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] > 1)
-				message($lang_common['No new post']);
+				message($lang_pmsn['No new post']);
 
 			$to_user['id'] = $cur_topic['to_id'];
 			$to_user['username'] = $cur_topic['to_user'];
@@ -54,7 +50,7 @@ if ($tid > 0)
 		else
 		{
 			if ($cur_topic['topic_to'] < 2 && $cur_topic['topic_st'] > 1)
-				message($lang_common['No new post']);
+				message($lang_pmsn['No new post']);
 
 			$to_user['id'] = $cur_topic['starter_id'];
 			$to_user['username'] = $cur_topic['starter'];

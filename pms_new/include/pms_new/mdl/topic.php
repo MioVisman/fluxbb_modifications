@@ -7,7 +7,6 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
 if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 	exit;
 
@@ -62,7 +61,6 @@ if ($cur_topic['starter_id'] == $pun_user['id'])
 {
 	$to_user['id'] = $cur_topic['to_id'];
 	$to_user['username'] = $cur_topic['to_user'];
-//	$to_user['time'] = $cur_topic['see_to'];
 
 	if ($cur_topic['topic_st'] < 2)
 	{
@@ -77,7 +75,6 @@ else
 {
 	$to_user['id'] = $cur_topic['starter_id'];
 	$to_user['username'] = $cur_topic['starter'];
-//	$to_user['time'] = $cur_topic['see_st'];
 
 	if ($cur_topic['topic_to'] < 2)
 	{
@@ -91,21 +88,24 @@ else
 
 $newpost = false;
 $quickpost = false;
-if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id'] == $cur_topic['starter_id'] && $cur_topic['see_to'] == 0))
+if ($pun_user['messages_enable'] == 1 && $pun_user['g_pm'] == 1)
 {
-	$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
-	$newpost = true;
+	if (($cur_topic['topic_st'] < 2 && $cur_topic['topic_to'] < 2) || ($pun_user['id'] == $cur_topic['starter_id'] && $cur_topic['see_to'] == 0))
+	{
+		$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=post&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Add Reply'].'</a></span>'.$pmsn_f_cnt;
+		$newpost = true;
 
-	if ($pun_config['o_quickpost'] == '1')
-		$quickpost = true;
-	else
-		$quickpost = false;
+		if ($pun_config['o_quickpost'] == '1')
+			$quickpost = true;
+		else
+			$quickpost = false;
+	}
+	$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=del&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Delete'].'</a></span>'.$pmsn_f_cnt;
+
+	if ($mmodul == 'save' && $cur_topic['starter_id'] == $pun_user['id'] && $cur_topic['see_to'] == 0)
+		if ($pun_user['g_pm_limit'] == 0 || $pmsn_kol_list < $pun_user['g_pm_limit'])
+			$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=send&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Send d'].'</a></span>'.$pmsn_f_cnt;
 }
-$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=del&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Delete'].'</a></span>'.$pmsn_f_cnt;
-
-if ($mmodul == 'save' && $cur_topic['starter_id'] == $pun_user['id'] && $cur_topic['see_to'] == 0)
-	if ($pun_user['g_pm_limit'] == 0 || $pmsn_kol_list < $pun_user['g_pm_limit'])
-		$pmsn_f_cnt = '<span><a href="pmsnew.php?mdl=send&amp;tid='.$tid.$sidamp.'">'.$lang_pmsn['Send d'].'</a></span>'.$pmsn_f_cnt;
 
 require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
@@ -144,7 +144,7 @@ if (isset($to_user['id']) && $to_user['id'] != $sid)
 </div>
 <?php
 
-generate_pmsn_menu($pmsn_modul); // , $to_user
+generate_pmsn_menu($pmsn_modul);
 
 /*	<div class="blockform">
 */

@@ -7,7 +7,6 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
 if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 	exit;
 
@@ -138,10 +137,8 @@ function ChekUncheck()
 				$item_status .= ' inew';
 				$icon_type = 'icon icon-new';
 				$subject = '<strong>'.$subject.'</strong>';
-//				$subject_new_posts = '<span class="newtext">[ <a href="pmsnew.php?mdl=topic&amp;tid='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 			}
-//			else
-				$subject_new_posts = null;
+			$subject_new_posts = null;
 
 			// Insert the status text before the subject
 			$subject = implode(' ', $status_text).' '.$subject;

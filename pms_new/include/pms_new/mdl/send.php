@@ -7,14 +7,10 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
 if (!defined('PUN') || !defined('PUN_PMS_NEW'))
 	exit;
 
 define('PUN_PMS_LOADED', 1);
-
-if ($pun_user['g_pm'] != 1 || $pun_user['messages_enable'] == 0)
-	message($lang_common['Bad request']);
 
 $tid = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 

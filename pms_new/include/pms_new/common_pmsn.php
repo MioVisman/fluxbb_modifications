@@ -7,15 +7,11 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
 if (!defined('PUN'))
 	exit;
 
 require PUN_ROOT.'lang/'.$pun_user['language'].'/pms_new.php';
 
-//
-// Display navigation menu
-//
 function generate_pmsn_menu($page = '')
 {
 	global $pun_config, $pun_user, $lang_pmsn, $lang_common, $pmsn_kol_list, $pmsn_kol_new, $pmsn_kol_save;
@@ -25,7 +21,7 @@ function generate_pmsn_menu($page = '')
 <div class="block2col">
 	<div class="blockmenu">
 <?php
-	if ($pun_user['messages_enable'] == 1)
+	if ($pun_user['messages_enable'] == 1 && $pun_user['g_pm'] == 1)
 	{
 ?>
 		<h2><span><?php echo $lang_pmsn['Boxs'] ?></span></h2>

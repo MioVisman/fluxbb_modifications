@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  New Private Messaging System
 ##
-##      Mod version:  1.2.4
+##      Mod version:  1.2.5
 ##  Works on FluxBB:  1.4.2
 ##     Release date:  2010-09-08
 ##      Review date:  YYYY-MM-DD (Leave unedited)
@@ -179,7 +179,7 @@ $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u
 			if ($cur_post['url'] != '')
 			{
 				if ($pun_config['o_censoring'] == '1')
-						$cur_post['url'] = censor_words($cur_post['url']);
+					$cur_post['url'] = censor_words($cur_post['url']);
 						
 				$user_contacts[] = '<span class="website"><a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a></span>';
 			}

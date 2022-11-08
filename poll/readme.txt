@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.2.0
+##      Mod version:  1.2.1
 ##  Works on FluxBB:  1.4.4, 1.4.5
-##     Release date:  2011-04-19
+##     Release date:  2011-04-23
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -25,6 +25,8 @@
 ##                      Preview of poll is added in post.php/edit.php.
 ##                      Добавлены превью опросов в post.php/edit.php.
 ##                      Оптимизировал число запросов к базе при сохранении голоса.
+##                    v 1.2.1
+##                      Fix form in post.php.
 ##
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name

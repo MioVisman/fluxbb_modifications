@@ -1,0 +1,14 @@
+##
+##
+##        Mod title:  Poll Mod
+##
+##        Update version 1.2.0 to version 1.2.1
+##
+
+
+#
+#---------[ 1. UPLOAD ]-------------------------------------------------------
+#
+
+folders include and plugins to /
+

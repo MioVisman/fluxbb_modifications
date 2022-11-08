@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Timelimit
 ##
-##      Mod version:  1.0.3
-##  Works on FluxBB:  1.4.3
-##     Release date:  2010-08-21
+##      Mod version:  1.0.4
+##  Works on FluxBB:  1.5.1
+##     Release date:  2012-10-20
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -122,7 +122,7 @@ if (($pun_user['g_edit_posts'] == '0' ||
 	$cur_post['poster_id'] != $pun_user['id'] ||
 	$cur_post['closed'] == '1') &&
 	!$is_admmod)
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 
 #
@@ -191,7 +191,7 @@ if (($pun_user['g_delete_posts'] == '0' ||
 	$cur_post['poster_id'] != $pun_user['id'] ||
 	$cur_post['closed'] == '1') &&
 	!$is_admmod)
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 #
 #---------[ 22. AFTER, ADD ]-------------------------------------------------
@@ -218,6 +218,7 @@ delete.php
 
 'EditPost edit' => 'To allow to edit the given message without restrictions',
 
+#   ATTENTION!!!   ATTENTION!!!   ATTENTION!!!
 # For Russian
 # 'EditPost edit' => 'Разрешить редактировать данное сообщение без ограничений',
 # For French

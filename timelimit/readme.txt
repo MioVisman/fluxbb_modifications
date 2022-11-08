@@ -2,16 +2,17 @@
 ##
 ##        Mod title:  Timelimit
 ##
-##      Mod version:  1.0
+##      Mod version:  1.0.2
 ##  Works on FluxBB:  1.4
-##     Release date:  2010-07-14
+##     Release date:  2010-08-21
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
-##      Description:  Добавляет ограничение времени редактирования и удаление сообщений/тем пользователями.
+##      Description:  Р”РѕР±Р°РІР»СЏРµС‚ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РІСЂРµРјРµРЅРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ Рё СѓРґР°Р»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёР№/С‚РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё.
 ##                    Adds restriction of time of editing and removal of messages / topics for users. 
 ##
-##   Repository URL:  http://fluxbb.org/resources/mods/xxx (Leave unedited)
+##   Repository URL:  http://fluxbb.org/resources/mods/timelimit/
+##                    http://fluxbb.org/forums/viewtopic.php?id=4395
 ##
 ##   Affected files:  viewtopic.php
 ##                    edit.php
@@ -20,7 +21,7 @@
 ##
 ##       Affects DB:  Yes
 ##
-##            Notes:  Russian/English
+##            Notes:  Russian/English/French
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -39,7 +40,7 @@ install_mod.php to /
 file "AP_Timelimit.php" to "/plugins/"
 file "/Russian/admin_plugin_timelimit.php" to "/lang/Russian/"
 file "/English/admin_plugin_timelimit.php" to "/lang/English/"
-
+file "/French/admin_plugin_timelimit.php" to "/lang/French/"
 
 #
 #---------[ 2. RUN ]----------------------------------------------------------
@@ -184,20 +185,6 @@ delete.php
 #---------[ 21. FIND ]-------------------------------------------------
 #
 
-// Fetch some info about the post, the topic and the forum
-$result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, p.posted, t.first_post_id, t.closed, p.poster, p.poster_id, p.message, p.hide_smilies FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-
-#
-#---------[ 22. REPLACE WITH ]-------------------------------------------------
-#
-
-// Fetch some info about the post, the topic and the forum
-$result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, p.posted, t.first_post_id, t.closed, p.poster, p.poster_id, p.message, p.hide_smilies, p.posted as pposted FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-
-#
-#---------[ 23. FIND ]-------------------------------------------------
-#
-
 // Do we have permission to edit this post?
 if (($pun_user['g_delete_posts'] == '0' ||
 	($pun_user['g_delete_topics'] == '0' && $is_topic_post) ||
@@ -207,35 +194,37 @@ if (($pun_user['g_delete_posts'] == '0' ||
 	message($lang_common['No permission']);
 
 #
-#---------[ 24. AFTER, ADD ]-------------------------------------------------
+#---------[ 22. AFTER, ADD ]-------------------------------------------------
 #
 
-if (!$is_admmod && $pun_user['g_deledit_interval'] != 0 && (time()-$cur_post['pposted']) > $pun_user['g_deledit_interval'])
+if (!$is_admmod && $pun_user['g_deledit_interval'] != 0 && (time()-$cur_post['posted']) > $pun_user['g_deledit_interval'])
 	message($lang_common['No permission']);
 
 #
-#---------[ 25. SAVE ]---------------------------------------------------
+#---------[ 23. SAVE ]---------------------------------------------------
 #
 
 delete.php
 
 #
-#---------[ 26. OPEN ]--------------------------------------------
+#---------[ 24. OPEN ]--------------------------------------------
 #
 
 /lang/[language]/post.php
 
 #
-#---------[ 27. ADD NEW ELEMENT OF ARRAY ]--------------------------------------------
+#---------[ 25. ADD NEW ELEMENT OF ARRAY ]--------------------------------------------
 #
 
 'EditPost edit' => 'To allow to edit the given message without restrictions',
 
 # For Russian
-# 'EditPost edit' => 'Разрешить редактировать данное сообщение без ограничений',
+# 'EditPost edit' => 'Р Р°Р·СЂРµС€РёС‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РґР°РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёР№',
+# For French
+# 'EditPost edit' => 'Permettre de rГ©viser le message donnГ© sans restrictions',
 
 #
-#---------[ 28. SAVE ]---------------------------------------------------
+#---------[ 26. SAVE ]---------------------------------------------------
 #
 
 /lang/[language]/post.php

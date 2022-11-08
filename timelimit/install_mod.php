@@ -3,8 +3,8 @@
 
 // Some info about your mod.
 $mod_title      = 'Timelimit';
-$mod_version    = '1.0.1';
-$release_date   = '2010-07-14';
+$mod_version    = '1.0.2';
+$release_date   = '2010-08-21';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
@@ -43,6 +43,10 @@ function restore()
 define('PUN_TURN_OFF_MAINT', 1);
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
+
+// only admin
+if ($pun_user['g_id'] != PUN_ADMIN)
+	redirect('login.php', $lang_common['Redirecting']);
 
 // We want the complete error message if the script fails
 if (!defined('PUN_DEBUG'))

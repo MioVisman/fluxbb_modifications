@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.3.1
-##  Works on FluxBB:  1.5.1
-##     Release date:  2012-11-19
+##      Mod version:  1.3.2
+##  Works on FluxBB:  1.5.1, 1.5.2, 1.5.3
+##     Release date:  2013-03-13
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -34,6 +34,9 @@
 ##                      For FluxBB 1.5.1.
 ##                      Fix markup.
 ##                      Fix French. Thanks to tosca.
+##                    v 1.3.2
+##                      Dutch is added. Thanks to glennvho.
+##                      Fix for close topic.
 ##
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
@@ -49,7 +52,7 @@
 ##
 ##       Affects DB:  Yes
 ##
-##            Notes:  Russian/English/French/Polish
+##            Notes:  Russian/English/French/Polish/Dutch
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -97,6 +100,9 @@ install_mod.php
 # 'Poll' => 'Sondage',
 # For Polish
 # 'Poll' => 'Ankieta',
+# For Dutch
+# 'Poll' => 'Poll',
+#   ATTENTION!!!   ATTENTION!!!   ATTENTION!!!
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------

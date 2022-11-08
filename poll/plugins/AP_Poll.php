@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2013 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -17,7 +17,7 @@ else
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.3.1');
+define('PLUGIN_VERSION', '1.3.2');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 
 // If the "Show text" button was clicked

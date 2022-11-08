@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2013 Visman (visman@inbox.ru)
  * based on code by kg (kg@as-planned.com)
  * Poll Mod for FluxBB, written by As-Planned.com
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -55,9 +55,10 @@ function poll_bad()
 // может ли голосовать юзер ****************************************************
 function poll_can_vote($tid, $uid)
 {
-	global $db, $pun_user;
+	global $db, $cur_topic;
 
-	if ($pun_user['is_guest']) return false;
+	if (is_null($uid) || $uid < 2) return false;
+	if (isset($cur_topic['closed']) && $cur_topic['closed'] != '0') return false;
 	
 	$result = $db->query('SELECT 1 FROM '.$db->prefix.'poll_voted WHERE tid='.$tid.' AND uid='.$uid) or error('Unable to fetch poll voted info', __FILE__, __LINE__, $db->error());
 	return ($db->num_rows($result) == 0);
@@ -151,7 +152,7 @@ function poll_topic($tid)
 	else if (isset($cur_topic['poll_type']))
 	{
 		$rez = array($cur_topic['poll_type'], $cur_topic['poll_time'], $cur_topic['poll_term'], $cur_topic['poll_kol']);
-		if ($cur_topic['closed'] != '0')
+		if ($cur_topic['closed'] != '0' && $cur_topic['poll_type'] != '0')
 			$rez[0] = 2;
 	}
 	else if (isset($cur_post['poll_type']))

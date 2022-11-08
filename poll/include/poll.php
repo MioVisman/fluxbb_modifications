@@ -113,8 +113,12 @@ function poll_info($tid, $uid = NULL)
 		if (!$fh)
 			error('Unable to write configuration cache file to cache(/polls) directory. Please make sure PHP has write access to this directory.', __FILE__, __LINE__);
 
+		flock($fh, LOCK_EX);
+		ftruncate($fh, 0);
+
 		fwrite($fh, '<?php'."\n\n".'$kol = '.$kol.';'."\n\n".'$rez = '.var_export($rez, true).';'."\n\n".'?'.'>');
 
+		flock($fh, LOCK_UN);
 		fclose($fh);
 
 		if (function_exists('apc_delete_file'))

@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.3.2
-##  Works on FluxBB:  1.5.1, 1.5.2, 1.5.3
-##     Release date:  2013-03-13
+##      Mod version:  1.3.3
+##  Works on FluxBB:  1.5.4
+##     Release date:  2013-08-18
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -37,6 +37,9 @@
 ##                    v 1.3.2
 ##                      Dutch is added. Thanks to glennvho.
 ##                      Fix for close topic.
+##                    v 1.3.3
+##                      For FluxBB 1.5.4.
+##                      Fix for InnoDB.
 ##
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
@@ -321,12 +324,11 @@ else
 
 require PUN_ROOT.'include/poll.php';
 
-if (poll_post('poll_submit') != null)
+if (!is_null(poll_post('poll_submit')))
 {
 	poll_vote($id, $pun_user['id']);
 
-	header('Location: viewtopic.php?id='.$id.((isset($_GET['p']) && $_GET['p'] > 1) ? '&p='.intval($_GET['p']) : ''));
-	exit;
+	redirect('viewtopic.php?id='.$id.((isset($_GET['p']) && $_GET['p'] > 1) ? '&p='.intval($_GET['p']) : ''), $lang_poll['M0']);
 }
 
 // Fetch some info about the topic

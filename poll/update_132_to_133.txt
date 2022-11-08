@@ -1,0 +1,48 @@
+##
+##
+##        Mod title:  Poll Mod
+##
+##        Update version 1.3.2 to version 1.3.3
+##
+
+
+#
+#---------[ 1. UPLOAD ]-------------------------------------------------------
+#
+
+folders include and plugins to /
+
+#
+#---------[ 2. OPEN ]---------------------------------------------------------
+#
+
+viewtopic.php
+
+#
+#---------[ 3. FIND ]---------------------------------------------------------
+#
+
+if (poll_post('poll_submit') != null)
+{
+	poll_vote($id, $pun_user['id']);
+
+	header('Location: viewtopic.php?id='.$id.((isset($_GET['p']) && $_GET['p'] > 1) ? '&p='.intval($_GET['p']) : ''));
+	exit;
+}
+
+#
+#---------[ 4. REPLACE WITH ]-------------------------------------------------
+#
+
+if (!is_null(poll_post('poll_submit')))
+{
+	poll_vote($id, $pun_user['id']);
+
+	redirect('viewtopic.php?id='.$id.((isset($_GET['p']) && $_GET['p'] > 1) ? '&p='.intval($_GET['p']) : ''), $lang_poll['M0']);
+}
+
+#
+#---------[ 5. SAVE ]---------------------------------------------------------
+#
+
+viewtopic.php

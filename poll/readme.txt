@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.3.0
-##  Works on FluxBB:  1.5.0
-##     Release date:  2012-08-01
+##      Mod version:  1.3.1
+##  Works on FluxBB:  1.5.1
+##     Release date:  2012-11-19
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -30,6 +30,10 @@
 ##                    v 1.3.0
 ##                      For FluxBB 1.5.0.
 ##                      Fix view of topics for $db_type = 'mysql';
+##                    v 1.3.1
+##                      For FluxBB 1.5.1.
+##                      Fix markup.
+##                      Fix French. Thanks to tosca.
 ##
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name

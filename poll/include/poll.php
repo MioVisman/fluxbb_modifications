@@ -80,6 +80,9 @@ function poll_info($tid, $uid = NULL)
 				$votes[$kol][$cur['field']] = $cur['votes'];
 			}
 		}
+
+		if ($kol == 0) return null;
+	
 		$rez = array(
 			'questions' => $questions,
 			'choices' => $choices,
@@ -530,7 +533,7 @@ function poll_display($tid, $uid, $info, $top)
 		{
 			if ($v > $max) $max = $v;
 		}
-		$maxPercent = ($top[3] == 0) ? 1 : 100 * $max / $top[3];
+		$maxPercent = ($top[3] == 0 || !$max) ? 1 : 100 * $max / $top[3];
 ?>
 <?php if ($can_vote): ?>
 	<input type="hidden" name="poll_max[<?php echo $k ?>]" value="<?php echo $amax[$k] ?>" />

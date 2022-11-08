@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.1.0
-##  Works on FluxBB:  1.4.4
-##     Release date:  2011-02-26
+##      Mod version:  1.1.1
+##  Works on FluxBB:  1.4.4, 1.4.5
+##     Release date:  2011-03-27
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -16,6 +16,10 @@
 ##                      French is added. Thanks to jojaba.
 ##                      Has added use of a cache for polls (-1 query).
 ##                      Добавил использование кэша для опросов (-1 запрос к базе).
+##                    v 1.1.1
+##                      Fix French.
+##                      Fix create cache.
+##                      Исправлено создание кэш файлов.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##

@@ -3,13 +3,13 @@
 
 // Some info about your mod.
 $mod_title      = 'Poll Mod';
-$mod_version    = '1.1.0';
-$release_date   = '2011-02-26';
+$mod_version    = '1.1.1';
+$release_date   = '2011-03-27';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.4.4');
+$fluxbb_versions= array('1.4.4', '1.4.5');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;

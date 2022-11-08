@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2011 Visman (visman@inbox.ru)
- * Copyright (C) 2008-2010 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
+ * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -11,8 +9,11 @@
 if (!defined('PUN'))
 	exit;
 
-// Load the language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_poll.php';
+// Load language file
+if (file_exists(PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_poll.php'))
+	require PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_poll.php';
+else
+	require PUN_ROOT.'lang/English/admin_plugin_poll.php';
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
@@ -63,7 +64,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_poll['Plugin title'] ?> v.1.1.0</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_poll['Plugin title'] ?> v.1.1.1</span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_poll['Explanation 1'] ?></p>
@@ -82,7 +83,7 @@ else
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<td>
-										<span><input type="checkbox" name="enable_poll" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_poll_enabled'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_admin_plugin_poll['Q1'] ?></span>
+										<label><input type="checkbox" name="enable_poll" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_poll_enabled'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_admin_plugin_poll['Q1'] ?></label>
 									</td>
 								</tr>
 							</table>
@@ -120,7 +121,7 @@ if ($pun_config['o_poll_enabled'] == '1')
 								</tr>
 								<tr>
 									<td>
-										<span><input type="checkbox" name="poll_guest" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_poll_guest'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_admin_plugin_poll['Q6'] ?></span>
+										<label><input type="checkbox" name="poll_guest" value="1" tabindex="<?php echo ($cur_index++) ?>"<?php echo ($pun_config['o_poll_guest'] == '1') ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_admin_plugin_poll['Q6'] ?></label>
 									</td>
 								</tr>
 							</table>

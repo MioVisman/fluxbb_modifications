@@ -2,11 +2,11 @@
 ##
 ##        Mod title:  Spoiler
 ##
-##      Mod version:  1.0.1
-##  Works on FluxBB:  1.5.4
-##     Release date:  2013-08-18
+##      Mod version:  1.1.0
+##  Works on FluxBB:  1.5.10, 1.5.9, 1.5.8, 1.5.7, 1.5.6, 1.5.5, 1.5.4
+##     Release date:  2016-07-22
 ##      Review date:  YYYY-MM-DD (Leave unedited)
-##           Author:  Visman (visman@inbox.ru)
+##           Author:  Visman (mio.visman@yandex.ru)
 ##
 ##      Description:  Добавляет bb-код [spoiler].
 ##                    Adds bb-code [spoiler]. 
@@ -15,8 +15,12 @@
 ##                    Для FluxBB 1.5.4. Если стоит модификация версии 1.0.0, обновление не требуется!
 ##                    For FluxBB 1.5.4. If version 1.0.0 is established, updating isn't required!
 ##
-##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
-##                    http://fluxbb.org.ru/forum/viewforum.php?id=34
+##                    v 1.1.0
+##                    Регулярное выражение имеет более строгий вид.
+##                    The regular expression has more strict idea.
+##
+##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    https://fluxbb.qb7.ru/forum/viewtopic.php?id=3798
 ##
 ##   Affected files:  /lang/[language]/common.php
 ##                    /include/search_idx.php
@@ -171,7 +175,7 @@
 	if (strpos($text, '[spoiler') !== false)
 	{
 		$text = str_replace('[spoiler]', "</p><div class=\"quotebox\" style=\"padding: 0px;\"><div onclick=\"var e,d,c=this.parentNode,a=c.getElementsByTagName('div')[1],b=this.getElementsByTagName('span')[0];if(a.style.display!=''){while(c.parentNode&&(!d||!e||d==e)){e=d;d=(window.getComputedStyle?getComputedStyle(c, null):c.currentStyle)['backgroundColor'];if(d=='transparent'||d=='rgba(0, 0, 0, 0)')d=e;c=c.parentNode;}a.style.display='';a.style.backgroundColor=d;b.innerHTML='&#9650;';}else{a.style.display='none';b.innerHTML='&#9660;';}\" style=\"font-weight: bold; cursor: pointer; font-size: 0.9em;\"><span style=\"padding: 0 5px;\">&#9660;</span>".$lang_common['Hidden text']."</div><div style=\"padding: 6px; margin: 0; display: none;\"><p>", $text);
-		$text = preg_replace('#\[spoiler=(.*?)\]#s', '</p><div class="quotebox" style="padding: 0px;"><div onclick="var e,d,c=this.parentNode,a=c.getElementsByTagName(\'div\')[1],b=this.getElementsByTagName(\'span\')[0];if(a.style.display!=\'\'){while(c.parentNode&&(!d||!e||d==e)){e=d;d=(window.getComputedStyle?getComputedStyle(c, null):c.currentStyle)[\'backgroundColor\'];if(d==\'transparent\'||d==\'rgba(0, 0, 0, 0)\')d=e;c=c.parentNode;}a.style.display=\'\';a.style.backgroundColor=d;b.innerHTML=\'&#9650;\';}else{a.style.display=\'none\';b.innerHTML=\'&#9660;\';}" style="font-weight: bold; cursor: pointer; font-size: 0.9em;"><span style="padding: 0 5px;">&#9660;</span>$1</div><div style="padding: 6px; margin: 0; display: none;"><p>', $text);
+		$text = preg_replace('%\[spoiler=(?P<quote>(?:&quot;|&\#039;|"|\'))?((?(quote)[^\r\n]+?|[^\r\n\]]++))(?(quote)(?P=quote))\]%', '</p><div class="quotebox" style="padding: 0px;"><div onclick="var e,d,c=this.parentNode,a=c.getElementsByTagName(\'div\')[1],b=this.getElementsByTagName(\'span\')[0];if(a.style.display!=\'\'){while(c.parentNode&&(!d||!e||d==e)){e=d;d=(window.getComputedStyle?getComputedStyle(c, null):c.currentStyle)[\'backgroundColor\'];if(d==\'transparent\'||d==\'rgba(0, 0, 0, 0)\')d=e;c=c.parentNode;}a.style.display=\'\';a.style.backgroundColor=d;b.innerHTML=\'&#9650;\';}else{a.style.display=\'none\';b.innerHTML=\'&#9660;\';}" style="font-weight: bold; cursor: pointer; font-size: 0.9em;"><span style="padding: 0 5px;">&#9660;</span>$2</div><div style="padding: 6px; margin: 0; display: none;"><p>', $text);
 		$text = str_replace('[/spoiler]', '</p></div></div><p>', $text);
 	}
 

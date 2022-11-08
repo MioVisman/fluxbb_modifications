@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  Poll
 ##
-##      Mod version:  1.0.1
+##      Mod version:  1.0.2
 ##  Works on FluxBB:  1.4.2
 ##     Release date:  2011-01-05
 ##      Review date:  YYYY-MM-DD (Leave unedited)

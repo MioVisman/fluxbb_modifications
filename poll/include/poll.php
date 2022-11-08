@@ -505,7 +505,7 @@ function poll_display($tid, $uid, $info, $top)
 	<input type="hidden" name="poll_max[<?php echo $k ?>]" value="<?php echo $amax[$k] ?>" />
 <?php endif ?>
 	<fieldset class="poll">
-		<p><?php echo htmlspecialchars($question) ?></p>
+		<p><?php echo pun_htmlspecialchars($question) ?></p>
 <?php if ($can_vote && $types[$k]>1): ?>
 		<div class="poss"><?php printf($lang_poll['Possible choose'], $types[$k]) ?></div>
 <?php endif ?>
@@ -522,18 +522,18 @@ function poll_display($tid, $uid, $info, $top)
 			if ($can_vote)
 			{
 				if ($types[$k] < 2)
-					echo "\t\t\t\t\t".'<label><input type="radio" name="poll_vote['.$k.'][0]" value="'.$i.'" /> '.htmlspecialchars($ch).'</label>';
+					echo "\t\t\t\t\t".'<label><input type="radio" name="poll_vote['.$k.'][0]" value="'.$i.'" /> '.pun_htmlspecialchars($ch).'</label>';
 				else
-					echo "\t\t\t\t\t".'<label><input type="checkbox" name="poll_vote['.$k.']['.$i.']" value="1" /> '.htmlspecialchars($ch).'</label>';
+					echo "\t\t\t\t\t".'<label><input type="checkbox" name="poll_vote['.$k.']['.$i.']" value="1" /> '.pun_htmlspecialchars($ch).'</label>';
 			}
 			else if ($can_visi)
 			{
-				echo "\t\t\t\t\t".'<span class="answer">'.htmlspecialchars($ch).'</span><span class="percent">('.$lang_poll['Votes'].$vote[$i].' ['.$percent.'%])</span>';
+				echo "\t\t\t\t\t".'<span class="answer">'.pun_htmlspecialchars($ch).'</span><span class="percent">('.$lang_poll['Votes'].$vote[$i].' ['.$percent.'%])</span>';
 				echo '<p class="progressbar"><span style="width: '.round(100 * $percent / $maxPercent).'%;"><span>'.$percent.'%</span></span> </p>';
 			}
 			else
 			{
-				echo "\t\t\t\t\t".'<span class="answer">'.htmlspecialchars($ch).'</span>';
+				echo "\t\t\t\t\t".'<span class="answer">'.pun_htmlspecialchars($ch).'</span>';
 			}
 ?>
 

@@ -14,6 +14,21 @@ if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/poll.php'))
 else
 	require PUN_ROOT.'lang/English/poll.php';
 
+// вывод сообщений *************************************************************
+function poll_mess($mess, $ques = '', $vote = '')
+{
+	global $lang_poll;
+
+	if (empty($ques))
+		$m = $lang_poll[$mess];
+	else if (!empty($ques) && empty($vote))
+		$m = sprintf($lang_poll[$mess], $ques);
+	else
+		$m = sprintf($lang_poll[$mess], $ques, $vote);
+
+	message($lang_poll['Err poll'].'<h2>'.$m.'</h2>');
+}
+
 // получение данных из формы ***************************************************
 function poll_post($var, $default = null)
 {
@@ -116,8 +131,7 @@ function poll_info($tid, $uid = NULL)
 // форма ввода в новой теме ****************************************************
 function poll_form_post($tid)
 {
-	if ($tid == 0)
-		poll_form(0);
+	poll_form($tid);
 }
 
 // форма редактирования ********************************************************
@@ -484,18 +498,88 @@ function poll_display_topic($tid, $uid, $p = 0)
 	poll_display($tid, $uid, $info, $top);
 }
 
+// превью в посте **************************************************************
+function poll_display_post($tid, $uid)
+{
+	global $pun_config;
+
+	if (poll_bad()) return;
+
+	if ($tid > 0 && poll_noedit($tid)) // уже запрещено менять опрос
+	{
+		$top = poll_topic($tid);
+		if ($top[0] == 0) return;
+
+		$info = poll_info($tid, $uid);
+	}
+	else // а тут опрос еще можно редактировать
+	{
+		if (poll_post('poll_enabled', 0) != 1) return;
+   
+		$top = poll_topic($tid);
+
+		$questions = poll_post('poll_question', array());
+		$choices = poll_post('poll_choice', array());
+		$type = poll_post('poll_type', array());
+
+		$questions = array_map('pun_trim', $questions);
+		$type = array_map('intval', $type);
+
+		$q = $ch = array();
+		$fk = true;
+		for ($k = 1; $k <= $pun_config['o_poll_max_ques'] && $fk; $k++)
+		{
+			$question = (isset($questions[$k]) && $fk) ? $questions[$k] : '';
+			if ($question == '')
+	   		$fk = false;
+			else
+			{
+				$q[$k] = $question;
+				$ch[$k] = $votes[$k] = array();
+
+				$fi = $fk;
+				for ($i = 1; $i <= $pun_config['o_poll_max_field'] && $fi; $i++)
+				{
+					$choice = (isset($choices[$k][$i]) && $fi) ? pun_trim($choices[$k][$i]) : '';
+					if ($choice == '')
+						$fi = false;
+					else
+					{
+						$ch[$k][$i] = $choice;
+						$votes[$k][$i] = 0;
+					}
+				}
+			}
+		}
+
+		$info = array(
+			'questions' => $q,
+			'choices' => $ch,
+			'votes' => $votes,
+			'type' => $type,
+			'isGuest' => false,
+		);
+	}
+
+	$top[4] = 0;
+	$info['canVote'] = true;
+	poll_display($tid, $uid, $info, $top, true);
+}
+
 // отображаем результат голосования ********************************************
-function poll_display($tid, $uid, $info, $top)
+function poll_display($tid, $uid, $info, $top, $prev = false)
 {
 
 	global $db, $lang_poll, $pun_config, $lang_common;
 
 	if (is_null($info)) return;
 	
-	$can_vote = ($info['canVote'] && $top[0] != 2 && poll_post('poll_view') == null); //  && poll_post('preview') == null
+	$can_vote = ($info['canVote'] && $top[0] != 2 && poll_post('poll_view') == null);
 	$can_visi = ((($info['isGuest'] && $pun_config['o_poll_guest'] == '1') || !$info['isGuest']) && $top[2] <= $top[3]);
 	$fmess = '';
-	if ($top[0] == 2)
+	if ($prev)
+		$fmess = '&nbsp;';
+	else if ($top[0] == 2)
 		$fmess = $lang_poll['M1'];
 	else if ($top[2] > $top[3])
 		$fmess = sprintf($lang_poll['M2'], $top[2]);
@@ -513,7 +597,7 @@ function poll_display($tid, $uid, $info, $top)
 	$types = $info['type'];
 	$votes = $info['votes'];
 
-	if ($can_vote)
+	if ($can_vote && !$prev)
 	{
 ?>
 <div id="poll_form">
@@ -535,7 +619,7 @@ function poll_display($tid, $uid, $info, $top)
 		}
 		$maxPercent = ($top[3] == 0 || !$max) ? 1 : 100 * $max / $top[3];
 ?>
-<?php if ($can_vote): ?>
+<?php if ($can_vote && !$prev): ?>
 	<input type="hidden" name="poll_max[<?php echo $k ?>]" value="<?php echo $amax[$k] ?>" />
 <?php endif ?>
 	<fieldset class="poll">
@@ -580,7 +664,7 @@ function poll_display($tid, $uid, $info, $top)
 	</fieldset>
 <?php
 	}
-	if ($can_vote)
+	if ($can_vote && !$prev)
 	{
 		$csrf = pun_hash($tid.(pun_hash($uid.count($questions).implode('0',$types))).get_remote_address().implode('.',$amax));
 		foreach ($types as $i => $type)
@@ -606,7 +690,7 @@ function poll_vote($tid, $uid)
 {
 	global $db;
 
-	if (poll_bad() || !poll_can_vote($tid, $uid)) return;
+	if (poll_bad() || !poll_can_vote($tid, $uid)) poll_mess('Err1');
 
 	$csrf = poll_post('poll_csrf');
 	$ques = poll_post('poll_ques');
@@ -614,9 +698,9 @@ function poll_vote($tid, $uid)
 	$votes = poll_post('poll_vote');
 	$amax = poll_post('poll_max');
 
-	if (is_null($csrf) || is_null($ques) || is_null($type) || is_null($votes) || is_null($amax)) return;
+	if (is_null($csrf) || is_null($ques) || is_null($type) || is_null($votes) || is_null($amax)) poll_mess('Err2');
 
-	if (!is_array($type) || !is_array($votes) || !is_array($amax)) return;
+	if (!is_array($type) || !is_array($votes) || !is_array($amax)) poll_mess('Err2');
 
 	$type = array_map('intval', $type);
 	$amax = array_map('intval', $amax);
@@ -624,30 +708,31 @@ function poll_vote($tid, $uid)
 	
 	$csrf2 = pun_hash($tid.(pun_hash($uid.$ques.implode('0',$type))).get_remote_address().implode('.',$amax));
 	
-	if ($csrf2 != $csrf) return;
+	if ($csrf2 != $csrf) poll_mess('Err2');
 
 	$kol = 0;
 	foreach($votes as $k => $vote)
 	{
-		if ($k < 1 || $k > $ques) return;
+		if ($k < 1 || $k > $ques) poll_mess('Err3');
 		$kol++;
 		$kk = 0;
 		$vote = array_map('intval', $vote);
 		foreach($vote as $i => $vo)
 		{
-			if ($type[$k] < 2 && $i != 0) return;
-			if ($type[$k] < 2 && $vo < 1) return;
-			if ($type[$k] < 2 && $vo > $amax[$k]) return;
-			if ($type[$k] > 1 && $i == 0) return;
-			if ($type[$k] > 1 && $i > $amax[$k]) return;
-			if ($type[$k] > 1 && $vo != 1) return;
+			if ($type[$k] < 2 && $i != 0) poll_mess('Err2');
+			if ($type[$k] < 2 && $vo < 1) poll_mess('Err2');
+			if ($type[$k] < 2 && $vo > $amax[$k]) poll_mess('Err2');
+			if ($type[$k] > 1 && $i == 0) poll_mess('Err2');
+			if ($type[$k] > 1 && $i > $amax[$k]) poll_mess('Err2');
+			if ($type[$k] > 1 && $vo != 1) poll_mess('Err2');
 			$kk++;
 		}
-		if ($type[$k] < 2 && $kk != 1) return;
-		if ($type[$k] > 1 && ($kk < 1 || $kk > $type[$k])) return;
+		if ($type[$k] < 2 && $kk != 1) poll_mess('Err4', $k);
+		if ($type[$k] > 1 && ($kk < 1 || $kk > $type[$k])) poll_mess('Err5', $k, $type[$k]);
 	}
-	if ($kol != $ques) return;
+	if ($kol != $ques) poll_mess('Err6');
 
+	$arr = array();
 	foreach($votes as $k => $vote)
 	{
 		$vote = array_map('intval', $vote);
@@ -655,9 +740,13 @@ function poll_vote($tid, $uid)
 		{
 			if ($type[$k] < 2) $j = $vo;
 			else $j = $i;
-			$db->query('UPDATE '.$db->prefix.'poll SET votes=votes+1 WHERE tid='.$tid.' AND question='.$k.' AND field='.$j) or error('Unable to update poll choice', __FILE__, __LINE__, $db->error());
+			$arr[] = '(question='.$k.' AND field='.$j.')';
     }
 	}
+
+	if (!empty($arr))
+		$db->query('UPDATE '.$db->prefix.'poll SET votes=votes+1 WHERE tid='.$tid.' AND ('.implode(' OR ', $arr).')') or error('Unable to update poll choice', __FILE__, __LINE__, $db->error());
+
 	$db->query('INSERT INTO '.$db->prefix.'poll_voted (tid, uid, rez) VALUES ('.$tid.','.$uid.',\''.$db->escape(serialize($votes)).'\')') or error('Unable to save vote', __FILE__, __LINE__, $db->error());
 	$db->query('UPDATE '.$db->prefix.'topics SET poll_kol=poll_kol+1 WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 	

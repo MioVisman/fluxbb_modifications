@@ -27,4 +27,12 @@ $lang_poll = array(
 'Votes'	=>	'voix ',
 'View'	=>	'Afficher les résultats',
 
+'Err poll'	=> 'Voting error:<br />',
+'Err1'			=> 'You have already voted or poll is closed for voting.',
+'Err2'			=> 'The answer has a wrong format.',
+'Err3'			=> 'Number of a question has fallen outside the limits poll.',
+'Err4'			=> 'Question %s: One variant of the answer should be chosen.',
+'Err5'			=> 'Question %s: Should be chosen from 1 to %s variants of the answer.',
+'Err6'			=> 'All questions should have answers.',
+
 );

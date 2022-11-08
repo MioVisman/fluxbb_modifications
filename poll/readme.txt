@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.1.1
+##      Mod version:  1.2.0
 ##  Works on FluxBB:  1.4.4, 1.4.5
-##     Release date:  2011-03-27
+##     Release date:  2011-04-19
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -20,8 +20,15 @@
 ##                      Fix French.
 ##                      Fix create cache.
 ##                      Исправлено создание кэш файлов.
+##                    v 1.2.0
+##                      Polish is added. Thanks to KAT.
+##                      Preview of poll is added in post.php/edit.php.
+##                      Добавлены превью опросов в post.php/edit.php.
+##                      Оптимизировал число запросов к базе при сохранении голоса.
+##
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    http://fluxbb.org.ru/forum/viewtopic.php?id=3349
 ##
 ##   Affected files:  edit.php
 ##                    post.php
@@ -33,7 +40,7 @@
 ##
 ##       Affects DB:  Yes
 ##
-##            Notes:  Russian/English/French
+##            Notes:  Russian/English/French/Polish
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -78,6 +85,8 @@ install_mod.php
 # 'Poll' => 'Опрос',
 # For French
 # 'Poll' => 'Sondage',
+# For Polish
+# 'Poll' => 'Ankieta',
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------
@@ -146,53 +155,65 @@ $result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect
 #---------[ 16. FIND ]--------------------------------------------------------
 #
 
+						<?php echo $preview_message."\n" ?>
+
+#
+#---------[ 17. AFTER, ADD ]--------------------------------------------------
+#
+
+<?php if ($can_edit_subject) poll_display_post($cur_post['tid'], $pun_user['id']); ?>
+
+#
+#---------[ 18. FIND ]--------------------------------------------------------
+#
+
 			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 
 #
-#---------[ 17. BEFORE, ADD ]-------------------------------------------------
+#---------[ 19. BEFORE, ADD ]-------------------------------------------------
 #
 
 <?php if ($can_edit_subject) poll_form_edit($cur_post['tid']); ?>
 
 #
-#---------[ 18. SAVE ]--------------------------------------------------------
+#---------[ 20. SAVE ]--------------------------------------------------------
 #
 
 edit.php
 
 #
-#---------[ 19. OPEN ]--------------------------------------------------------
+#---------[ 21. OPEN ]--------------------------------------------------------
 #
 
 post.php
 
 #
-#---------[ 20. FIND ]--------------------------------------------------------
+#---------[ 22. FIND ]--------------------------------------------------------
 #
 
 require PUN_ROOT.'include/common.php';
 
 #
-#---------[ 21. AFTER, ADD ]--------------------------------------------------
+#---------[ 23. AFTER, ADD ]--------------------------------------------------
 #
 
 require PUN_ROOT.'include/poll.php';
 
 #
-#---------[ 22. FIND ]--------------------------------------------------------
+#---------[ 24. FIND ]--------------------------------------------------------
 #
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
 
 #
-#---------[ 23. BEFORE, ADD ]-------------------------------------------------
+#---------[ 25. BEFORE, ADD ]-------------------------------------------------
 #
 
 	poll_form_validate($tid, $errors);
 
 #
-#---------[ 24. FIND ]--------------------------------------------------------
+#---------[ 26. FIND ]--------------------------------------------------------
 #
 
 			update_search_index('post', $new_pid, $message, $subject);
@@ -200,44 +221,56 @@ require PUN_ROOT.'include/poll.php';
 			update_forum($fid);
 
 #
-#---------[ 25. AFTER, ADD ]--------------------------------------------------
+#---------[ 27. AFTER, ADD ]--------------------------------------------------
 #
 
 			poll_save($new_tid);
 
 #
-#---------[ 26. FIND ]--------------------------------------------------------
+#---------[ 28. FIND ]--------------------------------------------------------
+#
+
+						<?php echo $preview_message."\n" ?>
+
+#
+#---------[ 29. AFTER, ADD ]--------------------------------------------------
+#
+
+<?php if ($fid) poll_display_post($tid, $pun_user['id']); ?>
+
+#
+#---------[ 30. FIND ]--------------------------------------------------------
 #
 
 			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 
 #
-#---------[ 27. BEFORE, ADD ]-------------------------------------------------
+#---------[ 31. BEFORE, ADD ]-------------------------------------------------
 #
 
 <?php poll_form_post($tid); ?>
 
 #
-#---------[ 28. SAVE ]--------------------------------------------------------
+#---------[ 32. SAVE ]--------------------------------------------------------
 #
 
 post.php
 
 #
-#---------[ 29. OPEN ]--------------------------------------------------------
+#---------[ 33. OPEN ]--------------------------------------------------------
 #
 
 include/functions.php
 
 #
-#---------[ 30. FIND ]--------------------------------------------------------
+#---------[ 34. FIND ]--------------------------------------------------------
 #
 
 	// Delete any subscriptions for this topic
 	$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id='.$topic_id) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 31. AFTER, ADD ]--------------------------------------------------
+#---------[ 35. AFTER, ADD ]--------------------------------------------------
 #
 
 	global $pun_user;
@@ -245,19 +278,19 @@ include/functions.php
 	poll_delete($topic_id);
 
 #
-#---------[ 32. SAVE ]--------------------------------------------------------
+#---------[ 36. SAVE ]--------------------------------------------------------
 #
 
 include/functions.php
 
 #
-#---------[ 33. OPEN ]--------------------------------------------------------
+#---------[ 37. OPEN ]--------------------------------------------------------
 #
 
 viewtopic.php
 
 #
-#---------[ 34. FIND ]--------------------------------------------------------
+#---------[ 38. FIND ]--------------------------------------------------------
 #
 
 // Fetch some info about the topic
@@ -267,7 +300,7 @@ else
 	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, 0 AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 35. REPLACE WITH ]------------------------------------------------
+#---------[ 39. REPLACE WITH ]------------------------------------------------
 #
 
 require PUN_ROOT.'include/poll.php';
@@ -287,31 +320,31 @@ else
 	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, t.poll_type, t.poll_time, t.poll_term, t.poll_kol, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, 0 AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 36. FIND ]--------------------------------------------------------
+#---------[ 40. FIND ]--------------------------------------------------------
 #
 
 						<?php echo $cur_post['message']."\n" ?>
 
 #
-#---------[ 37. AFTER, ADD ]--------------------------------------------------
+#---------[ 41. AFTER, ADD ]--------------------------------------------------
 #
 
 <?php if ($cur_post['id'] == $cur_topic['first_post_id']) poll_display_topic($id, $pun_user['id'], $p); ?>
 
 #
-#---------[ 38. SAVE ]--------------------------------------------------------
+#---------[ 42. SAVE ]--------------------------------------------------------
 #
 
 viewtopic.php
 
 #
-#---------[ 39. OPEN ]--------------------------------------------------------
+#---------[ 43. OPEN ]--------------------------------------------------------
 #
 
 viewforum.php
 
 #
-#---------[ 40. FIND ]--------------------------------------------------------
+#---------[ 44. FIND ]--------------------------------------------------------
 #
 
 	// Fetch list of topics to display on this page
@@ -327,7 +360,7 @@ viewforum.php
 	}
 
 #
-#---------[ 41. REPLACE WITH ]------------------------------------------------
+#---------[ 45. REPLACE WITH ]------------------------------------------------
 #
 
 	// Fetch list of topics to display on this page
@@ -343,14 +376,14 @@ viewforum.php
 	}
 
 #
-#---------[ 42. FIND ]--------------------------------------------------------
+#---------[ 46. FIND ]--------------------------------------------------------
 #
 
 			$item_status .= ' iclosed';
 		}
 
 #
-#---------[ 43. AFTER, ADD ]--------------------------------------------------
+#---------[ 47. AFTER, ADD ]--------------------------------------------------
 #
 
 		if ($cur_topic['poll_type'] > 0)
@@ -360,40 +393,40 @@ viewforum.php
 		}
 
 #
-#---------[ 44. SAVE ]--------------------------------------------------------
+#---------[ 48. SAVE ]--------------------------------------------------------
 #
 
 viewforum.php
 
 #
-#---------[ 45. OPEN ]--------------------------------------------------------
+#---------[ 49. OPEN ]--------------------------------------------------------
 #
 
 search.php
 
 #
-#---------[ 46. FIND ]--------------------------------------------------------
+#---------[ 50. FIND ]--------------------------------------------------------
 #
 
 		else
 			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 47. REPLACE WITH ]------------------------------------------------
+#---------[ 51. REPLACE WITH ]------------------------------------------------
 #
 
 		else
 			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.poll_type, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 48. FIND ]--------------------------------------------------------
+#---------[ 52. FIND ]--------------------------------------------------------
 #
 
 					$item_status .= ' iclosed';
 				}
 
 #
-#---------[ 49. AFTER, ADD ]--------------------------------------------------
+#---------[ 53. AFTER, ADD ]--------------------------------------------------
 #
 
 				if ($cur_search['poll_type'] > 0)
@@ -403,7 +436,7 @@ search.php
 				}
 
 #
-#---------[ 50. SAVE ]--------------------------------------------------------
+#---------[ 54. SAVE ]--------------------------------------------------------
 #
 
 search.php

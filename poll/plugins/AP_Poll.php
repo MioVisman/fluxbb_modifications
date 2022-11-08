@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2010-2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2010-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -17,6 +17,8 @@ else
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
+define('PLUGIN_VERSION', '1.3.0');
+define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 
 // If the "Show text" button was clicked
 if (isset($_POST['show_text']))
@@ -52,7 +54,7 @@ if (isset($_POST['show_text']))
 
 	generate_config_cache();
 
-	redirect(pun_htmlspecialchars('admin_loader.php?plugin=AP_Poll.php'), $lang_admin_plugin_poll['Plugin redirect']);
+	redirect(PLUGIN_URL, $lang_admin_plugin_poll['Plugin redirect']);
 
 }
 else
@@ -64,7 +66,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_poll['Plugin title'] ?> v.1.2.1</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_poll['Plugin title'].' v.'.PLUGIN_VERSION ?></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_poll['Explanation 1'] ?></p>
@@ -74,7 +76,7 @@ else
 
 		<h2 class="block2"><span><?php echo $lang_admin_plugin_poll['Form title'] ?></span></h2>
 		<div class="box">
-			<form id="example" method="post" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>&amp;foo=<?php echo time() ?>">
+			<form id="example" method="post" action="<?php echo PLUGIN_URL.'&amp;'.time() ?>">
 				<p class="submittop"><input type="submit" name="show_text" value="<?php echo $lang_admin_plugin_poll['Show text button'] ?>" tabindex="<?php echo ($cur_index++) ?>" /></p>
 				<div class="inform">
 					<fieldset>

@@ -1,0 +1,43 @@
+##
+##
+##        Mod title:  Poll Mod
+##
+##        Update version 1.2.1 to version 1.3.0
+##
+
+
+#
+#---------[ 1. UPLOAD ]-------------------------------------------------------
+#
+
+folders include and plugins to /
+
+#
+#---------[ 2. OPEN ]---------------------------------------------------------
+#
+
+viewtopic.php
+
+#
+#---------[ 3. FIND ]---------------------------------------------------------
+#
+
+// Retrieve the posts (and their respective poster/online status)
+
+#
+#---------[ 4. REPLACE WITH ]-------------------------------------------------
+#
+
+if (in_array($cur_topic['first_post_id'], $post_ids))
+	poll_display_topic($id, $pun_user['id'], $p, true);
+
+// Retrieve the posts (and their respective poster/online status)
+
+#
+#---------[ 5. SAVE ]---------------------------------------------------------
+#
+
+viewtopic.php
+
+
+

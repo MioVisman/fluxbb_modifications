@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.2.1
-##  Works on FluxBB:  1.4.4, 1.4.5
-##     Release date:  2011-04-23
+##      Mod version:  1.3.0
+##  Works on FluxBB:  1.5.0
+##     Release date:  2012-08-01
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -27,6 +27,9 @@
 ##                      Оптимизировал число запросов к базе при сохранении голоса.
 ##                    v 1.2.1
 ##                      Fix form in post.php.
+##                    v 1.3.0
+##                      For FluxBB 1.5.0.
+##                      Fix view of topics for $db_type = 'mysql';
 ##
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
@@ -83,6 +86,7 @@ install_mod.php
 
 'Poll' => 'Poll',
 
+#   ATTENTION!!!   ATTENTION!!!   ATTENTION!!!
 # For Russian
 # 'Poll' => 'Опрос',
 # For French
@@ -325,28 +329,43 @@ else
 #---------[ 40. FIND ]--------------------------------------------------------
 #
 
+// Retrieve the posts (and their respective poster/online status)
+
+#
+#---------[ 41. REPLACE WITH ]------------------------------------------------
+#
+
+if (in_array($cur_topic['first_post_id'], $post_ids))
+	poll_display_topic($id, $pun_user['id'], $p, true);
+
+// Retrieve the posts (and their respective poster/online status)
+
+#
+#---------[ 42. FIND ]--------------------------------------------------------
+#
+
 						<?php echo $cur_post['message']."\n" ?>
 
 #
-#---------[ 41. AFTER, ADD ]--------------------------------------------------
+#---------[ 43. AFTER, ADD ]--------------------------------------------------
 #
 
 <?php if ($cur_post['id'] == $cur_topic['first_post_id']) poll_display_topic($id, $pun_user['id'], $p); ?>
 
 #
-#---------[ 42. SAVE ]--------------------------------------------------------
+#---------[ 44. SAVE ]--------------------------------------------------------
 #
 
 viewtopic.php
 
 #
-#---------[ 43. OPEN ]--------------------------------------------------------
+#---------[ 45. OPEN ]--------------------------------------------------------
 #
 
 viewforum.php
 
 #
-#---------[ 44. FIND ]--------------------------------------------------------
+#---------[ 46. FIND ]--------------------------------------------------------
 #
 
 	// Fetch list of topics to display on this page
@@ -362,7 +381,7 @@ viewforum.php
 	}
 
 #
-#---------[ 45. REPLACE WITH ]------------------------------------------------
+#---------[ 47. REPLACE WITH ]------------------------------------------------
 #
 
 	// Fetch list of topics to display on this page
@@ -378,14 +397,14 @@ viewforum.php
 	}
 
 #
-#---------[ 46. FIND ]--------------------------------------------------------
+#---------[ 48. FIND ]--------------------------------------------------------
 #
 
 			$item_status .= ' iclosed';
 		}
 
 #
-#---------[ 47. AFTER, ADD ]--------------------------------------------------
+#---------[ 49. AFTER, ADD ]--------------------------------------------------
 #
 
 		if ($cur_topic['poll_type'] > 0)
@@ -395,40 +414,40 @@ viewforum.php
 		}
 
 #
-#---------[ 48. SAVE ]--------------------------------------------------------
+#---------[ 50. SAVE ]--------------------------------------------------------
 #
 
 viewforum.php
 
 #
-#---------[ 49. OPEN ]--------------------------------------------------------
+#---------[ 51. OPEN ]--------------------------------------------------------
 #
 
 search.php
 
 #
-#---------[ 50. FIND ]--------------------------------------------------------
+#---------[ 52. FIND ]--------------------------------------------------------
 #
 
 		else
 			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 51. REPLACE WITH ]------------------------------------------------
+#---------[ 53. REPLACE WITH ]------------------------------------------------
 #
 
 		else
 			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.poll_type, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 
 #
-#---------[ 52. FIND ]--------------------------------------------------------
+#---------[ 54. FIND ]--------------------------------------------------------
 #
 
 					$item_status .= ' iclosed';
 				}
 
 #
-#---------[ 53. AFTER, ADD ]--------------------------------------------------
+#---------[ 55. AFTER, ADD ]--------------------------------------------------
 #
 
 				if ($cur_search['poll_type'] > 0)
@@ -438,7 +457,7 @@ search.php
 				}
 
 #
-#---------[ 54. SAVE ]--------------------------------------------------------
+#---------[ 56. SAVE ]--------------------------------------------------------
 #
 
 search.php

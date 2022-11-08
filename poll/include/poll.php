@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
  * based on code by kg (kg@as-planned.com)
  * Poll Mod for FluxBB, written by As-Planned.com
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -147,9 +147,7 @@ function poll_topic($tid)
 	global $cur_post, $cur_topic;
 	
 	if ($tid == 0)
-	{
 		$rez = array(0,time(),0,0);
-  }
 	else if (isset($cur_topic['poll_type']))
 	{
 		$rez = array($cur_topic['poll_type'], $cur_topic['poll_time'], $cur_topic['poll_term'], $cur_topic['poll_kol']);
@@ -157,9 +155,7 @@ function poll_topic($tid)
 			$rez[0] = 2;
 	}
 	else if (isset($cur_post['poll_type']))
-	{
 		$rez = array($cur_post['poll_type'], $cur_post['poll_time'], $cur_post['poll_term'], $cur_post['poll_kol']);
-	}
 	else
 		$rez = array(0,time(),0,0);
 		
@@ -178,10 +174,7 @@ function poll_form($tid)
 	$resu = ($top[2] > 1);
 	$term = max($top[2],$pun_config['o_poll_term']);
 	
-	if (poll_noedit($tid))
-		$edit = false;
-	else
-		$edit = true;
+	$edit = (poll_noedit($tid)) ? false : true;
 
 	$questions = $type = $choices = array();
 	if ($edit && poll_post('form_sent', false))
@@ -313,8 +306,7 @@ function poll_form($tid)
 		</div>
 <script type="text/javascript">
 /* <![CDATA[ */
-var max_ques = <?php echo $pun_config['o_poll_max_ques'] ?>;
-var max_field = <?php echo $pun_config['o_poll_max_field'] ?>;
+var max_ques = <?php echo $pun_config['o_poll_max_ques'] ?>, max_field = <?php echo $pun_config['o_poll_max_field'] ?>;
 function ForEnabled(){var c=document.getElementById('poll_enabled');if(c.checked==true){document.getElementById('poll_input').style.display='';ForQues(1,'')}else{document.getElementById('poll_input').style.display='none'}return false}
 function ForChoice(num,field,t){if(num > max_ques || field > max_field){return false}var div=document.getElementById('poll_number_'+num);var i=field+1;if(typeof t != 'undefined'){if(t == 'none'){div.getElementsByTagName('label')[i].style.display='none';ForChoice(num,i,'none')}else{div.getElementsByTagName('label')[i].style.display='';ForChoice(num,field)}}else{var inp=div.getElementsByTagName('label')[i].getElementsByTagName('input')[0];if(inp.value == ""){ForChoice(num, i, 'none')}else{ForChoice(num, i, '')}}return false}
 function ForQues(num,t){if(num > max_ques){return false}var div=document.getElementById('poll_number_'+num);if(typeof t != 'undefined'){if(t == 'none'){div.style.display='none';ForQues(num+1,'none')}else{div.style.display='';ForQues(num)}}else{var inp=document.getElementById('poll_ques_'+num);if(inp.value == ""){div.getElementsByTagName('label')[1].style.display='none';ForChoice(num,1,'none');ForQues(num+1,'none')}else{div.getElementsByTagName('label')[1].style.display='';ForChoice(num,1,'');ForQues(num+1,'')}}return false}
@@ -485,9 +477,10 @@ function poll_save($tid)
 }
 
 // результат голосования в теме ************************************************
-function poll_display_topic($tid, $uid, $p = 0)
+function poll_display_topic($tid, $uid, $p = 0, $f = false)
 {
 	global $pun_config;
+	static $info = null;
 
 	if ($pun_config['o_poll_enabled'] != '1') return;
 
@@ -495,7 +488,10 @@ function poll_display_topic($tid, $uid, $p = 0)
 	if ($top[0] == 0) return;
 		
 	$top[4] = $p;
-	$info = poll_info($tid, $uid);
+	if (is_null($info))
+		$info = poll_info($tid, $uid);
+	if ($f) return;
+	
 	poll_display($tid, $uid, $info, $top);
 }
 

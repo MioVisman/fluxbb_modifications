@@ -2,14 +2,18 @@
 ##
 ##        Mod title:  Spoiler
 ##
-##      Mod version:  1.0
-##  Works on FluxBB:  1.5.3
-##     Release date:  2013-07-25
+##      Mod version:  1.0.1
+##  Works on FluxBB:  1.5.4
+##     Release date:  2013-08-18
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  Добавляет bb-код [spoiler].
 ##                    Adds bb-code [spoiler]. 
+##
+##                    v 1.0.1
+##                    Для FluxBB 1.5.4. Если стоит модификация версии 1.0.0, обновление не требуется!
+##                    For FluxBB 1.5.4. If version 1.0.0 is established, updating isn't required!
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org.ru/forum/viewforum.php?id=34
@@ -159,9 +163,6 @@
 
 	if (!$is_signature)
 	{
-		$pattern[] = $re_list;
-		$replace[] = 'handle_list_tag(\'$2\', \'$1\')';
-	}
 
 #
 #---------[ 20. BEFORE, ADD ]---------------------------------------------------

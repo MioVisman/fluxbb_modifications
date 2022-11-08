@@ -1,0 +1,80 @@
+/* Poll
+----------------------------------------------------------------*/
+.pun .poll {
+	margin-top: 2em;
+	padding: 1em;
+	background-color: #fff;
+	border: 1px solid #f1f1f1;
+}
+
+.poll legend {
+	font-weight: normal;
+}
+
+.poll p {
+	font-weight: bold;
+}
+
+.pun .poll ol {
+	list-style: none outside none;
+	padding: 0px;
+}
+
+.pun .poll li {
+	font-weight: normal;
+	padding: .5em 1em .5em 0;
+}
+
+.pun .poll label {
+	padding: 0px;
+}
+
+.poll .percent {
+	font-size: 0.8em;
+	margin-left: 10px;
+}
+
+.poll .progressbar {
+	height: 10px;
+	border: 1px solid #6c8a3f;
+	width: 60%;
+}
+
+.poll .progressbar span {
+	background-color: #6c8a3f;
+	width: 100%;
+	height: 10px;
+	display: block;
+	font-size: 0;
+	overflow: hidden;
+}
+
+.poll .progressbar span span {
+	display: none;
+}
+
+.poll .total {
+	color: #b7b7b7;
+	margin-top: .5em;
+	font-style: italic;
+}
+
+.poll .poss {
+	color: #b7b7b7;
+	font-style: italic;
+}
+
+.pun .poll_mess {
+	font-style: italic;
+	text-align: center;
+	text-shadow: 2px 2px 2px #b7b7b7;
+}
+
+.pun .pollbut {
+	font-size: 0.8em;
+	padding: 7px 0 0 30px;
+}
+
+.pun .pollbut input {
+	margin-right: 12px;
+}

@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Poll
 ##
-##      Mod version:  1.0.0
+##      Mod version:  1.0.1
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2011-01-01
+##     Release date:  2011-01-05
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
@@ -230,6 +230,7 @@ include/functions.php
 #---------[ 31. AFTER, ADD ]--------------------------------------------------
 #
 
+	global $pun_user;
 	require PUN_ROOT.'include/poll.php';
 	poll_delete($topic_id);
 

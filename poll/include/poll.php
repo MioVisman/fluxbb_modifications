@@ -454,7 +454,7 @@ function poll_display_topic($tid, $uid, $p = 0)
 function poll_display($tid, $uid, $info, $top)
 {
 
-	global $db, $lang_poll, $pun_config;
+	global $db, $lang_poll, $pun_config, $lang_common;
 
 	if (is_null($info)) return;
 	
@@ -469,6 +469,8 @@ function poll_display($tid, $uid, $info, $top)
 		$fmess = $lang_poll['M3'];
 	else if ($info['isGuest'])
 		$fmess = $lang_poll['M4'];
+	else if (poll_post('poll_view') != null)
+		$fmess = '<a href="javascript:history.go(-1)">'.$lang_common['Go back'].'</a>';
 	else if (!$can_vote)
 		$fmess = $lang_poll['M0'];
 

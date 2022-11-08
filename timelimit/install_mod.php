@@ -3,13 +3,13 @@
 
 // Some info about your mod.
 $mod_title      = 'Timelimit';
-$mod_version    = '1.0.2';
-$release_date   = '2010-08-21';
+$mod_version    = '1.0.3';
+$release_date   = '2011-01-31';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 
 // Versions of FluxBB this mod was created for. A warning will be displayed, if versions do not match
-$fluxbb_versions= array('1.4.2');
+$fluxbb_versions= array('1.4.3');
 
 // Set this to false if you haven't implemented the restore function (see below)
 $mod_restore	= true;

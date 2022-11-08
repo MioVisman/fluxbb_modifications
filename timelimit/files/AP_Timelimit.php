@@ -42,7 +42,7 @@ else
 
 
 ?>
-	<div id="exampleplugin" class="blockform">
+	<div class="plugin blockform">
 		<h2><span><?php echo $lang_admin_plugin_timelimit['Plugin title'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">

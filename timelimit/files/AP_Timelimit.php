@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2015 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -11,8 +11,8 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.0.4');
-define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
+define('PLUGIN_VERSION', '1.0.5');
+define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin='.$plugin));
 
 // Load language file
 if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/admin_plugin_timelimit.php'))
@@ -62,7 +62,7 @@ else
 				<div class="inform">
 					<fieldset>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 							<thead>
 								<tr>
 									<th class="tcl" scope="col"><?php echo $lang_admin_plugin_timelimit['Group'] ?></th>

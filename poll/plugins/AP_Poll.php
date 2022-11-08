@@ -63,7 +63,7 @@ else
 
 ?>
 	<div class="plugin blockform">
-		<h2><span><?php echo $lang_admin_plugin_poll['Plugin title'] ?> v.1.0</span></h2>
+		<h2><span><?php echo $lang_admin_plugin_poll['Plugin title'] ?> v.1.0.3</span></h2>
 		<div class="box">
 			<div class="inbox">
 				<p><?php echo $lang_admin_plugin_poll['Explanation 1'] ?></p>

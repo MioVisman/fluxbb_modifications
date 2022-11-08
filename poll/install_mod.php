@@ -3,8 +3,8 @@
 
 // Some info about your mod.
 $mod_title      = 'Poll Mod';
-$mod_version    = '1.0.4';
-$release_date   = '2011-02-04';
+$mod_version    = '1.1.0';
+$release_date   = '2011-02-26';
 $author         = 'Visman';
 $author_email   = 'visman@inbox.ru';
 

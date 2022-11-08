@@ -54,38 +54,60 @@ function poll_info($tid, $uid = NULL)
 	global $db;
 
 	if ($tid == 0) return null;
-
-	$result = $db->query('SELECT question, field, choice, votes FROM '.$db->prefix.'poll WHERE tid='.$tid.' ORDER BY question, field') or error('Unable to fetch poll info', __FILE__, __LINE__, $db->error());
-
-  $kol = 0;
-  $questions = $type = $choices = $votes = array();
-	while ($cur = $db->fetch_assoc($result))
+	
+	if (file_exists(FORUM_CACHE_DIR.'polls/'.$tid.'.php'))
+		include FORUM_CACHE_DIR.'polls/'.$tid.'.php';
+		
+	if (!isset($kol))
 	{
-		$kol = $cur['question'];
-		if ($cur['field'] == 0)
-		{
-			$questions[$kol] = $cur['choice'];
-			$type[$kol] = $cur['votes'];
-			$choices[$kol] = array();
-			$votes[$kol] = array();
-		}
-		else
-		{
-			$choices[$kol][$cur['field']] = $cur['choice'];
-			$votes[$kol][$cur['field']] = $cur['votes'];
-		}
-	}
+		$result = $db->query('SELECT question, field, choice, votes FROM '.$db->prefix.'poll WHERE tid='.$tid.' ORDER BY question, field') or error('Unable to fetch poll info', __FILE__, __LINE__, $db->error());
 
+	  $kol = 0;
+	  $questions = $type = $choices = $votes = array();
+		while ($cur = $db->fetch_assoc($result))
+		{
+			$kol = $cur['question'];
+			if ($cur['field'] == 0)
+			{
+				$questions[$kol] = $cur['choice'];
+				$type[$kol] = $cur['votes'];
+				$choices[$kol] = array();
+				$votes[$kol] = array();
+			}
+			else
+			{
+				$choices[$kol][$cur['field']] = $cur['choice'];
+				$votes[$kol][$cur['field']] = $cur['votes'];
+			}
+		}
+		$rez = array(
+			'questions' => $questions,
+			'choices' => $choices,
+			'votes' => $votes,
+			'type' => $type,
+			);
+
+		if (!is_dir(FORUM_CACHE_DIR.'polls/'))
+			mkdir(FORUM_CACHE_DIR.'polls', 0755);
+
+		$fh = @fopen(FORUM_CACHE_DIR.'polls/'.$tid.'.php', 'wb');
+		if (!$fh)
+			error('Unable to write configuration cache file to cache(/polls) directory. Please make sure PHP has write access to this directory.', __FILE__, __LINE__);
+
+		fwrite($fh, '<?php'."\n\n".'$kol = '.$kol.';'."\n\n".'$rez = '.var_export($rez, true).';'."\n\n".'?'.'>');
+
+		fclose($fh);
+
+		if (function_exists('apc_delete_file'))
+			@apc_delete_file(FORUM_CACHE_DIR.'polls/'.$tid.'.php');
+	}
+	
 	if ($kol == 0) return null;
 
-	return array(
-		'questions' => $questions,
-		'choices' => $choices,
-		'votes' => $votes,
-		'type' => $type,
-		'canVote' => (is_null($uid)) ? false : poll_can_vote($tid, $uid),
-		'isGuest' => (is_null($uid) || $uid > 1) ? false : true
-		);
+	$rez['canVote'] = (is_null($uid)) ? false : poll_can_vote($tid, $uid);
+	$rez['isGuest'] = (is_null($uid) || $uid > 1) ? false : true;
+
+	return $rez;
 }
 
 // форма ввода в новой теме ****************************************************
@@ -340,6 +362,13 @@ function poll_form_validate($tid, &$errors)
 	}
 }
 
+// удаление кэша опроса ********************************************************
+function poll_cache_delete($tid)
+{
+	if (file_exists(FORUM_CACHE_DIR.'polls/'.$tid.'.php'))
+		@unlink(FORUM_CACHE_DIR.'polls/'.$tid.'.php');
+}
+
 // удаление опроса *************************************************************
 function poll_delete($tid, $flag = false)
 {
@@ -350,6 +379,7 @@ function poll_delete($tid, $flag = false)
 	if ($flag)
 		$db->query('UPDATE '.$db->prefix.'topics SET poll_type=0, poll_time=0, poll_term=0, poll_kol=0 WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 
+	poll_cache_delete($tid);
 }
 
 // сохраняем опрос *************************************************************
@@ -426,6 +456,7 @@ function poll_save($tid)
 				$db->query('DELETE FROM '.$db->prefix.'poll  WHERE tid='.$tid.' AND question='.$k.' AND field='.$i) or error('Unable to delete poll choice', __FILE__, __LINE__, $db->error());
 			}
 		}
+		poll_cache_delete($tid);
 	}
 	else
 	{
@@ -626,4 +657,6 @@ function poll_vote($tid, $uid)
 	}
 	$db->query('INSERT INTO '.$db->prefix.'poll_voted (tid, uid, rez) VALUES ('.$tid.','.$uid.',\''.$db->escape(serialize($votes)).'\')') or error('Unable to save vote', __FILE__, __LINE__, $db->error());
 	$db->query('UPDATE '.$db->prefix.'topics SET poll_kol=poll_kol+1 WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+	
+	poll_cache_delete($tid);
 }

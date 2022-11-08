@@ -2,15 +2,20 @@
 ##
 ##        Mod title:  Poll Mod
 ##
-##      Mod version:  1.0.4
+##      Mod version:  1.1.0
 ##  Works on FluxBB:  1.4.4
-##     Release date:  2011-02-04
+##     Release date:  2011-02-26
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    based on code by kg (kg@as-planned.com)
 ##
 ##      Description:  This mod will allow you to add polls of any complexity to the first post in a topic.
 ##                    Мод позволяет вам добавить опрос любой сложности в первый пост темы.
+##
+##                    v 1.1.0
+##                      French is added. Thanks to jojaba.
+##                      Has added use of a cache for polls (-1 query).
+##                      Добавил использование кэша для опросов (-1 запрос к базе).
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##
@@ -24,7 +29,7 @@
 ##
 ##       Affects DB:  Yes
 ##
-##            Notes:  Russian/English 
+##            Notes:  Russian/English/French
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -67,6 +72,8 @@ install_mod.php
 
 # For Russian
 # 'Poll' => 'Опрос',
+# For French
+# 'Poll' => 'Sondage',
 
 #
 #---------[ 6. SAVE ]---------------------------------------------------------

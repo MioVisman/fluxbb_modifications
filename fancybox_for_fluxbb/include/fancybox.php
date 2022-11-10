@@ -11,7 +11,7 @@ if (isset($pun_config['o_fbox_files']) && (!$pun_user['is_guest'] || !empty($pun
 {
 	if (strpos(','.$pun_config['o_fbox_files'], ','.basename($_SERVER['PHP_SELF'])) !== false)
 	{
-		$page_head['jquery'] = (defined('AJAX_JQUERY') ? AJAX_JQUERY : '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>');
+		$page_head['jquery'] = '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
 		$page_head['fancyboxcss'] = '<link rel="stylesheet" type="text/css" href="style/imports/fancybox.css" />';
 		$page_head['fancybox'] = '<script type="text/javascript" src="js/fancybox.js"></script>';
 	}

@@ -10,8 +10,8 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.2.0');
-define('PLUGIN_REVISION', 2);
+define('PLUGIN_VERSION', '1.2.1');
+define('PLUGIN_REVISION', 3);
 define('PLUGIN_NAME', 'Fancybox for FluxBB');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_FILES', 'viewtopic.php,search.php,pmsnew.php');
@@ -35,7 +35,7 @@ $arr_files = array(
 	$prefhf,
 );
 $arr_search = array(
-	'echo implode("\n", $page_head)."\n";',
+	'// JavaScript tricks for IE6 and older',
 );
 $arr_new = array(
 	$fd_str."\n\n".'%search%',

@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.2.0
-##  Works on FluxBB:  1.4.4, 1.4.5
-##     Release date:  2011-03-31
+##      Mod version:  1.2.1
+##  Works on FluxBB:  1.4.4, 1.4.5, 1.4.6
+##     Release date:  2011-08-29
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -20,6 +20,8 @@
 ##                    1.2.0
 ##                     Installation/change/removal by means of plugin.
 ##                     Has added processing directupload.net and itmages.ru.
+##                    1.2.1
+##                     Update for FluxBB 1.4.6
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/resources/mods/fancybox-for-fluxbb/
@@ -31,7 +33,6 @@
 ##            Notes:  Russian/English
 ##                    All work is carried out on the party of the client (javascript + jQuery).
 ##                    Work examples http://forum.alltes.ru/fluxbb14test/viewtopic.php?id=24
-##                    Should work at an original forum and on my version / Должен работать на оригинальном форуме и на моей версии
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 

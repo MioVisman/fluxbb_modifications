@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.1.0
-##  Works on FluxBB:  1.4.2
-##     Release date:  2011-01-14
+##      Mod version:  1.1.1
+##  Works on FluxBB:  1.4.4
+##     Release date:  2011-02-03
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -15,8 +15,11 @@
 ##                     Has added processing photobucket.com.
 ##                     Has added video processing www.youtube.com.
 ##                     The signature in post isn't processed.
+##                    1.1.1
+##                     for FluxBB 1.4.4
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    http://fluxbb.org/resources/mods/fancybox-for-fluxbb/
 ##
 ##   Affected files:  header.php
 ##
@@ -49,8 +52,7 @@ header.php
 #---------[ 3. FIND ]---------------------------------------------------------
 #
 
-if (isset($page_head))
-	echo implode("\n", $page_head)."\n";
+echo implode("\n", $page_head)."\n";
 
 #
 #---------[ 4. BEFORE, ADD ]--------------------------------------------------

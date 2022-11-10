@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.2.4
-##  Works on FluxBB:  1.5.1, 1.5.2, 1.5.3
-##     Release date:  2013-03-22
+##      Mod version:  1.3.1
+##  Works on FluxBB:  1.5.4
+##     Release date:  2013-11-11
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -28,6 +28,11 @@
 ##                    1.2.4
 ##                     Use jQuery 1.9.1. With 1.8.2 too works.
 ##                     Has added processing imgur.com.
+##                    1.3.1
+##                     Support ompldr.org is removed
+##                     Support imagelore.org, pixs.ru and smages.com is added.
+##                     Support "Upload Mod" v.2.0 and above (https://fluxbb.org/resources/mods/upload-mod/) is added.
+##                     Compatibility with "Media.js" (https://fluxbb.org/resources/mods/mediajs/).
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/resources/mods/fancybox-for-fluxbb/

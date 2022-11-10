@@ -17,11 +17,11 @@ else
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.2.4');
-define('PLUGIN_REVISION', 3);
+define('PLUGIN_VERSION', '1.3.1');
+define('PLUGIN_REVISION', 4);
 define('PLUGIN_NAME', 'Fancybox for FluxBB');
-define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
-define('PLUGIN_FILES', 'viewtopic.php,search.php,pmsnew.php');
+define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin='.$plugin));
+define('PLUGIN_FILES', 'viewtopic.php,search.php,pmsnew.php,upfiles.php,AP_Upload.php');
 $tabindex = 1;
 
 $fd_str = 'require PUN_ROOT.\'include/fancybox.php\';';
@@ -143,7 +143,7 @@ else if (isset($_POST['update']))
 	foreach ($files as $file)
 	{
 		$file = str_replace(array('/','\\','\'','`','"'), array('','','','',''), $file);
-		if (substr($file, -4) == '.php' && file_exists(PUN_ROOT.$file))
+		if ((substr($file, -4) == '.php' && file_exists(PUN_ROOT.$file)) || ($file == 'AP_Upload.php') && file_exists(PUN_ROOT.'plugins/'.$file))
 			$fls[] = $file;
 	}
 
@@ -252,10 +252,12 @@ if (!$f_inst)
 	$ar_file = array();
 	while (($entry = $d->read()) !== false)
 	{
-		if (substr($entry, -4) == '.php' && substr($entry, 0, 5) != 'admin' && !in_array($entry, array('db_update.php', 'install.php', 'extern.php', 'pjq.php', 're.php')))
+		if (substr($entry, -4) == '.php' && substr($entry, 0, 5) != 'admin' && !in_array($entry, array('db_update.php', 'install.php', 'extern.php', 'pjq.php', 're.php', 'footer.php', 'header.php', 'help.php', 'login.php', 'misc.php', 'register.php', 'reglog.php', 'userlist.php')))
 			$ar_file[] = $entry;
 	}
 	$d->close();
+  if (file_exists(PUN_ROOT.'plugins/AP_Upload.php'))
+		$ar_file[] = 'AP_Upload.php';
 
 	natcasesort($ar_file);
 	

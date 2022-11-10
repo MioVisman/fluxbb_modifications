@@ -7,9 +7,9 @@
 if (!defined('PUN'))
 	exit;
 
-if (isset($pun_config['o_fbox_files']) && (!$pun_user['is_guest'] || !empty($pun_config['o_fbox_guest'])))
+if (isset($pun_config['o_fbox_files']) && !isset($http_status) && (!$pun_user['is_guest'] || !empty($pun_config['o_fbox_guest'])))
 {
-	if (strpos(','.$pun_config['o_fbox_files'], ','.basename($_SERVER['PHP_SELF'])) !== false)
+	if (strpos(','.$pun_config['o_fbox_files'], ','.basename($_SERVER['PHP_SELF'])) !== false || (!empty($plugin) && strpos(','.$pun_config['o_fbox_files'], ','.$plugin) !== false))
 	{
 		$page_head['jquery'] = '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
 		$page_head['fancyboxcss'] = '<link rel="stylesheet" type="text/css" href="style/imports/fancybox.css" />';

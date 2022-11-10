@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.2.2
-##  Works on FluxBB:  1.5.1
-##     Release date:  2012-11-15
+##      Mod version:  1.2.4
+##  Works on FluxBB:  1.5.1, 1.5.2, 1.5.3
+##     Release date:  2013-03-22
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -25,6 +25,9 @@
 ##                    1.2.2
 ##                     Update for FluxBB 1.5.1
 ##                     Use jQuery 1.8.2
+##                    1.2.4
+##                     Use jQuery 1.9.1. With 1.8.2 too works.
+##                     Has added processing imgur.com.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/resources/mods/fancybox-for-fluxbb/

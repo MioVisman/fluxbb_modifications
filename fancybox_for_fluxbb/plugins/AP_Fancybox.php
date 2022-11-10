@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2013 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -8,20 +9,20 @@
 if (!defined('PUN'))
 	exit;
 
+// Load language file
+if (file_exists(PUN_ROOT.'lang/'.$admin_language.'/fancybox.php'))
+	require PUN_ROOT.'lang/'.$admin_language.'/fancybox.php';
+else
+	require PUN_ROOT.'lang/English/fancybox.php';
+
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.2.2');
+define('PLUGIN_VERSION', '1.2.4');
 define('PLUGIN_REVISION', 3);
 define('PLUGIN_NAME', 'Fancybox for FluxBB');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_FILES', 'viewtopic.php,search.php,pmsnew.php');
 $tabindex = 1;
-
-// Load language file
-if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/fancybox.php'))
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/fancybox.php';
-else
-	require PUN_ROOT.'lang/English/fancybox.php';
 
 $fd_str = 'require PUN_ROOT.\'include/fancybox.php\';';
 $prefhf = PUN_ROOT.'header.php';
@@ -180,6 +181,19 @@ $file_content = file_get_contents($prefhf);
 if ($file_content === false)
 	message(pun_htmlspecialchars($prefhf.$lang_fb['Error open file']));
 $f_inst = (strpos($file_content, $fd_str) !== false);
+if ($f_inst && !isset($pun_config['o_fbox_files'])) // непредвиденная ситуация при обновлении
+{
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_fbox_%"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_fbox_guest\', \'0\')') or error('Unable to insert into table config.', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_fbox_files\', \''.$db->escape(PLUGIN_FILES).'\')') or error('Unable to insert into table config.', __FILE__, __LINE__, $db->error());
+
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
+	generate_config_cache();
+
+	redirect(PLUGIN_URL, 'Synchronization of settings this plugin.');
+}
 
 // Display the admin navigation menu
 generate_admin_menu($plugin);
@@ -195,7 +209,7 @@ generate_admin_menu($plugin);
 if (!$f_inst)
 {
 ?>
-						<input type="submit" name="installation" value="<?php echo $lang_fb['installation'] ?>" />&nbsp;<?php echo $lang_fb['installation_info'] ?><br />
+						<input type="submit" name="installation" value="<?php echo $lang_fb['installation'] ?>" />&#160;<?php echo $lang_fb['installation_info'] ?><br />
 					</p>
 				</form>
 			</div>
@@ -203,7 +217,7 @@ if (!$f_inst)
 <?php
 } else {
 ?>
-						<input type="submit" name="delete" value="<?php echo $lang_fb['delete'] ?>" />&nbsp;<?php echo $lang_fb['delete_info'] ?><br /><br />
+						<input type="submit" name="delete" value="<?php echo $lang_fb['delete'] ?>" />&#160;<?php echo $lang_fb['delete_info'] ?><br /><br />
 					</p>
 				</form>
 			</div>

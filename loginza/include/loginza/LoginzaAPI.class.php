@@ -7,7 +7,7 @@
  * @version 1.0
  *
  * @модификация для FluxBB - Visman (visman@inbox.ru)
- * @version 1.0.2
+ * @version 1.0.3
  */
 if (!defined('PUN'))
 	exit;
@@ -17,7 +17,7 @@ class LoginzaAPI {
 	 * Версия класса
 	 *
 	 */
-	const VERSION = 'FluxBB-1.0.2';
+	const VERSION = 'FluxBB-1.0.3';
 	/**
 	 * URL для взаимодействия с API loginza
 	 *
@@ -81,7 +81,7 @@ class LoginzaAPI {
 		}
 
 		if (!$return_url) {
-			$params[] = 'token_url='.urlencode($this->currentUrl());
+			$params[] = 'token_url='.get_current_url();
 		} else {
 			$params[] = 'token_url='.urlencode($return_url);
 		}
@@ -198,41 +198,6 @@ class LoginzaAPI {
 		return $tempfile;
 	}
 
-	/**
-	 * Возвращает ссылку на текущую страницу
-	 *
-	 * @return string
-	 */
-	private function currentUrl () {
-		$url = array();
-		// проверка https
-		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') {
-			$url['sheme'] = "https";
-			$url['port'] = '443';
-		} else {
-			$url['sheme'] = 'http';
-			$url['port'] = '80';
-		}
-		// хост
-		$url['host'] = $_SERVER['HTTP_HOST'];
-		// если не стандартный порт
-		if (strpos($url['host'], ':') === false && $_SERVER['SERVER_PORT'] != $url['port']) {
-			$url['host'] .= ':'.$_SERVER['SERVER_PORT'];
-		}
-		// строка запроса
-		if (isset($_SERVER['REQUEST_URI'])) {
-			$url['request'] = $_SERVER['REQUEST_URI'];
-		} else {
-			$url['request'] = $_SERVER['SCRIPT_NAME'] . $_SERVER['PATH_INFO'];
-			$query = $_SERVER['QUERY_STRING'];
-			if (isset($query)) {
-			  $url['request'] .= '?'.$query;
-			}
-		}
-		
-		return $url['sheme'].'://'.$url['host'].$url['request'];
-	}
-	
 	/**
 	 * Делает запрос на API loginza
 	 *

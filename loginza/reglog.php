@@ -101,14 +101,13 @@ if ($pun_user['is_guest'])
 			// MOD кэш пользователей - Visman
 			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 				require PUN_ROOT.'include/cache.php';
-			if (function_exists('generate_users_cache'))
-				generate_users_cache();
+			generate_users_info_cache();
 
       $LgzAPI = new LoginzaAPI();
       $LgzAPI->setAvatar($new_uid, $dUser['photo_url'], $pun_config);
       
 			// отправляем письмо с паролем
-			if (strstr($dUser['email'], '@localhost') === false)
+			if (is_valid_email($dUser['email']))
 			{
 				// Load the "welcome" template
 				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/welcome.tpl'));
@@ -122,11 +121,27 @@ if ($pun_user['is_guest'])
 				$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
 				$mail_message = str_replace('<username>', $username, $mail_message);
 				$mail_message = str_replace('<password>', $password, $mail_message);
-				$mail_message = str_replace('<login_url>', get_base_url().'/login.php', $mail_message);
+				$mail_message = str_replace('<login_url>', get_base_url(), $mail_message);
 				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
 				pun_mail($dUser['email'], $mail_subject, $mail_message);
 			}
+			
+			// If the mailing list isn't empty, we may need to send out some alerts
+			if ($pun_config['o_mailing_list'] != '')
+			{
+				// Should we alert people on the admin mailing list that a new user has registered?
+				if ($pun_config['o_regs_report'] == '1')
+				{
+					$mail_subject = $lang_common['New user notification'];
+					$mail_message = sprintf($lang_common['New user message'], $username, get_base_url().'/')."\n";
+					$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$new_uid)."\n";
+					$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+
+					pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
+				}
+			}
+
 //			$pun_config['o_redirect_delay'] = 30;
 			redirect('profile.php?id='.$new_uid, $lang_register['Reg complete']);
 		}
@@ -351,7 +366,7 @@ else
 
 			$db->query('INSERT INTO '.$db->prefix.'reglog (user_id, identity, provider, email, uid) VALUES('.$pun_user['id'].', \''.$db->escape($dUser['identity']).'\', \''.$db->escape($dUser['provider']).'\', \''.$db->escape($dUser['email']).'\', \''.$db->escape($dUser['uid']).'\')') or error('Unable to create reglog', __FILE__, __LINE__, $db->error());
 
-			if (strstr($dUser['email'], '@localhost') === false && strstr($pun_user['email'], '@localhost') !== false)
+			if (is_valid_email($dUser['email']) && !is_valid_email($pun_user['email']))
 				$db->query('UPDATE '.$db->prefix.'users SET email=\''.$db->escape($dUser['email']).'\' WHERE id='.$pun_user['id']) or error('Unable to update email address', __FILE__, __LINE__, $db->error());
 
 			redirect('reglog.php', $lang_rl['Setacc redirect']);

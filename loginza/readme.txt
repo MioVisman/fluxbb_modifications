@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.0.0
-##  Works on FluxBB:  1.4.4
-##     Release date:  2011-03-11
+##      Mod version:  1.1.0
+##  Works on FluxBB:  1.4.5
+##     Release date:  2011-03-25
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -41,7 +41,7 @@
 file reglog.php; folders include, lang, plugins, img to /
 
 #
-#---------[ 2. START ]-------------------------------------------------------
+#---------[ 2. DO THIS ]------------------------------------------------------
 #
 
 Administration -> Plugin "Loginza" -> Install

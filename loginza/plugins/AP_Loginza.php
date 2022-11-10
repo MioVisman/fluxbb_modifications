@@ -10,8 +10,8 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.0.0');
-define('PLUGIN_REVISION', 1);
+define('PLUGIN_VERSION', '1.1.0');
+define('PLUGIN_REVISION', 2);
 define('PLUGIN_NAME', 'Loginza');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_PROV', 'google,yandex,mailruapi,vkontakte,facebook,twitter,loginza,myopenid,webmoney,rambler,flickr,lastfm,verisign,aol,steam,openid,mailru');
@@ -41,7 +41,7 @@ $arr_new = array(
 	'<?php require PUN_ROOT.\'include/loginza/login.php\'; ?>'."\n".'%search%',
 	'<?php require PUN_ROOT.\'include/loginza/register.php\'; ?>'."\n".'%search%',
 	'%search%'."\n".'		require PUN_ROOT.\'include/loginza/profile.php\';',
-	'%search%'."\n".'if (strstr($to, \'@localhost\') !== false) {return; }',
+	'%search%'."\n".'if (!is_valid_email($to)) { return; }',
 	'%search%'."\n".'<?php if ($pun_user[\'id\'] == $id): ?>					<li<?php if ($page == \'loginza\') echo \' class="isactive"\'; ?>><a href="reglog.php">Loginza</a></li>'."\n".'<?php endif; ?>',
 );
 ?><?php
@@ -285,7 +285,7 @@ if (!isset($pun_config['o_loginza_set']))
 							<tr>
 								<th scope="row"><label for="rejim"><?php echo $lang_rl['rejim'] ?></label></th>
 								<td>
-									<span><input type="checkbox" name="rejim" value="1" tabindex="<?php echo $tabindex++ ?>"<?php echo (strstr($pun_config['o_loginza_set'], 'java') !== false) ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_rl['rejim info'] ?></span>
+									<label><input type="checkbox" name="rejim" value="1" tabindex="<?php echo $tabindex++ ?>"<?php echo (strstr($pun_config['o_loginza_set'], 'java') !== false) ? ' checked="checked"' : '' ?> />&#160;&#160;<?php echo $lang_rl['rejim info'] ?></label>
 								</td>
 							</tr>
 						</table>

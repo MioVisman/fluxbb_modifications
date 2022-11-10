@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2013 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -31,6 +31,6 @@ if (strpos($pun_config['o_loginza_set'], 'java') !== false)
 		echo '<script src="//loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
 }
 ?>
-						<p class="actions"><span><a href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><?php echo $lang_rl['Loginza log'] ?></a></span></p>
+						<p class="actions"><span><a rel="nofollow" href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><?php echo $lang_rl['Loginza log'] ?></a></span></p>
 					</div>
 				</fieldset>

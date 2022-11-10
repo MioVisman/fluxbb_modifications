@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  3.0.0 beta
+##      Mod version:  3.0.1 beta
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-11-07
+##     Release date:  2019-11-29
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -60,6 +60,10 @@
 ##                      The file mentioned in the forum posts cannot be deleted.
 ##                        The search for the mention of the file goes through the search index and further LIKE in the message.
 ##                        Admin can delete files without checks in the admin plugin.
+##                    v 3.0.1
+##                      Minor fix: Remove double serialization during automatic reconfiguration of the modification.
+##                      https://github.com/MioVisman/FluxBB_by_Visman/commit/61fcae2702b5981ecfe277f01792e38d6034214d
+##
 ##
 ##
 ##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
@@ -90,6 +94,7 @@
 upfiles.php to /
 img/ to /img/
 include/ to /include/
+js/ to /js/
 lang/ to /lang/
 plugins/ to /plugins/
 style/ to /style/

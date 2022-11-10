@@ -2,14 +2,19 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.0.1
+##      Mod version:  1.1.0
 ##  Works on FluxBB:  1.4.2
-##     Release date:  2011-01-11
+##     Release date:  2011-01-14
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
 ##      Description:  FancyBox is a tool for displaying images, html content and multi-media in a Mac-style "lightbox" that floats overtop of web page.
-##                    This mod displays full images from a preview of sites funkyimg.com, fastpic.ru, radikal.ru, imageshack.us, savepic.(ru|org|net), fastpic.ru, jpegshare.net, ompldr.org; from references to images *.(jpg|jpeg|png|gif|bmp).
+##                    This mod displays full images from a preview of sites funkyimg.com, fastpic.ru, radikal.ru, imageshack.us, savepic.(ru|org|net), jpegshare.net, ompldr.org; from references to images *.(jpg|jpeg|png|gif|bmp).
+##
+##                    1.1.0 
+##                     Has added processing photobucket.com.
+##                     Has added video processing www.youtube.com.
+##                     The signature in post isn't processed.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##

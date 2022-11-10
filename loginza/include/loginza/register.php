@@ -12,7 +12,9 @@ if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/reglog.php'))
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/reglog.php';
 else
 	require PUN_ROOT.'lang/English/reglog.php';
-require PUN_ROOT.'include/loginza/LoginzaAPI.class.php';
+
+if (!class_exists('LoginzaAPI'))
+	require PUN_ROOT.'include/loginza/LoginzaAPI.class.php';
 
 $LgzAPI = new LoginzaAPI();
 $urlLgz = $LgzAPI->getWidgetUrl(get_base_url(true).'/reglog.php', $pun_config['o_loginza_prov'], $lang_rl['lang']);
@@ -21,9 +23,15 @@ $urlLgz = $LgzAPI->getWidgetUrl(get_base_url(true).'/reglog.php', $pun_config['o
 				<fieldset>
 					<legend><?php echo $lang_rl['Loginza reglog'] ?></legend>
 					<div class="infldset">
-<?php if (strstr($pun_config['o_loginza_set'], 'java') !== false): ?>
-						<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>
-<?php endif; ?>
+<?php
+if (strpos($pun_config['o_loginza_set'], 'java') !== false)
+{
+	if (isset($page_js))
+		$page_js['f']['loginza'] = 'http://s1.loginza.ru/js/widget.js';
+	else
+		echo '<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
+}
+?>
 						<p class="actions"><span><a href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><?php echo $lang_rl['Loginza log'] ?></a></span></p>
 					</div>
 				</fieldset>

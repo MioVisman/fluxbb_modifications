@@ -443,7 +443,13 @@ else
 </div>
 <?php
 
-	echo (strstr($pun_config['o_loginza_set'], 'java') !== false) ? '<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>'."\n" : '';
-	
+	if (strpos($pun_config['o_loginza_set'], 'java') !== false)
+	{
+		if (isset($page_js))
+			$page_js['f']['loginza'] = 'http://s1.loginza.ru/js/widget.js';
+		else
+			echo '<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
+	}
+
 	require PUN_ROOT.$prefhf.'footer.php';
 }

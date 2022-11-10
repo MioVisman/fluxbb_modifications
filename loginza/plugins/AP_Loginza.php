@@ -10,8 +10,8 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.1.2');
-define('PLUGIN_REVISION', 3);
+define('PLUGIN_VERSION', '1.2.0');
+define('PLUGIN_REVISION', 4);
 define('PLUGIN_NAME', 'Loginza');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_PROV', 'google,yandex,mailruapi,vkontakte,facebook,twitter,loginza,myopenid,webmoney,rambler,flickr,lastfm,verisign,aol,steam,openid,mailru');
@@ -23,6 +23,11 @@ if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/reglog.php'))
 else
 	require PUN_ROOT.'lang/English/reglog.php';
 
+if (file_exists(PUN_ROOT.'include/header.php'))
+	$prefhf = 'include/header.php';
+else
+	$prefhf = 'header.php';
+
 $arr_files = array(
 	'login.php',
 	'register.php',
@@ -30,6 +35,7 @@ $arr_files = array(
 	'include/email.php',
 	'include/functions.php',
 	'admin_users.php',
+	$prefhf,
 );
 $arr_search = array(
 	'				<fieldset>'."\n".'					<legend><?php echo $lang_login[\'Login legend\'] ?></legend>',
@@ -38,6 +44,7 @@ $arr_search = array(
 	'function pun_mail($to, $subject, $message, $reply_to_email = \'\', $reply_to_name = \'\')'."\n".'{'."\n".'	global $pun_config, $lang_common;',
 	'					<li<?php if ($page == \'privacy\') echo \' class="isactive"\'; ?>><a href="profile.php?section=privacy&amp;id=<?php echo $id ?>"><?php echo $lang_profile[\'Section privacy\'] ?></a></li>',
 	'		redirect(\'admin_users.php\', $lang_admin_users[\'Users delete redirect\']);',
+	'	$page_statusinfo = \'<p>\'.$lang_common[\'Not logged in\'].\'</p>\';',
 );
 $arr_new = array(
 	'<?php require PUN_ROOT.\'include/loginza/login.php\'; ?>'."\n".'%search%',
@@ -46,6 +53,7 @@ $arr_new = array(
 	'%search%'."\n".'if (!is_valid_email($to)) { return; }',
 	'%search%'."\n".'<?php if ($pun_user[\'id\'] == $id): ?>					<li<?php if ($page == \'loginza\') echo \' class="isactive"\'; ?>><a href="reglog.php">Loginza</a></li>'."\n".'<?php endif; ?>',
 	'require PUN_ROOT.\'include/loginza/admin_users.php\';'."\n\n".'%search%',
+	'{'."\n".'	require PUN_ROOT.\'include/loginza/header.php\';'."\n".'} // %search%',
 );
 ?><?php
 // установка изменений в файлы
@@ -58,9 +66,6 @@ function InstallModInFiles ()
 
 	for ($i=0; $i < $max; $i++)
 	{
-//		echo var_export($arr_files, true);
-//		echo var_export($arr_search, true);
-//		echo var_export($arr_new, true);
 		$file_content = file_get_contents(PUN_ROOT.$arr_files[$i]);
 		if ($file_content === false)
 		{
@@ -101,9 +106,6 @@ function DeleteModInFiles ()
 
 	for ($i=0; $i < $max; $i++)
 	{
-//		echo var_export($arr_files, true);
-//		echo var_export($arr_search, true);
-//		echo var_export($arr_new, true);
 		$file_content = file_get_contents(PUN_ROOT.$arr_files[$i]);
 		if ($file_content === false)
 		{

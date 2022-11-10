@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.1.2
+##      Mod version:  1.2.0
 ##  Works on FluxBB:  1.4.5
-##     Release date:  2011-05-04
+##     Release date:  2011-05-31
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -15,6 +15,10 @@
 ##
 ##                    v 1.1.2
 ##                    French is added. Thanks to adaur.
+##
+##                    v 1.2.0
+##                    Кнопка Loginza добавлена на каждую страницу форума.
+##                    Button Loginza is added in each page of forum.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/forums/viewtopic.php?id=5218
@@ -29,7 +33,8 @@
 ##                    REQUIRES: CURL or allow_url_fopen = ON
 ##                    TEST:     only PHP5.
 ##
-##                    Should work at an original forum and on my version / Должен работать на оригинальном форуме и на моей версии
+##                    Should work at an original forum and on my version /
+##                    / Должен работать на оригинальном форуме и на моей версии
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 

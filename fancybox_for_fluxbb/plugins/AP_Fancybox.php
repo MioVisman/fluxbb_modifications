@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -10,7 +10,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.2.1');
+define('PLUGIN_VERSION', '1.2.2');
 define('PLUGIN_REVISION', 3);
 define('PLUGIN_NAME', 'Fancybox for FluxBB');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
@@ -24,11 +24,7 @@ else
 	require PUN_ROOT.'lang/English/fancybox.php';
 
 $fd_str = 'require PUN_ROOT.\'include/fancybox.php\';';
-
-if (file_exists(PUN_ROOT.'include/header.php'))
-	$prefhf = PUN_ROOT.'include/header.php';
-else
-	$prefhf = PUN_ROOT.'header.php';
+$prefhf = PUN_ROOT.'header.php';
 
 
 $arr_files = array(
@@ -183,11 +179,7 @@ else if (isset($_POST['delete']))
 $file_content = file_get_contents($prefhf);
 if ($file_content === false)
 	message(pun_htmlspecialchars($prefhf.$lang_fb['Error open file']));
-if (strpos($file_content, $fd_str) !== false)
-	$f_inst = true;
-else
-	$f_inst = false;
-
+$f_inst = (strpos($file_content, $fd_str) !== false);
 
 // Display the admin navigation menu
 generate_admin_menu($plugin);

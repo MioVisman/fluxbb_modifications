@@ -13,7 +13,7 @@ if (!defined('PUN')) {
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '2.2.1');
+define('PLUGIN_VERSION', '2.2.2');
 define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin=' . $plugin));
 define('PLUGIN_EXTS', 'jpg,jpeg,png,gif,mp3,zip,rar,7z');
 define('PLUGIN_NF', 25);
@@ -89,14 +89,9 @@ else if (isset($_POST['update'])) {
 			$g_ext = PLUGIN_EXTS;
 		}
 
-		if ($cur_group['g_id'] == PUN_ADMIN) {
-			$g_lim = 1073741824;
-			$g_max = min(return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
-		} else {
-			$g_lim = (!isset($g_up_limit[$cur_group['g_id']]) || $g_up_limit[$cur_group['g_id']] < 0) ? 0 : $g_up_limit[$cur_group['g_id']];
-			$g_max = (!isset($g_up_max[$cur_group['g_id']]) || $g_up_max[$cur_group['g_id']] < 0) ? 0 : $g_up_max[$cur_group['g_id']];
-			$g_max = min($g_max, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
-		}
+		$g_lim = (!isset($g_up_limit[$cur_group['g_id']]) || $g_up_limit[$cur_group['g_id']] < 0) ? 0 : $g_up_limit[$cur_group['g_id']];
+		$g_max = (!isset($g_up_max[$cur_group['g_id']]) || $g_up_max[$cur_group['g_id']] < 0) ? 0 : $g_up_max[$cur_group['g_id']];
+		$g_max = min($g_max, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
 
 		$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape($g_ext) . '\', g_up_limit=' . $g_lim . ', g_up_max=' . $g_max . ' WHERE g_id=' . $cur_group['g_id']) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
 	}
@@ -350,8 +345,8 @@ if (defined('PLUGIN_OFF')) {
 								<tr>
 									<td class="tcl"><?= pun_htmlspecialchars($cur_group['g_title']) ?></td>
 									<td class="tc2"><input type="text" name="g_up_ext[<?= $cur_group['g_id'] ?>]" value="<?= pun_htmlspecialchars($cur_group['g_up_ext']) ?>" tabindex="<?= $tabindex++ ?>" size="40" maxlength="255" /></td>
-									<td class="tcr"><input type="text" name="g_up_max[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_max'] ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" <?= ($cur_group['g_id'] == PUN_ADMIN ? 'disabled="disabled" ' : '')?>/></td>
-									<td class="tcr"><input type="text" name="g_up_limit[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_limit'] ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" <?= ($cur_group['g_id'] == PUN_ADMIN ? 'disabled="disabled" ' : '')?>/></td>
+									<td class="tcr"><input type="text" name="g_up_max[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_max'] ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" /></td>
+									<td class="tcr"><input type="text" name="g_up_limit[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_limit'] ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" /></td>
 								</tr>
 <?php
 

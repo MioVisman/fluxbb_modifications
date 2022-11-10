@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  2.2.1 beta
+##      Mod version:  2.2.2 beta
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-10-12
+##     Release date:  2019-10-21
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -46,6 +46,10 @@
 ##
 ##                    v 2.2.1 beta
 ##                      Fix AP_Upload.php for SQLite.
+##
+##                    v 2.2.2 beta
+##                      Updated .htaccess for img/members/ folder.
+##                      A group of administrators can set limits for themselves.
 ##
 ##
 ##

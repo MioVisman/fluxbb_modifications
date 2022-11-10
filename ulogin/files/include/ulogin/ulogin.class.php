@@ -25,7 +25,7 @@ class uLoginClass
 	private function _Request($url, $timeout = 10, $max_redirects = 10)
 	{
 		$allow_url_fopen = strtolower(ini_get('allow_url_fopen'));
-		$ua = 'Mozilla/5.0 (Windows NT 6.4; rv:38.0) Gecko/20100101 Firefox/38.0';
+		$ua = 'Mozilla/5.0 (Windows NT 6.1; rv:43.0) Gecko/20100101 Firefox/43.0';
 
 		// 1
 		if (extension_loaded('curl'))
@@ -303,7 +303,7 @@ class uLoginClass
 		  
 		// заполняем реальное имя
 		if (!empty($profile['first_name']))
-		  $arr['realname'].= $profile['first_name'];
+		  $arr['realname'] = $profile['first_name'];
 		if (!empty($profile['last_name']))
 		  $arr['realname'].= ' '.$profile['last_name'];
 	  $arr['realname'] = pun_trim($arr['realname']);
@@ -413,7 +413,7 @@ class uLoginClass
 			$usernames[] = $profile['nickname'].mt_rand(1, 10000);
 		}
 
-		if (!empty($profile['email']) && preg_match('%^(.+)\@%u', $profile['email'], $nickname))
+		if (!empty($profile['email']) && preg_match('%^([\w-]+)%u', $profile['email'], $nickname))
 			$usernames[] = $nickname[1];
 
 		$result = $this->db->query('SELECT id FROM '.$this->db->prefix.'users ORDER BY id DESC LIMIT 1') or error('Unable to fetch users info', __FILE__, __LINE__, $this->db->error());

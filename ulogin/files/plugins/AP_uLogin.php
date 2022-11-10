@@ -10,8 +10,8 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.0.0');
-define('PLUGIN_REVISION', 1);
+define('PLUGIN_VERSION', '1.1.0');
+define('PLUGIN_REVISION', 2);
 define('PLUGIN_NAME', 'uLogin');
 define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_NET', 'dudu,facebook,foursquare,flickr,google,googleplus,instagram,lastfm,linkedin,liveid,livejournal,mailru,odnoklassniki,openid,soundcloud,steam,tumblr,twitter,uid,vimeo,vkontakte,wargaming,webmoney,yandex,youtube');

@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  uLogin
 ##
-##      Mod version:  1.0.0
+##      Mod version:  1.1.0
 ##  Works on FluxBB:  1.5.8
 ##     Release date:  2015-05-25
 ##      Review date:  YYYY-MM-DD (Leave unedited)

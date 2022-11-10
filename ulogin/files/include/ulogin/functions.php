@@ -65,6 +65,7 @@ function ulogin_set_reglog($redirect_url, $str = false)
 					</div>
 				</fieldset>
 <?php
+
 }
 
 
@@ -86,9 +87,9 @@ function ulogin_set_header(&$page_statusinfo)
 function ulogin_set_js()
 {
 	global $page_js, $tpl_main;
-	static $flag_set;
+	static $script;
 	
-	if (isset($flag_set))
+	if (isset($script))
 	  return;
 	  
   $script = 'function fluxbb_ulogin_click()

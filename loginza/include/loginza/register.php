@@ -19,7 +19,6 @@ if (!class_exists('LoginzaAPI'))
 $LgzAPI = new LoginzaAPI();
 $urlLgz = $LgzAPI->getWidgetUrl(get_base_url(true).'/reglog.php', $pun_config['o_loginza_prov'], $lang_rl['lang']);
 ?>
-			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_rl['Loginza reglog'] ?></legend>
 					<div class="infldset">
@@ -35,4 +34,3 @@ if (strpos($pun_config['o_loginza_set'], 'java') !== false)
 						<p class="actions"><span><a href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><?php echo $lang_rl['Loginza log'] ?></a></span></p>
 					</div>
 				</fieldset>
-			</div>

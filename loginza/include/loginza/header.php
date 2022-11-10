@@ -24,4 +24,4 @@ if (!class_exists('LoginzaAPI'))
 $LgzAPI = new LoginzaAPI();
 $urlLgz = $LgzAPI->getWidgetUrl(get_base_url(true).'/reglog.php?redirect_url='.get_current_url(), $pun_config['o_loginza_prov'], $lang_rl['lang']);
 
-$page_statusinfo = '<p><span>'.$lang_common['Not logged in'].'</span>&nbsp;<a href="'.pun_htmlspecialchars($urlLgz).'" class="loginza"><img alt="'.$lang_rl['Loginza reglog'].'" src="'.$btnlgz.'" style="margin-bottom: -0.5em;"></a></p>';
+$page_statusinfo = '<p class="conl"><span>'.$lang_common['Not logged in'].'</span>&nbsp;<a href="'.pun_htmlspecialchars($urlLgz).'" class="loginza"><img alt="'.$lang_rl['Loginza reglog'].'" src="'.$btnlgz.'" style="margin-bottom: -0.5em;"></a></p>';

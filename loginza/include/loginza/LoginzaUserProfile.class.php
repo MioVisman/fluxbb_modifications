@@ -5,15 +5,15 @@
  * @version 1.0
  *
  * @модификация для FluxBB - Visman (visman@inbox.ru)
- * @version 1.0.2
+ * @version 1.0.3
  */
 if (!defined('PUN'))
 	exit;
 
 function checkUsername ($username)
 {
-	$username = preg_replace('/[@=\'\.-]+/u', '_', $username);
-	$username = preg_replace('/[^\p{L}\p{N} _]/u', '', $username);
+	$username = preg_replace('%[@=\'\.-]+%u', '_', $username);
+	$username = preg_replace('%[^\p{L}\p{N} _]%u', '', $username);
 	$username = pun_trim(utf8_substr($username, 0, 25));
 	
 	return $username;
@@ -60,21 +60,21 @@ class LoginzaUserProfile {
 
 		$username[] = $this->genRealname();
 
-		if (!empty($this->profile->email) && preg_match('/^(.+)\@/i', $this->profile->email, $nickname))
+		if (!empty($this->profile->email) && preg_match('%^(.+)\@%i', $this->profile->email, $nickname))
 			$username[] = $nickname[1];
 
 		// шаблоны по которым выцепляем ник из identity
 		$patterns = array(
 			'([^\.]+)\.ya\.ru',
 			'([^\.]+)\.loginza\.ru',
-			'openid\.mail\.ru\/[^\/]+\/([^\/?]+)',
-			'my\.mail\.ru\/[^\/]+\/([^\/?]+)',
-			'openid\.yandex\.ru\/([^\/?]+)',
+			'openid\.mail\.ru/[^/]+/([^/?]+)',
+			'my\.mail\.ru/[^/]+/([^/?]+)',
+			'openid\.yandex\.ru/([^/?]+)',
 			'([^\.]+)\.myopenid\.com',
-			'id\.rambler\.ru\/users\/([^\/?]+)',
+			'id\.rambler\.ru/users/([^/?]+)',
 		);
 		foreach ($patterns as $pattern) {
-			if (preg_match('/^https?\:\/\/'.$pattern.'/i', $this->profile->identity, $result))
+			if (preg_match('%^https?\://'.$pattern.'%i', $this->profile->identity, $result))
 				$username[] = $result[1];
 		}
 
@@ -91,19 +91,19 @@ class LoginzaUserProfile {
 
 		// шаблоны по которым выцепляем email из identity
 		$patterns = array(
-			'openid\.mail\.ru\/([^\/]+)\/([^\/?]+)',
-			'my\.mail\.ru\/([^\/]+)\/([^\/?]+)',
-			'openid\.(yandex)\.ru\/([^\/?]+)',
-			'id\.(rambler)\.ru\/users\/([^\/?]+)',
+			'openid\.mail\.ru/([^/]+)/([^/?]+)',
+			'my\.mail\.ru/([^/]+)/([^/?]+)',
+			'openid\.(yandex)\.ru/([^/?]+)',
+			'id\.(rambler)\.ru\/users/([^/?]+)',
 		);
 		foreach ($patterns as $pattern) {
-			if (preg_match('/^https?\:\/\/'.$pattern.'/i', $this->profile->identity, $result))
+			if (preg_match('%^https?\://'.$pattern.'%i', $this->profile->identity, $result))
 				return $result[2].'@'.$result[1].'.ru';
 		}
 
 		// email от балды
-		$result = preg_replace('/https?\:\/\/(www\.)?/i', '', $this->profile->identity);
-		$result = pun_trim(preg_replace('/[^\w\d]+/u', '.', $result), '.');
+		$result = preg_replace('%https?\://(www\.)?%i', '', $this->profile->identity);
+		$result = pun_trim(preg_replace('%[^\w\d]+%u', '.', $result), '.');
 		return $result.'@localhost';
 	}
 
@@ -119,7 +119,7 @@ class LoginzaUserProfile {
 			if (isset($this->profile->name->last_name))
 				$name.= ' '.pun_trim($this->profile->name->last_name);
 		}
-		$name = preg_replace('/[\s]+/u', ' ', $name);
+		$name = preg_replace('%[\s]+%u', ' ', $name);
 
 		return pun_trim(utf8_substr($name, 0, 40));;
 	}
@@ -152,11 +152,11 @@ class LoginzaUserProfile {
 
 		// шаблоны по которым обнуляем сайт
 		$patterns = array(
-			'google\.com\/accounts\/.*\/id\?id',
-			'https\:\/\/me\.yahoo\.com\/',
+			'google\.com/accounts/.*/id\?id',
+			'https\://me\.yahoo\.com/',
 		);
 		foreach ($patterns as $pattern) {
-			if (preg_match('/'.$pattern.'/i', $url))
+			if (preg_match('%'.$pattern.'%i', $url))
 				return '';
 		}
 

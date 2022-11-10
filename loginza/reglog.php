@@ -78,7 +78,7 @@ if ($pun_user['is_guest'])
 				{
 					if (in_array($key, $arr_numb)) {
 						$set_fi.= ', '.$key;
-						$set_va.= ', '.preg_replace('/[^0-9\.-]/', '', str_replace(',', '.', $dat));
+						$set_va.= ', '.preg_replace('%[^0-9\.-]%', '', str_replace(',', '.', $dat));
 					} else if (!empty($dat)) {
 						$set_fi.= ', '.$key;
 						$set_va.= ', \''.$db->escape($dat).'\'';
@@ -122,7 +122,7 @@ if ($pun_user['is_guest'])
 				$mail_message = str_replace('<username>', $username, $mail_message);
 				$mail_message = str_replace('<password>', $password, $mail_message);
 				$mail_message = str_replace('<login_url>', get_base_url(), $mail_message);
-				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				pun_mail($dUser['email'], $mail_subject, $mail_message);
 			}
@@ -130,13 +130,20 @@ if ($pun_user['is_guest'])
 			// If the mailing list isn't empty, we may need to send out some alerts
 			if ($pun_config['o_mailing_list'] != '')
 			{
-				// Should we alert people on the admin mailing list that a new user has registered?
 				if ($pun_config['o_regs_report'] == '1')
 				{
-					$mail_subject = $lang_common['New user notification'];
-					$mail_message = sprintf($lang_common['New user message'], $username, get_base_url().'/')."\n";
-					$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$new_uid)."\n";
-					$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+					// Load the "new user" template
+					$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/new_user.tpl'));
+
+					// The first row contains the subject
+					$first_crlf = strpos($mail_tpl, "\n");
+					$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+					$mail_message = trim(substr($mail_tpl, $first_crlf));
+
+					$mail_message = str_replace('<username>', $username, $mail_message);
+					$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
+					$mail_message = str_replace('<profile_url>', get_base_url().'/profile.php?id='.$new_uid, $mail_message);
+					$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 					pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 				}

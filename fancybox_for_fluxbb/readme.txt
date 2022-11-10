@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.1.1
-##  Works on FluxBB:  1.4.4
-##     Release date:  2011-02-03
+##      Mod version:  1.2.0
+##  Works on FluxBB:  1.4.4, 1.4.5
+##     Release date:  2011-03-31
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -17,16 +17,21 @@
 ##                     The signature in post isn't processed.
 ##                    1.1.1
 ##                     for FluxBB 1.4.4
+##                    1.2.0
+##                     Installation/change/removal by means of plugin.
+##                     Has added processing directupload.net and itmages.ru.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/resources/mods/fancybox-for-fluxbb/
 ##
-##   Affected files:  header.php
+##   Affected files:  The plugin itself makes changes to forum files.
 ##
 ##       Affects DB:  No
 ##
-##            Notes:  All work is carried out on the party of the client (javascript + jQuery).
+##            Notes:  Russian/English
+##                    All work is carried out on the party of the client (javascript + jQuery).
 ##                    Work examples http://forum.alltes.ru/fluxbb14test/viewtopic.php?id=24
+##                    Should work at an original forum and on my version / Должен работать на оригинальном форуме и на моей версии
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
 ##                    FluxBB. Installation of this modification is done at 
@@ -43,32 +48,7 @@
 all folders to /
 
 #
-#---------[ 2. OPEN ]---------------------------------------------------------
+#---------[ 2. DO THIS ]------------------------------------------------------
 #
 
-header.php
-
-#
-#---------[ 3. FIND ]---------------------------------------------------------
-#
-
-echo implode("\n", $page_head)."\n";
-
-#
-#---------[ 4. BEFORE, ADD ]--------------------------------------------------
-#
-
-// Fancybox
-if (!$pun_user['is_guest'] && in_array(basename($_SERVER['PHP_SELF']), array('viewtopic.php', 'search.php')))
-{
-	$page_head['jquery'] = '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
-	$page_head['fancyboxcss'] = '<link rel="stylesheet" type="text/css" href="style/imports/fancybox.css" />';
-	$page_head['fancybox'] = '<script type="text/javascript" src="js/fancybox.js"></script>';
-}
-
-#
-#---------[ 5. SAVE ]---------------------------------------------------------
-#
-
-header.php
-
+Administration -> Plugin "Fancybox" -> Install

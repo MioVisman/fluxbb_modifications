@@ -10,7 +10,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.3.0');
+define('PLUGIN_VERSION', '1.3.1');
 define('PLUGIN_REVISION', 5);
 define('PLUGIN_NAME', 'Loginza');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
@@ -23,11 +23,6 @@ if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/reglog.php'))
 else
 	require PUN_ROOT.'lang/English/reglog.php';
 
-if (file_exists(PUN_ROOT.'include/header.php'))
-	$prefhf = 'include/header.php';
-else
-	$prefhf = 'header.php';
-
 $arr_files = array(
 	'login.php',
 	'register.php',
@@ -35,7 +30,7 @@ $arr_files = array(
 	'include/email.php',
 	'include/functions.php',
 	'admin_users.php',
-	$prefhf,
+	'header.php',
 );
 $arr_search = array(
 	'				<fieldset>'."\n".'					<legend><?php echo $lang_login[\'Login legend\'] ?></legend>',
@@ -255,7 +250,7 @@ generate_admin_menu($plugin);
 if (!isset($pun_config['o_loginza_set']))
 {
 ?>
-						<input type="submit" name="installation" value="<?php echo $lang_rl['installation'] ?>" />&nbsp;<?php echo $lang_rl['installation_info'] ?><br />
+						<input type="submit" name="installation" value="<?php echo $lang_rl['installation'] ?>" />&#160;<?php echo $lang_rl['installation_info'] ?><br />
 					</p>
 				</form>
 			</div>
@@ -263,7 +258,7 @@ if (!isset($pun_config['o_loginza_set']))
 <?php
 } else {
 ?>
-						<input type="submit" name="delete" value="<?php echo $lang_rl['delete'] ?>" />&nbsp;<?php echo $lang_rl['delete_info'] ?><br /><br />
+						<input type="submit" name="delete" value="<?php echo $lang_rl['delete'] ?>" />&#160;<?php echo $lang_rl['delete_info'] ?><br /><br />
 					</p>
 				</form>
 			</div>

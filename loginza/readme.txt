@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.3.0
-##  Works on FluxBB:  1.5.0
-##     Release date:  2012-07-28
+##      Mod version:  1.3.1
+##  Works on FluxBB:  1.5.1
+##     Release date:  2012-11-22
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##

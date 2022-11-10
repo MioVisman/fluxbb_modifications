@@ -26,9 +26,9 @@ $urlLgz = $LgzAPI->getWidgetUrl(get_base_url(true).'/reglog.php'.(isset($redirec
 if (strpos($pun_config['o_loginza_set'], 'java') !== false)
 {
 	if (isset($page_js))
-		$page_js['f']['loginza'] = 'http://s1.loginza.ru/js/widget.js';
+		$page_js['f']['loginza'] = '//loginza.ru/js/widget.js';
 	else
-		echo '<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
+		echo '<script src="//loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
 }
 ?>
 						<p class="actions"><span><a href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><?php echo $lang_rl['Loginza log'] ?></a></span></p>

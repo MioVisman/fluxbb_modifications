@@ -9,8 +9,8 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
-	
+	message($lang_common['No view'], false, '403 Forbidden');
+
 if (!isset($pun_config['o_loginza_set']))
 	message($lang_common['No permission']);
 
@@ -29,11 +29,6 @@ require PUN_ROOT.'include/email.php';
 
 $hash_ip = pun_hash(get_remote_address());
 
-if (file_exists(PUN_ROOT.'include/header.php'))
-	$prefhf = 'include/';
-else
-	$prefhf = '';
-
 // обработка гостя
 if ($pun_user['is_guest'])
 {
@@ -46,12 +41,9 @@ if ($pun_user['is_guest'])
 		$dataUser = isset($_POST['dataUser']) ? $_POST['dataUser'] : '';
 		$dataHash = isset($_POST['dataHash']) ? $_POST['dataHash'] : '';
 
-		if ($dataHash != pun_hash($dataUser.$hash_ip))
+		if ($dataHash != pun_hash($_SERVER['SCRIPT_FILENAME'].pun_hash($dataUser.$hash_ip)))
 			message($lang_common['Bad request']);
 			
-		if ($_POST['form_sent'] != pun_hash($_SERVER['SCRIPT_FILENAME'].$hash_ip))
-			message($lang_common['Bad request']);
-
 		$username = isset($_POST['req_user']) ? pun_trim($_POST['req_user']) : '';
 
 		$errors  = array();
@@ -244,7 +236,7 @@ if ($pun_user['is_guest'])
 		}
 
 		$dataUser = serialize($LgzPrf->genDataAll($pun_config));
-		$dataHash = pun_hash($dataUser.$hash_ip);
+		$dataHash = pun_hash($_SERVER['SCRIPT_FILENAME'].pun_hash($dataUser.$hash_ip));
 		$errors  = array();
 	}
 	else
@@ -254,7 +246,7 @@ if ($pun_user['is_guest'])
 	$required_fields = array('req_user' => $lang_common['Username']);
 	$focus_element = array('register', 'req_user');
 	define('PUN_ACTIVE_PAGE', 'register');
-	require PUN_ROOT.$prefhf.'header.php';
+	require PUN_ROOT.'header.php';
 
 	// If there are errors, we display them
 	if (!empty($errors))
@@ -290,7 +282,7 @@ if ($pun_user['is_guest'])
 				<fieldset>
 					<legend><?php echo $lang_register['Username legend'] ?></legend>
 					<div class="infldset">
-						<input type="hidden" name="form_sent" value="<?php echo pun_htmlspecialchars(pun_hash($_SERVER['SCRIPT_FILENAME'].$hash_ip)) ?>" />
+						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="dataUser" value="<?php echo pun_htmlspecialchars($dataUser) ?>" />
 						<input type="hidden" name="dataHash" value="<?php echo pun_htmlspecialchars($dataHash) ?>" />
 						<label class="required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_user" value="<?php echo pun_htmlspecialchars($username) ?>" size="25" maxlength="25" /><br /></label>
@@ -303,7 +295,7 @@ if ($pun_user['is_guest'])
 </div>
 <?php
 
-	require PUN_ROOT.$prefhf.'footer.php';
+	require PUN_ROOT.'footer.php';
 }
 
 // обработка пользователя
@@ -393,7 +385,7 @@ else
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_rl['Management']);
 	define('PUN_ACTIVE_PAGE', 'profile');
-	require PUN_ROOT.$prefhf.'header.php';
+	require PUN_ROOT.'header.php';
 
 	$id = $pun_user['id'];
 	generate_profile_menu('loginza');
@@ -411,7 +403,7 @@ else
 								<tr>
 									<th class="provh"><?php echo $lang_rl['Provh'] ?></th>
 									<th class="statush"><?php echo $lang_rl['Account'] ?></th>
-									<th class="tdel"><input type="submit" name="delete" value="<?php echo $lang_rl['Delete'] ?>"></th>
+									<th class="tdel"><input type="submit" name="delete" value="<?php echo $lang_rl['Delete'] ?>" /></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -428,15 +420,15 @@ else
 			}
 			else
 			{
-				$status = '&nbsp;';
+				$status = '&#160;';
 				$disbl = '" disabled="disabled';
 			}
 
 ?>
 								<tr>
-									<td class="prov"><a href="<?php echo $urlLgz ?>" class="loginza"><span title="<?php echo $prov ?>" class="providers <?php echo $prov ?>"></span></a></td>
+									<td class="prov"><a href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><span title="<?php echo pun_htmlspecialchars($prov) ?>" class="providers <?php echo pun_htmlspecialchars($prov) ?>"></span></a></td>
 									<td class="status"><?php echo $status ?></td>
-									<td class="tdel"><input type="checkbox" name="<?php echo 'del_acc['.$prov.']'.$disbl ?>" value="1"></td>
+									<td class="tdel"><input type="checkbox" name="<?php echo 'del_acc['.pun_htmlspecialchars($prov).']'.$disbl ?>" value="1" /></td>
 								</tr>
 <?php
 
@@ -457,10 +449,10 @@ else
 	if (strpos($pun_config['o_loginza_set'], 'java') !== false)
 	{
 		if (isset($page_js))
-			$page_js['f']['loginza'] = 'http://s1.loginza.ru/js/widget.js';
+			$page_js['f']['loginza'] = '//loginza.ru/js/widget.js';
 		else
-			echo '<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
+			echo '<script src="//loginza.ru/js/widget.js" type="text/javascript"></script>'."\n";
 	}
 
-	require PUN_ROOT.$prefhf.'footer.php';
+	require PUN_ROOT.'footer.php';
 }

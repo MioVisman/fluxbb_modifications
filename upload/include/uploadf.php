@@ -9,7 +9,7 @@ if (!defined('PUN')) {
 	exit;
 }
 
-if (!$pun_user['is_guest'] && isset($pun_user['g_up_ext'], $required_fields['req_message'])) {
+if (!$pun_user['is_guest'] && isset($pun_config['o_upload_config'], $required_fields['req_message'])) {
 	if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_up_limit'] > 0 && $pun_user['g_up_max'] > 0)) {
 		// Load language file
 		if (!isset($lang_up)) {
@@ -26,7 +26,8 @@ if (!$pun_user['is_guest'] && isset($pun_user['g_up_ext'], $required_fields['req
 			$style = 'style/imports/upfiles.css';
 		}
 
-		$upf_conf = unserialize($pun_config['o_uploadile_other']);
+		$upf_conf = unserialize($pun_config['o_upload_config']);
+		$upf_max_size = (int) (10485.76 * $pun_user['g_up_max'])
 
 ?>
 <script type="text/javascript">
@@ -41,7 +42,7 @@ FluxBB.uploadvars = {
 		large: '<?= addslashes($lang_up['Too large']) ?>',
 		bad_type: '<?= addslashes($lang_up['Bad type']) ?>'
 	},
-	maxsize: <?= (int) $pun_user['g_up_max'] ?>,
+	maxsize: <?= $upf_max_size ?>,
 	exts: ['<?= str_replace([' ', ','], ['', '\', \''], addslashes($pun_user['g_up_ext'])) ?>'],
 	token: '<?= addslashes(function_exists('csrf_hash') ? csrf_hash('upfiles.php') : pun_csrf_token()) ?>'
 };
@@ -55,7 +56,7 @@ FluxBB.uploadvars = {
 			<legend><?= $lang_up['upfiles'] ?></legend>
 			<div class="infldset">
 				<button id="upf-button" type="button"><?= $lang_up['fichier'] ?></button>
-				<span><?= sprintf($lang_up['info_2'], pun_htmlspecialchars(str_replace([' ', ','], ['', ', '], $pun_user['g_up_ext'])), pun_htmlspecialchars(file_size((int) $pun_user['g_up_max']))) ?></span>
+				<span><?= sprintf($lang_up['info_2'], pun_htmlspecialchars(str_replace([' ', ','], ['', ', '], $pun_user['g_up_ext'])), pun_htmlspecialchars(file_size($upf_max_size))) ?></span>
 			</div>
 		</fieldset>
 	</div>
@@ -103,7 +104,7 @@ FluxBB.uploadvars = {
 				<div id="upf-legend">
 					<div style="background-color: rgb(0, 255, 0); width: 0%;"><span>0%</span></div>
 				</div>
-				<p id="upf-legend-p"><?= sprintf($lang_up['info_4'], 0, pun_htmlspecialchars(file_size($pun_user['g_up_limit']))) ?></p>
+				<p id="upf-legend-p"><?= sprintf($lang_up['info_4'], 0, pun_htmlspecialchars(file_size(1048576 * $pun_user['g_up_limit']))) ?></p>
 			</div>
 		</fieldset>
 	</div>

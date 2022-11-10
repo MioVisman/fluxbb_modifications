@@ -13,7 +13,7 @@ if (!defined('PUN')) {
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '2.2.2');
+define('PLUGIN_VERSION', '2.3.0');
 define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin=' . $plugin));
 define('PLUGIN_EXTS', 'jpg,jpeg,png,gif,mp3,zip,rar,7z');
 define('PLUGIN_NF', 25);
@@ -33,23 +33,79 @@ $sconf = [
 	'thumb' => $gd ? 1 : 0,
 	'thumb_size' => 100,
 	'thumb_perc' => 75,
-	'pic_mass' => 307200,
+	'pic_mass' => 300, //килобайт
 	'pic_perc' => 75,
 	'pic_w' => 1680,
 	'pic_h' => 1050,
 ];
 
-// Установка плагина/мода
-if (isset($_POST['installation'])) {
-	$db->add_field('users', 'upload', 'INT(15)', false, 0) or error(sprintf($lang_up['Error DB'], 'users'), __FILE__, __LINE__, $db->error());
+// обновление до версии 2.3.0
+if (isset($pun_config['o_uploadile_other'])) {
+	if (!isset($pun_config['o_upload_config'])) {
+		$aconf = unserialize($pun_config['o_uploadile_other']);
+		$aconf['pic_mass'] = (int) ($aconf['pic_mass'] / 1024);
+		$pun_config['o_upload_config'] = serialize($aconf);
+
+		$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_upload_config\', \'' . $db->escape(serialize($pun_config['o_upload_config'])) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+	}
+
+	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_uploadile_other\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
+		require PUN_ROOT . 'include/cache.php';
+	}
+
+	generate_config_cache();
+
+	$data_grs = [];
+	if (isset($pun_user['g_up_ext'], $pun_user['g_up_limit'], $pun_user['g_up_max'])) {
+		$result = $db->query('SELECT * FROM ' . $db->prefix . 'groups ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
+
+		while ($cur_group = $db->fetch_assoc($result)) {
+			if ($cur_group['g_id'] == PUN_GUEST) {
+				continue;
+			}
+			$data_grs[$cur_group['g_id']] = [
+				'g_up_ext' => $cur_group['g_up_ext'],
+				'g_up_max' => (int) ($cur_group['g_up_max'] / 10485.76),
+				'g_up_limit' => (int) ($cur_group['g_up_limit'] / 1048576),
+			];
+		}
+	}
+
+	$db->drop_field('groups', 'g_up_ext') or error('Unable to drop g_up_ext field', __FILE__, __LINE__, $db->error());
+	$db->drop_field('groups', 'g_up_max') or error('Unable to drop g_up_max field', __FILE__, __LINE__, $db->error());
+	$db->drop_field('groups', 'g_up_limit') or error('Unable to drop g_up_limit field', __FILE__, __LINE__, $db->error());
+
 	$db->add_field('groups', 'g_up_ext', 'VARCHAR(255)', false, PLUGIN_EXTS) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
 	$db->add_field('groups', 'g_up_max', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
 	$db->add_field('groups', 'g_up_limit', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
 
-	$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape(PLUGIN_EXTS) . '\', g_up_limit=1073741824, g_up_max=' . min(return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size'))) . ' WHERE g_id=' . PUN_ADMIN) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
+	foreach ($data_grs as $g_id => $cur_group) {
+		$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape($cur_group['g_up_ext']) . '\', g_up_limit=' . $cur_group['g_up_limit'] . ', g_up_max=' . $cur_group['g_up_max'] . ' WHERE g_id=' . $g_id) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
+	}
 
-	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_uploadile_other\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
-	$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_uploadile_other\', \'' . $db->escape(serialize($sconf)) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+	$db->add_field('users', 'upload_size', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'users'), __FILE__, __LINE__, $db->error());
+
+	if (isset($pun_user['upload'])) {
+		$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=ROUND(upload/10485.76)') or error('Unable to update upload size of users', __FILE__, __LINE__, $db->error());
+	}
+
+	$db->drop_field('users', 'upload') or error('Unable to drop upload field', __FILE__, __LINE__, $db->error());
+}
+
+// Установка плагина/мода
+if (isset($_POST['installation'])) {
+	$db->add_field('users', 'upload_size', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'users'), __FILE__, __LINE__, $db->error());
+	$db->add_field('groups', 'g_up_ext', 'VARCHAR(255)', false, PLUGIN_EXTS) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
+	$db->add_field('groups', 'g_up_max', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
+	$db->add_field('groups', 'g_up_limit', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
+
+	$adm_max = (int) (min(return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size'))) / 10485.76);
+	$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape(PLUGIN_EXTS) . '\', g_up_limit=1024, g_up_max=' . $adm_max . ' WHERE g_id=' . PUN_ADMIN) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
+
+	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_upload_config\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_upload_config\', \'' . $db->escape(serialize($sconf)) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
@@ -62,15 +118,14 @@ if (isset($_POST['installation'])) {
 
 // Обновления параметров
 else if (isset($_POST['update'])) {
-	if (!isset($pun_user['g_up_ext'])) {
-		$db->add_field('groups', 'g_up_ext', 'VARCHAR(255)', false, PLUGIN_EXTS) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
-		$db->add_field('groups', 'g_up_max', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
-		$db->add_field('groups', 'g_up_limit', 'INT(15)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
-	}
-
 	$g_up_ext = isset($_POST['g_up_ext']) ? array_map('pun_trim', $_POST['g_up_ext']) : [];
+	$g_up_max = isset($_POST['g_up_max']) ? array_map('floatval', $_POST['g_up_max']) : [];
 	$g_up_limit = isset($_POST['g_up_limit']) ? array_map('intval', $_POST['g_up_limit']) : [];
-	$g_up_max = isset($_POST['g_up_max']) ? array_map('intval', $_POST['g_up_max']) : [];
+
+	if (empty($g_up_limit)) {
+		$g_up_limit[PUN_ADMIN] = 1024;
+		$g_up_max[PUN_ADMIN] = 1024;
+	}
 
 	$result = $db->query('SELECT g_id FROM ' . $db->prefix . 'groups ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 	while ($cur_group = $db->fetch_assoc($result)) {
@@ -89,9 +144,10 @@ else if (isset($_POST['update'])) {
 			$g_ext = PLUGIN_EXTS;
 		}
 
-		$g_lim = (!isset($g_up_limit[$cur_group['g_id']]) || $g_up_limit[$cur_group['g_id']] < 0) ? 0 : $g_up_limit[$cur_group['g_id']];
 		$g_max = (!isset($g_up_max[$cur_group['g_id']]) || $g_up_max[$cur_group['g_id']] < 0) ? 0 : $g_up_max[$cur_group['g_id']];
-		$g_max = min($g_max, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
+		$g_max = (int) (100 * min($g_max, return_bytes(ini_get('upload_max_filesize')) / 1048576, return_bytes(ini_get('post_max_size')) / 1048576));
+		$g_lim = (!isset($g_up_limit[$cur_group['g_id']]) || $g_up_limit[$cur_group['g_id']] < 0) ? 0 : $g_up_limit[$cur_group['g_id']];
+		$g_lim = min($g_lim, 20971520);
 
 		$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape($g_ext) . '\', g_up_limit=' . $g_lim . ', g_up_max=' . $g_max . ' WHERE g_id=' . $cur_group['g_id']) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
 	}
@@ -119,8 +175,8 @@ else if (isset($_POST['update'])) {
 		$sconf['pic_h'] = (int) $_POST['pic_h'];
 	}
 
-	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_uploadile_other\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
-	$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_uploadile_other\', \'' . $db->escape(serialize($sconf)) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_upload_config\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_upload_config\', \'' . $db->escape(serialize($sconf)) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
@@ -133,12 +189,12 @@ else if (isset($_POST['update'])) {
 
 // Удаление мода
 else if (isset($_POST['restore'])) {
-	$db->drop_field('users', 'upload') or error('Unable to drop upload field', __FILE__, __LINE__, $db->error());
+	$db->drop_field('users', 'upload_size') or error('Unable to drop upload field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('groups', 'g_up_ext') or error('Unable to drop g_up_ext field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('groups', 'g_up_max') or error('Unable to drop g_up_max field', __FILE__, __LINE__, $db->error());
 	$db->drop_field('groups', 'g_up_limit') or error('Unable to drop g_up_limit field', __FILE__, __LINE__, $db->error());
 
-	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_uploadile_other\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_upload_config\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
@@ -149,8 +205,8 @@ else if (isset($_POST['restore'])) {
 	redirect(PLUGIN_URL, $lang_up['Redirect']);
 }
 
-if (isset($pun_config['o_uploadile_other'])) {
-	$aconf = unserialize($pun_config['o_uploadile_other']);
+if (isset($pun_config['o_upload_config'])) {
+	$aconf = unserialize($pun_config['o_upload_config']);
 } else {
 	$aconf = $sconf;
 	$aconf['thumb'] = 0;
@@ -194,8 +250,8 @@ if (isset($_POST['delete'], $_POST['delete_f']) && is_array($_POST['delete_f']))
 		if (!defined('PLUGIN_OFF')) {
 			foreach ($au as $user) {
 				// Считаем общий размер файлов юзера
-				$upload = dir_size($mem . $user . '/');
-				$db->query('UPDATE ' . $db->prefix . 'users SET upload=\'' . $upload . '\' WHERE id=' . $user) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+				$upload = (int) (dir_size($mem . $user . '/') / 10485.76);
+				$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=\'' . $upload . '\' WHERE id=' . $user) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 			}
 		}
 	}
@@ -284,7 +340,7 @@ if (defined('PLUGIN_OFF')) {
 								<th scope="row"><label><?= $lang_up['pictures'] ?></label></th>
 								<td>
 									<?= $lang_up['for pictures'] . "\n" ?>
-									<input type="text" name="pic_mass" size="8" maxlength="8" tabindex="<?= $tabindex++ ?>" value="<?= pun_htmlspecialchars($aconf['pic_mass']) . $disbl ?>" />&#160;<?= $lang_up['bytes'] . ":\n" ?><br />
+									<input type="text" name="pic_mass" size="8" maxlength="8" tabindex="<?= $tabindex++ ?>" value="<?= pun_htmlspecialchars($aconf['pic_mass']) . $disbl ?>" />&#160;<?= $lang_up['kbytes'] . ":\n" ?><br />
 									&#160;*&#160;<?= $lang_up['to jpeg'] ?><br />
 									&#160;*&#160;<?= $lang_up['Install quality'] . "\n" ?>
 									<input type="text" name="pic_perc" size="4" maxlength="3" tabindex="<?= $tabindex++ ?>" value="<?= pun_htmlspecialchars($aconf['pic_perc']) . $disbl ?>" />&#160;%<br />
@@ -345,7 +401,7 @@ if (defined('PLUGIN_OFF')) {
 								<tr>
 									<td class="tcl"><?= pun_htmlspecialchars($cur_group['g_title']) ?></td>
 									<td class="tc2"><input type="text" name="g_up_ext[<?= $cur_group['g_id'] ?>]" value="<?= pun_htmlspecialchars($cur_group['g_up_ext']) ?>" tabindex="<?= $tabindex++ ?>" size="40" maxlength="255" /></td>
-									<td class="tcr"><input type="text" name="g_up_max[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_max'] ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" /></td>
+									<td class="tcr"><input type="text" name="g_up_max[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_max'] / 100 ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" /></td>
 									<td class="tcr"><input type="text" name="g_up_limit[<?= $cur_group['g_id'] ?>]" value="<?= $cur_group['g_up_limit'] ?>" tabindex="<?= $tabindex++ ?>" size="10" maxlength="10" /></td>
 								</tr>
 <?php

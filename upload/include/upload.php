@@ -6,14 +6,16 @@
  */
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN'))
+if (!defined('PUN')) {
 	exit;
+}
 
 // Load language file
-if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php'))
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php';
-else
-	require PUN_ROOT.'lang/English/upload.php';
+if (file_exists(PUN_ROOT . 'lang/' . $pun_user['language'] . '/upload.php')) {
+	require PUN_ROOT . 'lang/' . $pun_user['language'] . '/upload.php';
+} else {
+	require PUN_ROOT . 'lang/English/upload.php';
+}
 
 $gd  = extension_loaded('gd');
 $gd2 = ($gd && function_exists('imagecreatetruecolor'));
@@ -52,12 +54,10 @@ $extimageGD = array(
 	'xbm' => 'xbm',
 );
 
-function parse_file($f)
-{
+function parse_file($f) {
 	static $UTF8AR = null;
 
-	if (is_null($UTF8AR))
-	{
+	if (is_null($UTF8AR)) {
 		$UTF8AR = array(
 			'à' => 'a', 'ô' => 'o', 'ď' => 'd', 'ḟ' => 'f', 'ë' => 'e', 'š' => 's', 'ơ' => 'o',
 			'ß' => 'ss', 'ă' => 'a', 'ř' => 'r', 'ț' => 't', 'ň' => 'n', 'ā' => 'a', 'ķ' => 'k',
@@ -110,27 +110,24 @@ function parse_file($f)
 	return $f;
 }
 
-function dir_size($dir)
-{
+function dir_size($dir) {
 	global $extforno;
 
-	$upload = 0;
-	$open = opendir(PUN_ROOT.$dir);
-	while(($file = readdir($open)) !== false)
-	{
-		if (is_file(PUN_ROOT.$dir.$file))
-		{
+	$size = 0;
+	$open = opendir(PUN_ROOT . $dir);
+	while (($file = readdir($open)) !== false) {
+		if (is_file(PUN_ROOT . $dir . $file)) {
 			$ext = strtolower(substr(strrchr($file, '.'), 1)); // берем расширение файла
-			if ($ext != '' && $file[0] != '#' && !in_array($ext, $extforno))
-				$upload += filesize(PUN_ROOT.$dir.$file);
+			if ($ext != '' && $file[0] != '#' && !in_array($ext, $extforno)) {
+				$size += filesize(PUN_ROOT . $dir . $file);
+			}
 		}
 	}
 	closedir($open);
-	return $upload;
+	return $size;
 }
 
-if ($gd && !function_exists('ImageCreateFromBMP'))
-{
+if ($gd && !function_exists('ImageCreateFromBMP')) {
 	/*********************************************/
 	/* Fonction: ImageCreateFromBMP              */
 	/* Author:   DHKold                          */
@@ -233,21 +230,28 @@ if ($gd && !function_exists('ImageCreateFromBMP'))
 	}
 }
 
-function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $quality = 75, $flag = false)
-{
+function img_resize($file, $dir, $name, $type, $width = 0, $height = 0, $quality = 75, $flag = false) {
 	global $gd, $gd2, $extimage2, $extimageGD;
 
-	if (!$gd) return 1;
-	if (!file_exists($file)) return 2;
+	if (!$gd) {
+		return 1;
+	}
+	if (!file_exists($file)) {
+		return 2;
+	}
 
 	$size = getimagesize($file);
-	if ($size === false) return 3;
+	if ($size === false) {
+		return 3;
+	}
 
 	$type2 = strtolower($type);
 	$type1 = (($flag && in_array($type2, array('jpeg','jpg','jpe','gif','png','bmp'))) || ($type2 == 'bmp')) ? 'jpeg' : $extimageGD[$type2];
 
-	$icfunc = 'imagecreatefrom'.$extimageGD[$extimage2[$size[2]][0]]; //  $type;
-	if (!function_exists($icfunc)) return 4;
+	$icfunc = 'imagecreatefrom' . $extimageGD[$extimage2[$size[2]][0]]; //  $type;
+	if (!function_exists($icfunc)) {
+		return 4;
+	}
 
 	$xr = ($width == 0) ? 1 : $width / $size[0];
 	$yr = ($height == 0) ? 1 : $height / $size[1];
@@ -256,98 +260,93 @@ function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $qualit
 	$height = round($size[1] * $r);
 
 	$image = @$icfunc($file);
-	if (!isset($image) || empty($image)) return 5;
+	if (!isset($image) || empty($image)) {
+		return 5;
+	}
 
-	if ($gd2)
-	{
+	if ($gd2) {
 		$idest = imagecreatetruecolor($width, $height);
 		imagefill($idest, 0, 0, 0x7FFFFFFF);
 		imagecolortransparent($idest, 0x7FFFFFFF);
-		if ($type1 == 'gif')
-		{
+		if ($type1 == 'gif') {
 			$palette = imagecolorstotal($image);
 			imagetruecolortopalette($idest, true, $palette);
 		}
 		imagecopyresampled($idest, $image, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
 		imagesavealpha($idest, true);
-	}
-	else
-	{
+	} else {
 		$idest = imagecreate($width, $height);
 		imagecopyresized($idest, $image, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
 	}
 
-	$icfunc = 'image'.$type1;
-	if (!function_exists($icfunc))
-	{
+	$icfunc = 'image' . $type1;
+	if (!function_exists($icfunc)) {
 		$type1 = 'jpeg';
-		$icfunc = 'image'.$type1;
-		if (!function_exists($icfunc)) return 6;
+		$icfunc = 'image' . $type1;
+		if (!function_exists($icfunc)) {
+			return 6;
+		}
 	}
 
-	if ($flag) $type = $type1;
+	if ($flag) {
+		$type = $type1;
+	}
 
-	if ($type1 == 'png' && version_compare(PHP_VERSION, '5.1.2', '>='))
-	{
+	if ($type1 == 'png' && version_compare(PHP_VERSION, '5.1.2', '>=')) {
 		$quality = floor((100 - $quality) / 11);
-		@imagepng($idest, PUN_ROOT.$dir.$name.'.'.$type, $quality);
+		@imagepng($idest, PUN_ROOT . $dir . $name . '.' . $type, $quality);
+	} else if ($type1 == 'jpeg') {
+		@imagejpeg($idest, PUN_ROOT . $dir . $name . '.' . $type, $quality);
+	} else {
+		@$icfunc($idest, PUN_ROOT . $dir . $name . '.' . $type);
 	}
-	else if ($type1 == 'jpeg')
-		@imagejpeg($idest, PUN_ROOT.$dir.$name.'.'.$type, $quality);
-	else
-		@$icfunc($idest, PUN_ROOT.$dir.$name.'.'.$type);
 
 	imagedestroy($image);
 	imagedestroy($idest);
 
-	if (!file_exists(PUN_ROOT.$dir.$name.'.'.$type)) return 7;
-	@chmod(PUN_ROOT.$dir.$name.'.'.$type, 0644);
+	if (!file_exists(PUN_ROOT . $dir . $name . '.' . $type)) {
+		return 7;
+	}
+	@chmod(PUN_ROOT . $dir . $name . '.' . $type, 0644);
 
 	return array($name, $type);
 }
 
-function isXSSattack ($file)
-{
+function isXSSattack($file) {
 	global $lang_up;
 	// сканируем содержание загруженного файла
 	$fin = fopen($file, "rb");
-	if (!$fin)
+	if (!$fin) {
 		return $lang_up['Error open'];
+	}
 
 	$buf1 = '';
-	while ($buf2 = fread($fin, 4096))
-	{
-		if (preg_match( "%<(script|html|head|title|body|table|a\s+href|img\s|plaintext|cross\-domain\-policy|embed|applet|\?php)%si", $buf1.$buf2 ))
-		{
+	while ($buf2 = fread($fin, 4096)) {
+		if (preg_match( "%<(script|html|head|title|body|table|a\s+href|img\s|plaintext|cross\-domain\-policy|embed|applet|\?php)%si", $buf1 . $buf2 )) {
 			fclose($fin);
 			return $lang_up['Error inject'];
 		}
-		$buf1 = substr($buf2,-30);
+		$buf1 = substr($buf2, -30);
 	}
 	fclose($fin);
 	return false;
 }
 
-function return_bytes ($val)
-{
 // Author: Ivo Mandalski
-	if(empty($val))return 0;
+function return_bytes($val) {
+	if (empty($val)) {
+		return 0;
+	}
 
 	$val = trim($val);
 
-	preg_match('#([0-9]+)[\s]*([a-z]+)#i', $val, $matches);
-
-	$last = '';
-	if(isset($matches[2])){
-		$last = $matches[2];
+	if (!preg_match('%^([0-9]+)[\s]*([a-z]+)$%i', $val, $matches)) {
+		return (int) $val;
 	}
 
-	if(isset($matches[1])){
-		$val = (int)$matches[1];
-	}
+	$val = (int) $matches[1];
 
-	switch (strtolower($last))
-	{
+	switch (strtolower($matches[2])) {
 		case 'g':
 		case 'gb':
 			$val *= 1024;
@@ -359,5 +358,5 @@ function return_bytes ($val)
 			$val *= 1024;
 	}
 
-	return (int)$val;
+	return $val;
 }

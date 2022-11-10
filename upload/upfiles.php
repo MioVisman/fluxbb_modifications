@@ -61,7 +61,7 @@ require PUN_ROOT . 'include/common.php';
 define('PLUGIN_REF', pun_htmlspecialchars('upfiles.php'));
 define('PLUGIN_NF', 25);
 
-$upf_ajax = !empty(upf_get_pg('ajx'));
+$upf_ajax = ('1' == upf_get_pg('ajx'));
 $upf_action = upf_get_pg('action');
 $upf_page = (int) upf_get_pg('p', 1);
 
@@ -69,7 +69,7 @@ if ($pun_user['g_read_board'] == '0') {
 	upf_message($lang_common['No view'], false, '403 Forbidden');
 }
 
-if ($pun_user['is_guest'] || !isset($pun_user['g_up_ext']) || empty($pun_config['o_uploadile_other']) || $upf_page < 1) {
+if ($pun_user['is_guest'] || empty($pun_user['g_up_ext']) || empty($pun_config['o_upload_config']) || $upf_page < 1) {
 	upf_message($lang_common['Bad request'], false, '404 Not Found');
 }
 
@@ -104,14 +104,14 @@ if (!isset($_GET['id'])) {
 	$upf_exts = $pun_user['g_up_ext'];
 	$upf_limit = $pun_user['g_up_limit'];
 	$upf_max_size = $pun_user['g_up_max'];
-	$upf_dir_size = $pun_user['upload'];
+	$upf_dir_size = $pun_user['upload_size'];
 } else {
 	$id = intval($_GET['id']);
 	if ($id < 2 || ($pun_user['g_id'] != PUN_ADMIN && $id != $pun_user['id'])) {
 		upf_message($lang_common['Bad request'], false, '404 Not Found');
 	}
 
-	$result = $db->query('SELECT u.username, u.upload, g.g_up_ext, g.g_up_max, g.g_up_limit FROM ' . $db->prefix . 'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE u.id=' . $id) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT u.username, u.upload_size, g.g_up_ext, g.g_up_max, g.g_up_limit FROM ' . $db->prefix . 'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE u.id=' . $id) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 	$user_info = $db->fetch_row($result);
 
 	if (!$user_info) {
@@ -126,7 +126,9 @@ if (!isset($_GET['id'])) {
 	$fpr = true;
 }
 
-$upf_max_size = min($upf_max_size, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
+$upf_limit *= 1048576;
+$upf_max_size = (int) min(10485.76 * $upf_max_size, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
+$upf_dir_size *= 10485.76;
 
 if ($pun_user['g_id'] != PUN_ADMIN && $upf_limit * $upf_max_size == 0) {
 	upf_message($lang_common['Bad request'], false, '404 Not Found');
@@ -135,7 +137,7 @@ if ($pun_user['g_id'] != PUN_ADMIN && $upf_limit * $upf_max_size == 0) {
 $upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
 
 $upf_dir = 'img/members/' . $id . '/';
-$upf_conf = unserialize($pun_config['o_uploadile_other']);
+$upf_conf = unserialize($pun_config['o_upload_config']);
 $upf_exts = explode(',', $upf_exts . ',' . strtoupper($upf_exts));
 $upf_new_files = [];
 
@@ -163,7 +165,7 @@ if ('delete' === $upf_action) {
 		$upf_dir_size = dir_size($upf_dir);
 		$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
 
-		$db->query('UPDATE ' . $db->prefix . 'users SET upload=' . $upf_dir_size . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=' . ((int) ($upf_dir_size / 10485.76)) . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 	} else {
 		$error = true;
 	}
@@ -276,7 +278,7 @@ else if ('upload' === $upf_action && isset($_FILES['upfile']) && $id == $pun_use
 		mkdir(PUN_ROOT . 'img/members/' . $id, 0755);
 	}
 
-	if ($_FILES['upfile']['size'] > $upf_conf['pic_mass'] && $isimg2 && $gd && isset($extimageGD[$ext])) {
+	if ($_FILES['upfile']['size'] > 1024 * $upf_conf['pic_mass'] && $isimg2 && $gd && isset($extimageGD[$ext])) {
 		$ext_ml = img_resize($_FILES['upfile']['tmp_name'], $upf_dir, $name, $ext, $upf_conf['pic_w'], $upf_conf['pic_h'], $upf_conf['pic_perc'], true);
 		if (!is_array($ext_ml)) {
 			upf_redirect(PLUGIN_URL, sprintf($lang_up['Error no mod img'], $ext_ml));
@@ -302,8 +304,7 @@ else if ('upload' === $upf_action && isset($_FILES['upfile']) && $id == $pun_use
 
 	$upf_dir_size = dir_size($upf_dir);
 	$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
-
-	$db->query('UPDATE ' . $db->prefix . 'users SET upload=\'' . $upf_dir_size . '\' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+	$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=' . ((int) ($upf_dir_size / 10485.76)) . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 
 	if ($upf_ajax) {
 		$upf_page = 1;

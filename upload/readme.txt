@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  2.2.2 beta
+##      Mod version:  2.3.0 beta
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-10-21
+##     Release date:  2019-10-26
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -50,6 +50,10 @@
 ##                    v 2.2.2 beta
 ##                      Updated .htaccess for img/members/ folder.
 ##                      A group of administrators can set limits for themselves.
+##
+##                    v 2.3.0 beta
+##                      Maximum "Space allocated to members" increased from 2 GiB to 20 TiB. For 32 and 64-bit systems.
+##                      Maximum "Max size members can upload" remained unchanged and depends on the server/PHP settings and OS bit depth.
 ##
 ##
 ##

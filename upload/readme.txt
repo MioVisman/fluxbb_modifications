@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  2.2.0 beta
+##      Mod version:  2.2.1 beta
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-10-02
+##     Release date:  2019-10-12
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -42,7 +42,10 @@
 ##                      New uploader for browsers with FormData support (https://caniuse.com/#search=FormData).
 ##                      Extended blacklist of file types for upload.
 ##                      New .htaccess for img/members/ folder.
+##                      Automatically add bb-code to the message when uploading a file.
 ##
+##                    v 2.2.1 beta
+##                      Fix AP_Upload.php for SQLite.
 ##
 ##
 ##

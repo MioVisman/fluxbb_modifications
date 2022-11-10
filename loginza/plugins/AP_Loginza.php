@@ -10,8 +10,8 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.1.0');
-define('PLUGIN_REVISION', 2);
+define('PLUGIN_VERSION', '1.1.1');
+define('PLUGIN_REVISION', 3);
 define('PLUGIN_NAME', 'Loginza');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_PROV', 'google,yandex,mailruapi,vkontakte,facebook,twitter,loginza,myopenid,webmoney,rambler,flickr,lastfm,verisign,aol,steam,openid,mailru');
@@ -29,6 +29,7 @@ $arr_files = array(
 	'profile.php',
 	'include/email.php',
 	'include/functions.php',
+	'admin_users.php',
 );
 $arr_search = array(
 	'				<fieldset>'."\n".'					<legend><?php echo $lang_login[\'Login legend\'] ?></legend>',
@@ -36,6 +37,7 @@ $arr_search = array(
 	'		$db->query(\'DELETE FROM \'.$db->prefix.\'users WHERE id=\'.$id) or error(\'Unable to delete user\', __FILE__, __LINE__, $db->error());',
 	'function pun_mail($to, $subject, $message, $reply_to_email = \'\', $reply_to_name = \'\')'."\n".'{'."\n".'	global $pun_config, $lang_common;',
 	'					<li<?php if ($page == \'privacy\') echo \' class="isactive"\'; ?>><a href="profile.php?section=privacy&amp;id=<?php echo $id ?>"><?php echo $lang_profile[\'Section privacy\'] ?></a></li>',
+	'		redirect(\'admin_users.php\', $lang_admin_users[\'Users delete redirect\']);',
 );
 $arr_new = array(
 	'<?php require PUN_ROOT.\'include/loginza/login.php\'; ?>'."\n".'%search%',
@@ -43,6 +45,7 @@ $arr_new = array(
 	'%search%'."\n".'		require PUN_ROOT.\'include/loginza/profile.php\';',
 	'%search%'."\n".'if (!is_valid_email($to)) { return; }',
 	'%search%'."\n".'<?php if ($pun_user[\'id\'] == $id): ?>					<li<?php if ($page == \'loginza\') echo \' class="isactive"\'; ?>><a href="reglog.php">Loginza</a></li>'."\n".'<?php endif; ?>',
+	'require PUN_ROOT.\'include/loginza/admin_users.php\';'."\n\n".'%search%',
 );
 ?><?php
 // установка изменений в файлы

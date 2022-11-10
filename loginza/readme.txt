@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.1.0
+##      Mod version:  1.1.1
 ##  Works on FluxBB:  1.4.5
 ##     Release date:  2011-03-25
 ##      Review date:  YYYY-MM-DD (Leave unedited)

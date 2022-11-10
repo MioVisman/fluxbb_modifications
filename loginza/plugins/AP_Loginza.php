@@ -10,7 +10,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.3.2');
+define('PLUGIN_VERSION', '1.3.3');
 define('PLUGIN_REVISION', 5);
 define('PLUGIN_NAME', 'Loginza');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
@@ -166,7 +166,7 @@ if (isset($_POST['installation']))
 
 	$db->create_table('reglog', $schema) or error('Unable to create reglog table', __FILE__, __LINE__, $db->error());
 
-	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_loginza_%"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE \'o_loginza_%\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 	$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_loginza_set\', \''.PLUGIN_REVISION.'\')') or error('Unable to insert into table config.', __FILE__, __LINE__, $db->error());
 	$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_loginza_prov\', \''.$db->escape(PLUGIN_PROV).'\')') or error('Unable to insert into table config.', __FILE__, __LINE__, $db->error());
 
@@ -206,7 +206,7 @@ else if (isset($_POST['update']))
 
 	$java = (isset($_POST['rejim']) && $_POST['rejim'] == '1') ? '-java' : '';
 
-	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_loginza_%"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE \'o_loginza_%\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 	$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_loginza_set\', \''.PLUGIN_REVISION.$java.'\')') or error('Unable to insert into table config.', __FILE__, __LINE__, $db->error());
 	$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\'o_loginza_prov\', \''.$db->escape($prov).'\')') or error('Unable to insert into table config.', __FILE__, __LINE__, $db->error());
 
@@ -221,7 +221,7 @@ else if (isset($_POST['update']))
 // Удаление мода (таблицу reglog через плагин не удалить! :P)
 else if (isset($_POST['delete']))
 {
-	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE "o_loginza_%"') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
+	$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name LIKE \'o_loginza_%\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 		require PUN_ROOT.'include/cache.php';

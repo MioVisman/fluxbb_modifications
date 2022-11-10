@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.3.2
+##      Mod version:  1.3.3
 ##  Works on FluxBB:  1.5.3
-##     Release date:  2013-03-11
+##     Release date:  2013-06-06
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -32,6 +32,9 @@
 ##
 ##                    v 1.3.2
 ##                     Update for FluxBB 1.5.3
+##
+##                    v 1.3.3
+##                     Fix for PostgreSQL. Thanks to MikeBB.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/forums/viewtopic.php?id=5218

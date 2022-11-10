@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -8,35 +8,19 @@
 if (!defined('PUN'))
 	exit;
 
-// Load language file
-if (!isset($lang_up))
+if (!$pun_user['is_guest'] && isset($pun_user['g_up_ext']))
 {
-	if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php'))
-		require PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php';
-	else
-		require PUN_ROOT.'lang/English/upload.php';
-}
+	if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_up_limit'] > 0 && $pun_user['g_up_max'] > 0))
+	{
+		// Load language file
+		if (!isset($lang_up))
+		{
+			if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php'))
+				require PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php';
+			else
+				require PUN_ROOT.'lang/English/upload.php';
+		}
 
-if (!$pun_user['is_guest'] && isset($pun_config['o_uploadile_exts']))
-{
-	$flag_uplmod = false;
-	if ($pun_user['g_id'] == PUN_ADMIN)
-		$flag_uplmod = true;
-	else if ($pun_user['g_moderator'] == 1)
-	{
-		$aconf = unserialize($pun_config['o_uploadile_other']);
-		if ($aconf['maxs_modo'] > 0 && $aconf['limit_modo'] > 0)
-			$flag_uplmod = true;
-	}
-	else
-	{
-		$aconf = unserialize($pun_config['o_uploadile_other']);
-		if ($aconf['maxs_memb'] > 0 && $aconf['limit_memb'] > 0)
-			$flag_uplmod = true;
-	}
-
-	if ($flag_uplmod)
-	{
 		echo '<script type="text/javascript">'."\n";
 		echo '/* <![CDATA[ */'."\n";
 		echo 'function PopUp(c,d,a,b,e){window.open(c,d,"top="+(screen.height-b)/3+", left="+(screen.width-a)/2+", width="+a+", height="+b+", "+e);return false};';

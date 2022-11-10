@@ -33,16 +33,13 @@ $lang_up = array(
 'configuration'						=> 'Configuration',
 'plugin_desc'							=> 'This plugin makes it possible to configure Uploadile according to your needs.',
 'legend_2'								=> 'Choose your options',
-'laws'										=> 'File type allowed',
+'laws'										=> 'File type allowed.',
 'laws_info'								=> 'Separate with a comma (,)',
 'thumb'										=> 'Activate thumbnails',
 'thumb_size'							=> 'Thumbs size: ',
 'quality'									=> 'Quality: ',
-'maxsize_member'					=> 'Max size members can upload',
-'maxsize_modo'						=> 'Max size moderators can upload',
-'maxsize_info'						=> '<br />Your server has a default limit.',
-'limit_member'						=> 'Space allocated to members',
-'limit_modo'							=> 'Space allocated to moderators',
+'maxsize_member'					=> 'Max size members can upload.',
+'limit_member'						=> 'Space allocated to members.',
 'oui'											=> 'Yes',
 'non'											=> 'No',
 'px'											=> 'Pixel',
@@ -61,8 +58,7 @@ $lang_up = array(
 'titre_4'									=> 'My uploads',
 'popup_title'							=> 'File manager',
 
-'info_2'									=> '/!\ Your file must not be bigger than %s and must be a %s file.',
-'info_2_admi'							=> '/!\ Your file must be a %s file.',
+'info_2'									=> 'Your file must not be bigger than %s and must be a %s file.',
 'info_4'									=> '<div style="border:1px solid #4E642D; width:12em;"><div style="border-right: 2px solid #4E642D; background-color: #6C8A3F; text-align:right; width:%s%s;">%s%s</div></div>Storage space used: %s in %s',
 'info_4b'									=> 'Storage space used: %s',
 'legend'									=> 'Select and send your file',
@@ -87,6 +83,7 @@ $lang_up = array(
 'update_thumb'						=> 'Update thumbs',
 
 'upfiles'									=> 'Uploads',
-);
 
-?>
+'groups'									=> 'Adjustment of groups',
+'group'										=> 'Group',
+);

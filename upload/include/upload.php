@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -18,6 +18,7 @@ $gd  = extension_loaded('gd');
 $gd2 = ($gd && function_exists('imagecreatetruecolor'));
 
 $extimage = array('gif', 'jpeg', 'jpg', 'jpe', 'png', 'bmp', 'tiff', 'tif', 'swf', 'psd', 'iff', 'wbmp', 'wbm', 'xbm');
+$extforno = array('phtml','php','php3','php4','php5','php6','phps','cgi','exe','pl','asp','aspx','shtml','shtm','fcgi','fpl','jsp','htm','html','wml','htaccess');
 
 $extimage2 = array(
 	1 => array('gif'),
@@ -50,7 +51,7 @@ $extimageGD = array(
 	'xbm' => 'xbm',
 );
 
-function parse_file($filen)
+function parse_file($f)
 {
 	static $UTF8AR = null;
 
@@ -100,28 +101,31 @@ function parse_file($filen)
 			);
 	}
 
-	$filen = preg_replace('/[@=\' ]+/', '-', $filen);
-	$filen = str_replace(array_keys($UTF8AR), array_values($UTF8AR), $filen);
-	$filen = preg_replace('/[^\w\.-]+/', '', $filen);
+	$f = preg_replace('%[\x00-\x1f]%', '', $f);
+	$f = preg_replace('%[@=\' ]+%', '-', $f);
+	$f = str_replace(array_keys($UTF8AR), array_values($UTF8AR), $f);
+	$f = preg_replace('%[^\w\.-]+%', '', $f);
 
-	return $filen;
+	return $f;
 }
 
-function dir_size($dir, $exts)
+function dir_size($dir)
 {
-		$upload = 0;
-		$open = opendir(PUN_ROOT.$dir);
-		while(($file = readdir($open)) !== false)
+	global $extforno;
+
+	$upload = 0;
+	$open = opendir(PUN_ROOT.$dir);
+	while(($file = readdir($open)) !== false)
+	{
+		if (is_file(PUN_ROOT.$dir.$file))
 		{
-			if (is_file(PUN_ROOT.$dir.$file))
-			{
-				$ext = strtolower(substr(strrchr($file, '.'), 1)); // берем расширение файла
-				if ($ext != '' && $file[0] != '#' && in_array($ext, $exts))
-					$upload += filesize(PUN_ROOT.$dir.$file);
-			}
+			$ext = strtolower(substr(strrchr($file, '.'), 1)); // берем расширение файла
+			if ($ext != '' && $file[0] != '#' && !in_array($ext, $extforno))
+				$upload += filesize(PUN_ROOT.$dir.$file);
 		}
-		closedir($open);
-		return $upload;
+	}
+	closedir($open);
+	return $upload;
 }
 
 if ($gd && !function_exists('ImageCreateFromBMP'))
@@ -237,8 +241,9 @@ function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $qualit
 
 	$size = getimagesize($file);
 	if ($size === false) return false;
-	
-	$type1 = (($flag && in_array($type, array('jpeg','jpg','jpe','gif','png','bmp'))) || ($type == 'bmp')) ? 'jpeg' : $extimageGD[$type];
+
+	$type2 = strtolower($type);
+	$type1 = (($flag && in_array($type2, array('jpeg','jpg','jpe','gif','png','bmp'))) || ($type2 == 'bmp')) ? 'jpeg' : $extimageGD[$type2];
 	
 	$icfunc = 'imagecreatefrom'.$extimageGD[$extimage2[$size[2]][0]]; //  $type;
 	if (!function_exists($icfunc)) return false;
@@ -311,7 +316,7 @@ function isXSSattack ($file)
 	$buf1 = '';
 	while ($buf2 = fread($fin, 4096))
 	{
-		if (preg_match( "#<(script|html|head|title|body|table|a\s+href|img\s|plaintext|cross\-domain\-policy|embed|applet|\?php)#si", $buf1.$buf2 ))
+		if (preg_match( "%<(script|html|head|title|body|table|a\s+href|img\s|plaintext|cross\-domain\-policy|embed|applet|\?php)%si", $buf1.$buf2 ))
 		{
 			fclose($fin);
 			return $lang_up['err_str'];
@@ -320,4 +325,21 @@ function isXSSattack ($file)
 	}
 	fclose($fin);
 	return false;
+}
+
+function return_bytes ($val)
+{
+    $val = trim($val);
+    $last = strtolower($val{strlen($val)-1});
+    switch($last) {
+        // The 'G' modifier is available since PHP 5.1.0
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
+
+    return $val;
 }

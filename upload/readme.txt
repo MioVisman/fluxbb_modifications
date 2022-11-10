@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  1.2.0
-##  Works on FluxBB:  1.4.4, 1.4.5
-##     Release date:  2011-04-07
+##      Mod version:  1.3.0
+##  Works on FluxBB:  1.5.0
+##     Release date:  2012-08-03
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -17,6 +17,12 @@
 ##                      Has added management of the uploaded files in a profile.
 ##                      В профиль добавил возможность загрузки/удаления файлов.
 ##
+##                    v 1.3.0
+##                      German is added. Thanks to cyberman.
+##                      For FluxBB v.1.5.0
+##                      Settings for each group of users.
+##                      Administration of files is changed.
+##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##
 ##   Affected files:  footer.php
@@ -24,7 +30,7 @@
 ##
 ##       Affects DB:  No (Yes in plugin)
 ##
-##            Notes:  Russian/English
+##            Notes:  Russian/English/French/German
 ##                    Functions move_uploaded_file(), mkdir(), opendir() and others
 ##                    must be enabled in your Website and this one must accept
 ##                    resizing pictures with GD.
@@ -41,7 +47,11 @@
 #---------[ 1. UPLOAD ]-------------------------------------------------------
 #
 
-file upfiles.php; folders include, img, lang, plugins to /
+upfiles.php to /
+img/ to /img/
+include/ to /include/
+lang/ to /lang/
+plugins/ to /plugins/
 
 #
 #---------[ 2. OPEN ]---------------------------------------------------------
@@ -90,3 +100,7 @@ include/functions.php
 #
 
 include/functions.php
+
+#
+# Adjust this plugin in Administration - Plugins menu - Upload
+#

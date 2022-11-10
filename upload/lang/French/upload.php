@@ -33,16 +33,13 @@ $lang_up = array(
 'configuration'						=> 'Configuration',
 'plugin_desc'							=> 'Ce plugin permet de configurer les fonctions d\'Uploadile dont vous avez besoin.',
 'legend_2'								=> 'Choisisser vos options',
-'laws'										=> 'Types de fichier autorisés',
+'laws'										=> 'Types de fichier autorisés.',
 'laws_info'								=> 'Séparer avec des virgules (,)',
 'thumb'										=> 'Activer les miniatures',
 'thumb_size'							=> 'Taille de la miniature: ',
 'quality'									=> 'Qualité: ',
 'maxsize_member'					=> 'La taille maximum que les membres peuvent télécharger.',
-'maxsize_modo'						=> 'La taille maximum que les modérateurs peuvent télécharger.',
-'maxsize_info'						=> '<br />Votre serveur a une limite par défaut.',
-'limit_member'						=> 'Espace alloué aux membres',
-'limit_modo'							=> 'Espace alloué aux modérateurs',
+'limit_member'						=> 'Espace alloué aux membres.',
 'oui'											=> 'Oui',
 'non'											=> 'Non',
 'px'											=> 'Pixel',
@@ -61,8 +58,7 @@ $lang_up = array(
 'titre_4'									=> 'Mes téléchargements',
 'popup_title'							=> 'Gestion des fichiers',
 
-'info_2'									=> '/!\ Votre fichier ne doit dépasser la taille %s et doit faire %s.',
-'info_2_admi'							=> '/!\ L\'extension de votre fichier doit être <strong>%s</strong> .',
+'info_2'									=> 'Votre fichier ne doit dépasser la taille %s et doit faire %s.',
 'info_4'									=> '<div style="border:1px solid #4E642D; width:12em;"><div style="border-right: 2px solid #4E642D; background-color: #6C8A3F; text-align:right; width:%s%s;">%s%s</div></div>Espace de stockage utilisé : %s en %s',
 'info_4b'									=> 'Espace de stockage utilisé : %s',
 'legend'									=> 'Sélectionner un fichier et envoyer le :',
@@ -87,6 +83,7 @@ $lang_up = array(
 'update_thumb'						=> 'Mettre à jour les miniatures',
 
 'upfiles'									=> 'Téléchargements',
-);
 
-?>
+'groups'									=> 'Le réglage des groupes',
+'group'										=> 'Groupe',
+);

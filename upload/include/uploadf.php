@@ -5,14 +5,14 @@
  */
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN')) {
+if (! defined('PUN')) {
 	exit;
 }
 
 if (!$pun_user['is_guest'] && isset($pun_config['o_upload_config'], $required_fields['req_message'])) {
 	if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_up_limit'] > 0 && $pun_user['g_up_max'] > 0)) {
 		// Load language file
-		if (!isset($lang_up)) {
+		if (! isset($lang_up)) {
 			if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php')) {
 				require PUN_ROOT.'lang/'.$pun_user['language'].'/upload.php';
 			} else {

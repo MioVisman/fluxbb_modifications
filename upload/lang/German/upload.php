@@ -8,9 +8,10 @@ $lang_up = array(
 'Error space'				=> 'Der dir zugewiesene Speicherplatz ist überfüllt. Lösche ein paar Dateien und versuch es dann noch einmal.',
 'Error delete'			=> 'Fehler während des Löschens der Datei.',
 'Error img'					=> 'Ungültiges Bildformat. Oder der Server unterstützt keine Bildverarbeitung.',
-'Error no mod img'	=> 'Das Bild wurde während der Aktualisierung zerstört (%d).',
+'Error no mod img'	=> 'Das Bild wurde während der Aktualisierung zerstört.',
 'Error open'				=> 'Die hochgeladene Datei konnte nicht geöffnet werden.',
 'Error inject'			=> 'Uploaded file contains the forbidden string. Archiviere diese Datei und versuch es noch einmal. Oder sprich mit dem Administrator.',
+'Error usage'			=> 'File used in %d post(s).',
 
 'Redirect'					=> 'Optionen aktualisiert. Leite weiter …',
 'Install info'			=> 'Bereitet die Datenbank und den Cache für den Einsatz von Uploadile vor.',

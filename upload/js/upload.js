@@ -1,4 +1,4 @@
-// upload.js v2.2.0 BETA Copyright (C) 2019 Visman (mio.visman@yandex.ru)
+// upload.js v3.0.0 BETA Copyright (C) 2019 Visman (mio.visman@yandex.ru)
 if (typeof FluxBB === 'undefined' || !FluxBB) {var FluxBB = {};}
 
 FluxBB.upload = (function (doc, win) {
@@ -275,7 +275,7 @@ FluxBB.upload = (function (doc, win) {
 
 		if (thumb) {
 			insertText('', '[url=' + file.url + '][img]' + file.mini + '[/img][/url]', '');
-		} else if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].indexOf(file.ext) > -1) {
+		} else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].indexOf(file.ext) > -1) {
 			insertText('', '[img]' + file.url + '[/img]', '');
 		} else {
 			insertText('[url=' + file.url + ']', '[/url]', file.filename);
@@ -385,7 +385,7 @@ FluxBB.upload = (function (doc, win) {
 			var file = files[0];
 			if (file.size > FluxBB.uploadvars.maxsize) {
 				alert(FluxBB.uploadvars.lang.large);
-			} else if (FluxBB.uploadvars.exts.indexOf(file.name.match(/\.([^.]*)$/)[1]) < 0) {
+			} else if (FluxBB.uploadvars.exts.indexOf(file.name.match(/\.([^.]*)$/)[1].toLowerCase()) < 0) {
 				alert(FluxBB.uploadvars.lang.bad_type);
 			} else {
 				var form = new FormData(get('upf-dataform'));

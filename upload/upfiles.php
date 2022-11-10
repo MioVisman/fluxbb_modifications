@@ -81,7 +81,7 @@ if (null !== $upf_action) {
 		}
 		confirm_referrer(PLUGIN_REF);
 		if ($upf_ajax) {
-			if (!empty($errors)) {
+			if (! empty($errors)) {
 				upf_return_json(['error' => array_pop($errors)]);
 			}
 			unset($errors);
@@ -93,7 +93,7 @@ if (null !== $upf_action) {
 
 require PUN_ROOT . 'include/upload.php';
 
-if (!isset($_GET['id'])) {
+if (! isset($_GET['id'])) {
 	$id = $pun_user['id'];
 
 	define('PUN_HELP', 1);
@@ -127,7 +127,7 @@ if (!isset($_GET['id'])) {
 }
 
 $upf_limit *= 1048576;
-$upf_max_size = (int) min(10485.76 * $upf_max_size, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
+$upf_max_size = (int) min(10485.76 * $upf_max_size, $upf_class->size(ini_get('upload_max_filesize')), $upf_class->size(ini_get('post_max_size')));
 $upf_dir_size *= 10485.76;
 
 if ($pun_user['g_id'] != PUN_ADMIN && $upf_limit * $upf_max_size == 0) {
@@ -147,32 +147,59 @@ $upf_new_files = [];
 if ('delete' === $upf_action) {
 	$error = false;
 
-	if (is_dir(PUN_ROOT . $upf_dir)) {
-		$filename = parse_file(pun_trim(upf_get_pg('file')));
-		$ext = strtolower(substr(strrchr($filename, '.'), 1)); // берем расширение файла
-		if ($filename[0] != '.' && $ext != '' && !in_array($ext, $extforno) && is_file(PUN_ROOT . $upf_dir . $filename)) {
-			if (unlink(PUN_ROOT . $upf_dir . $filename)) {
-				if (is_file(PUN_ROOT . $upf_dir . 'mini_' . $filename)) {
-					unlink(PUN_ROOT . $upf_dir . 'mini_' . $filename);
-				}
+	if (
+		is_dir(PUN_ROOT . $upf_dir)
+		&& preg_match('%^([\w-]+)\.(\w+)$%', pun_trim(upf_get_pg('file')), $matches)
+		&& false === $upf_class->inBlackList($matches[2])
+		&& 'mini_' !== substr($matches[1], 0, 5)
+		&& is_file(PUN_ROOT . $upf_dir . $matches[1] . '.' . $matches[2])
+	) {
+		include PUN_ROOT . 'include/search_idx.php';
+		$like = '/' . $upf_dir . $matches[1] . '.' . $matches[2];
+		$words = split_words(utf8_strtolower($like), true);
+
+		if (count($words) > 2) {
+			$words = array_diff($words, ['img', 'members']);
+		}
+		if (count($words) > 2) {
+			$words = array_diff($words, ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'webp']);
+		}
+
+		$count = count($words);
+
+		if ($count > 0) {
+			if (1 == $count) {
+				$query = 'SELECT COUNT(m.post_id) AS numposts FROM ' . $db->prefix . 'search_words AS w INNER JOIN ' . $db->prefix . 'search_matches AS m ON m.word_id = w.id INNER JOIN ' . $db->prefix . 'posts AS p ON p.id=m.post_id WHERE w.word=\'' . $db->escape(array_pop($words)) . '\' AND p.message LIKE \'%' . $db->escape($like) . '%\'';
 			} else {
-				$error = true;
+				$query = 'SELECT COUNT(p.id) AS numposts FROM ' . $db->prefix . 'posts AS p WHERE p.id IN (SELECT m.post_id FROM ' . $db->prefix . 'search_words AS w INNER JOIN ' . $db->prefix . 'search_matches AS m ON m.word_id = w.id WHERE w.word IN (\'' . implode('\',\'', array_map([$db, 'escape'], $words)) . '\') GROUP BY m.post_id HAVING COUNT(m.post_id)=' . $count . ') AND p.message LIKE \'%' . $db->escape($like) . '%\'';
 			}
+
+			$result = $db->query($query) or error('Unable to fetch search information', __FILE__, __LINE__, $db->error());
+			$count = $db->result($result);
+		}
+
+		if (empty($count) && unlink(PUN_ROOT . $upf_dir . $matches[1] . '.' . $matches[2])) {
+			if (is_file(PUN_ROOT . $upf_dir . 'mini_' . $matches[1] . '.' . $matches[2])) {
+				unlink(PUN_ROOT . $upf_dir . 'mini_' . $matches[1] . '.' . $matches[2]);
+			}
+
+			$upf_dir_size = $upf_class->dirSize(PUN_ROOT . $upf_dir);
+			$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
+
+			$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=' . ((int) ($upf_dir_size / 10485.76)) . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 		} else {
 			$error = true;
 		}
-
-		$upf_dir_size = dir_size($upf_dir);
-		$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
-
-		$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=' . ((int) ($upf_dir_size / 10485.76)) . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 	} else {
 		$error = true;
 	}
 
 	if ($error) {
-		$pun_config['o_redirect_delay'] = 5;
-		upf_redirect(($upf_page < 2 ? PLUGIN_URL : PLUGIN_URLD . 'p=' . $upf_page ) . '#gofile', $lang_up['Error delete']);
+		if ($pun_config['o_redirect_delay'] < 5) {
+			$pun_config['o_redirect_delay'] = 5;
+		}
+		$message = empty($count) ? $lang_up['Error delete'] : sprintf($lang_up['Error usage'], $count);
+		upf_redirect(($upf_page < 2 ? PLUGIN_URL : PLUGIN_URLD . 'p=' . $upf_page ) . '#gofile', $message);
 	} else if (! $upf_ajax) {
 		redirect(($upf_page < 2 ? PLUGIN_URL : PLUGIN_URLD . 'p=' . $upf_page ) . '#gofile', $lang_up['Redirect delete']);
 	}
@@ -180,10 +207,13 @@ if ('delete' === $upf_action) {
 
 // Загрузка файла
 else if ('upload' === $upf_action && isset($_FILES['upfile']) && $id == $pun_user['id']) {
-	$pun_config['o_redirect_delay'] = 5;
+	$upf_redir_delay = $pun_config['o_redirect_delay'];
+	if ($upf_redir_delay < 5) {
+		$pun_config['o_redirect_delay'] = 5;
+	}
 
 	// Ошибка при загрузке
-	if (!empty($_FILES['upfile']['error'])) {
+	if (! empty($_FILES['upfile']['error'])) {
 		switch($_FILES['upfile']['error']) {
 			case UPLOAD_ERR_INI_SIZE:
 				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_INI_SIZE']);
@@ -212,111 +242,115 @@ else if ('upload' === $upf_action && isset($_FILES['upfile']) && $id == $pun_use
 		}
 	}
 
-	if (!is_uploaded_file($_FILES['upfile']['tmp_name'])) {
-		upf_redirect(PLUGIN_URL, $lang_up['Unknown failure']);
+	if (false === $upf_class->loadFile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name'])) {
+		upf_redirect(PLUGIN_URL, $lang_up['Unknown failure'] . ' (' . pun_htmlspecialchars($upf_class->getError()) . ')');
 	}
 
-	$f = pathinfo(parse_file($_FILES['upfile']['name']));
-	if (empty($f['extension'])) {
+	// расширение
+	if (! in_array($upf_class->getFileExt(), $upf_exts)) {
 		upf_redirect(PLUGIN_URL, $lang_up['Bad type']);
 	}
 
-	// Проверяем расширение
-	$ext = strtolower($f['extension']);
-	if (in_array($ext, $extforno) || !in_array($ext, $upf_exts)) {
-		upf_redirect(PLUGIN_URL, $lang_up['Bad type']);
-	}
-
-	// Проверяется максимальный размер файла
+	// максимальный размер файла
 	if ($_FILES['upfile']['size'] > $upf_max_size) {
 		upf_redirect(PLUGIN_URL, $lang_up['Too large'] . ' (' . pun_htmlspecialchars(file_size($upf_max_size)) . ').');
 	}
 
-	// Проверяем допустимое пространство
+	// допустимое пространство
 	if ($_FILES['upfile']['size'] + $upf_dir_size > $upf_limit) {
 		upf_redirect(PLUGIN_URL, $lang_up['Error space']);
 	}
 
-	// Проверяем картинку (флэш) на правильность
-	$isimg2 = in_array($ext, $extimage);
-	$size = @getimagesize($_FILES['upfile']['tmp_name']);
-	if (($size === false && $isimg2) || ($size !== false && !$isimg2)) {
-		upf_redirect(PLUGIN_URL, $lang_up['Error img']);
-	}
-	if ($isimg2) {
-		$isimge = false;
-
-		if (empty($size[0]) || empty($size[1]) || empty($size[2])) {
-			$isimge = true;
-		} else if (!isset($extimage2[$size[2]]) || !in_array($ext, $extimage2[$size[2]])) {
-			$isimge = true;
-		}
-		if ($isimge) {
-			upf_redirect(PLUGIN_URL, $lang_up['Error img']);
-		}
+	// подозрительное содержимое
+	if (false !== $upf_class->isUnsafeContent()) {
+		upf_redirect(PLUGIN_URL, $lang_up['Error inject']);
 	}
 
-	// обрабатываем имя
-	$name = str_replace('.', '_', $f['filename']);
-	if (substr($name, 0, 5) == 'mini_') {
-		$name = substr($name, 5);
-	}
-	if ($name == '') {
-		$name = 'none';
-	}
-	if (strlen($name) > 100) {
-		$name = substr($name, 0, 100);
-	}
-	if (is_file(PUN_ROOT . $upf_dir . $name . '.' . $ext) || is_file(PUN_ROOT . $upf_dir . $name . '.jpeg')) { // если уже есть, переименуем
-		$name = $name . '_' . parse_file(date('Ymd\-Hi', time()));
-	}
+	$upf_class->prepFileName();
 
-	if (!is_dir(PUN_ROOT . 'img/members/')) {
+	if (! is_dir(PUN_ROOT . 'img/members/')) {
 		mkdir(PUN_ROOT . 'img/members', 0755);
 	}
-	if (!is_dir(PUN_ROOT . $upf_dir)) {
-		mkdir(PUN_ROOT . 'img/members/' . $id, 0755);
+	if (! is_dir(PUN_ROOT . $upf_dir)) {
+		mkdir(PUN_ROOT . $upf_dir, 0755);
 	}
 
-	if ($_FILES['upfile']['size'] > 1024 * $upf_conf['pic_mass'] && $isimg2 && $gd && isset($extimageGD[$ext])) {
-		$ext_ml = img_resize($_FILES['upfile']['tmp_name'], $upf_dir, $name, $ext, $upf_conf['pic_w'], $upf_conf['pic_h'], $upf_conf['pic_perc'], true);
-		if (!is_array($ext_ml)) {
-			upf_redirect(PLUGIN_URL, sprintf($lang_up['Error no mod img'], $ext_ml));
+	$saveImage = false;
+	$fileinfo = false;
+
+	// сохранение картинки
+	if (true === $upf_class->isImage()) {
+		$upf_class->setImageQuality($upf_conf['pic_perc']);
+
+		if (false === $upf_class->loadImage()) {
+			upf_redirect(PLUGIN_URL, $lang_up['Error img'] . ' (' . pun_htmlspecialchars($upf_class->getError()) . ')');
 		}
 
-		list($name, $ext) = $ext_ml;
-	} else {
-		$error = isXSSattack($_FILES['upfile']['tmp_name']);
-		if ($error !== false) {
-			upf_redirect(PLUGIN_URL, $error);
-		}
+		if ($_FILES['upfile']['size'] > 1024 * $upf_conf['pic_mass'] && $upf_class->isResize()) {
+			if (false === $upf_class->resizeImage($upf_conf['pic_w'], $upf_conf['pic_h'])) {
+				upf_redirect(PLUGIN_URL, $lang_up['Error no mod img']);
+			}
 
-		if (!@move_uploaded_file($_FILES['upfile']['tmp_name'], PUN_ROOT . $upf_dir . $name . '.' . $ext)) {
-			upf_redirect(PLUGIN_URL, $lang_up['Move failed']);
+			$saveImage = true;
+			$fileinfo = $upf_class->saveImage(PUN_ROOT . $upf_dir . $upf_class->getFileName() . '.' . $upf_class->getFileExt(), false);
+
+			if (false === $fileinfo) {
+				upf_redirect(PLUGIN_URL, $lang_up['Move failed'] . ' (' . pun_htmlspecialchars($upf_class->getError()) . ')'); //????
+			}
+
+			// картика стала больше после ресайза
+			if (filesize($fileinfo['path']) > $_FILES['upfile']['size']) {
+				$saveImage = false;
+				unlink($fileinfo['path']);
+			}
 		}
-		@chmod(PUN_ROOT . $upf_dir . $name . '.' . $ext, 0644);
 	}
 
-	// Создание привьюшки (только для поддерживаемых GD форматов)
-	if ($upf_conf['thumb'] == 1 && $isimg2 && $gd && isset($extimageGD[$ext])) {
-		img_resize(PUN_ROOT . $upf_dir . $name . '.' . $ext, $upf_dir, 'mini_' . $name, $ext, 0, $upf_conf['thumb_size'], $upf_conf['thumb_perc']);
+	// сохранение файла
+	if (false === $saveImage) {
+		if (is_array($fileinfo)) {
+			$fileinfo = $upf_class->saveFile($fileinfo['path'], true);
+		} else {
+			$fileinfo = $upf_class->saveFile(PUN_ROOT . $upf_dir . $upf_class->getFileName() . '.' . $upf_class->getFileExt(), false);
+		}
+
+		if (false === $fileinfo) {
+			upf_redirect(PLUGIN_URL, $lang_up['Move failed'] . ' (' . pun_htmlspecialchars($upf_class->getError()) . ')'); //????
+		}
 	}
 
-	$upf_dir_size = dir_size($upf_dir);
+	// превью
+	if (true === $upf_class->isImage() && 1 == $upf_conf['thumb'] && $upf_class->isResize()) {
+		$upf_class->setImageQuality($upf_conf['thumb_perc']);
+
+		$scaleResize = $upf_class->resizeImage(null, $upf_conf['thumb_size']);
+		if (false !== $scaleResize) {
+			$path = PUN_ROOT . $upf_dir . 'mini_' . $fileinfo['filename'] . '.' . $fileinfo['extension'];
+
+			if ($scaleResize < 1) {
+				$upf_class->saveImage($path, true);
+			} else {
+				copy($fileinfo['path'], $path);
+				chmod($path, 0644);
+			}
+		}
+	}
+
+	$upf_dir_size = $upf_class->dirSize(PUN_ROOT . $upf_dir);
 	$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
 	$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=' . ((int) ($upf_dir_size / 10485.76)) . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 
 	if ($upf_ajax) {
 		$upf_page = 1;
-		$upf_new_files[$name . '.' . $ext] = true;
+		$upf_new_files[$fileinfo['filename'] . '.' . $fileinfo['extension']] = true;
 	} else {
-		$pun_config['o_redirect_delay'] = '1';
+		$pun_config['o_redirect_delay'] = $upf_redir_delay;
 		redirect(PLUGIN_URL, $lang_up['Redirect upload']);
 	}
 }
 
 // Unknown failure
-else if (($upf_ajax && 'view' !== $upf_action) || (!$upf_ajax && !empty($_POST))) {
+else if (($upf_ajax && 'view' !== $upf_action) || (! $upf_ajax && ! empty($_POST))) {
 	upf_redirect(PLUGIN_URL, $lang_up['Unknown failure']);
 }
 
@@ -328,12 +362,12 @@ $num_pages = 1;
 if (is_dir(PUN_ROOT . $upf_dir)) {
 	$tmp = get_base_url(true) . '/' . $upf_dir;
 	foreach (new DirectoryIterator(PUN_ROOT . $upf_dir) as $file) {
-		if (!$file->isFile() || in_array($file->getExtension(), $extforno)) {
+		if (!$file->isFile() || true === $upf_class->inBlackList($file->getExtension())) {
 			continue;
 		}
 
 		$filename = $file->getFilename();
-		if ('#' == $filename[0] || 'mini_' == substr($filename, 0, 5)) {
+		if ('#' === $filename[0] || 'mini_' === substr($filename, 0, 5)) {
 			continue;
 		}
 
@@ -349,7 +383,7 @@ if (is_dir(PUN_ROOT . $upf_dir)) {
 			];
 		}
 	}
-	if (!empty($files)) {
+	if (! empty($files)) {
 		$num_pages = ceil($count / PLUGIN_NF);
 		if ($upf_page > $num_pages && !$upf_ajax) {
 			header('Location: ' . str_replace('&amp;', '&', PLUGIN_URLD) . 'p=' . $num_pages . '#gofile');
@@ -374,7 +408,7 @@ if ($upf_ajax) {
 	]);
 }
 
-if (!isset($page_head)) {
+if (! isset($page_head)) {
 	$page_head = [];
 }
 
@@ -465,8 +499,9 @@ if (empty($files)) {
 					<ul id="upf-list">
 <?php
 
+	$upf_img_exts = ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'];
 	foreach($files as $file) {
-		$fb = in_array($file['ext'], array('jpg', 'jpeg', 'gif', 'png', 'bmp')) ? '" class="fancy_zoom" rel="vi001' : '';
+		$fb = in_array($file['ext'], $upf_img_exts) ? '" class="fancy_zoom" rel="vi001' : '';
 
 ?>
 						<li>
@@ -531,7 +566,7 @@ FluxBB.upfile = (function (doc, win) {
 	}
 
 	function is_img(a) {
-		return /.+\.(jpg|jpeg|png|gif|bmp)$/.test(a);
+		return /.+\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(a);
 	}
 
 	function get_us(li) {
@@ -603,11 +638,20 @@ FluxBB.upfile = (function (doc, win) {
 			if (req.status == 200) {
 				var data = req.responseText;
 				if (typeof data === 'string') {
-					if (!/"error"/.test(data)) {
+					try {
+						data = JSON.parse(data);
+					} catch (e) {}
+				}
+				if (typeof data === 'string') {
+					if ('{' === data.substr(0, 1) && !/"error"/.test(data)) {
 						error = false;
 					}
-				} else if (!('error' in data)) {
-					error = false;
+				} else {
+					if ('error' in data) {
+						alert(data.error);
+					} else {
+						error = false;
+					}
 				}
 			}
 

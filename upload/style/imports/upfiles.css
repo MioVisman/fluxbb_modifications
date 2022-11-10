@@ -140,6 +140,7 @@ ul#upf-list {
 
 #upf-table .upf-c3 img {
 	border: none;
+	max-width: 150px;
 }
 
 #upf-block #upf-table td {

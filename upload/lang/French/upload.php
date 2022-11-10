@@ -8,9 +8,10 @@ $lang_up = array(
 'Error space'				=> 'Vous avez dépassé votre espace de stockage autorisé. Supprimez des fichiers et essayez à nouveau.',
 'Error delete'			=> 'Erreur pendant lors de la supression du fichier, essayez à nouveau.',
 'Error img'					=> 'Format invalide d\'image. Ou le serveur ne supporte pas le traitement d\'images.',
-'Error no mod img'	=> 'L\'image a été endommagée pendant la mise à jour (%d).',
+'Error no mod img'	=> 'L\'image a été endommagée pendant la mise à jour.',
 'Error open'				=> 'Le fichier téléchargé ne s\'ouvre pas.',
 'Error inject'			=> 'Le fichier envoyé contient la ficelle défendue. Compressez ce fichier et essayez à nouveau ou contacter à l\'administrateur.',
+'Error usage'			=> 'File used in %d post(s).',
 
 'Redirect'					=> 'Options mises à jour. Redirection …',
 'Install info'			=> 'Préparation de la base de données et du cache pour l\'installation Uploadile.',

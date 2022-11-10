@@ -7,21 +7,21 @@
  */
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN')) {
+if (! defined('PUN')) {
 	exit;
 }
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '2.3.0');
+define('PLUGIN_VERSION', '3.0.0');
 define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin=' . $plugin));
-define('PLUGIN_EXTS', 'jpg,jpeg,png,gif,mp3,zip,rar,7z');
+define('PLUGIN_EXTS', 'webp,jpg,jpeg,png,gif,mp3,zip,rar,7z');
 define('PLUGIN_NF', 25);
 
 require PUN_ROOT . 'include/upload.php';
 
 // Any action must be confirmed by token
-if (!empty($_POST)) {
+if (! empty($_POST)) {
 	if (function_exists('csrf_hash')) {
 		confirm_referrer('AP_Upload.php');
 	} else {
@@ -30,18 +30,18 @@ if (!empty($_POST)) {
 }
 
 $sconf = [
-	'thumb' => $gd ? 1 : 0,
+	'thumb' => (true === $upf_class->isResize()) ? 1 : 0,
 	'thumb_size' => 100,
 	'thumb_perc' => 75,
 	'pic_mass' => 300, //килобайт
 	'pic_perc' => 75,
-	'pic_w' => 1680,
-	'pic_h' => 1050,
+	'pic_w' => 1920,
+	'pic_h' => 1200,
 ];
 
 // обновление до версии 2.3.0
 if (isset($pun_config['o_uploadile_other'])) {
-	if (!isset($pun_config['o_upload_config'])) {
+	if (! isset($pun_config['o_upload_config'])) {
 		$aconf = unserialize($pun_config['o_uploadile_other']);
 		$aconf['pic_mass'] = (int) ($aconf['pic_mass'] / 1024);
 		$pun_config['o_upload_config'] = serialize($aconf);
@@ -51,7 +51,7 @@ if (isset($pun_config['o_uploadile_other'])) {
 
 	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_uploadile_other\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
+	if (! defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
 	}
 
@@ -101,13 +101,13 @@ if (isset($_POST['installation'])) {
 	$db->add_field('groups', 'g_up_max', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
 	$db->add_field('groups', 'g_up_limit', 'INT(10)', false, 0) or error(sprintf($lang_up['Error DB'], 'groups'), __FILE__, __LINE__, $db->error());
 
-	$adm_max = (int) (min(return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size'))) / 10485.76);
+	$adm_max = (int) (min($upf_class->size(ini_get('upload_max_filesize')), $upf_class->size(ini_get('post_max_size'))) / 10485.76);
 	$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape(PLUGIN_EXTS) . '\', g_up_limit=1024, g_up_max=' . $adm_max . ' WHERE g_id=' . PUN_ADMIN) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
 
 	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_upload_config\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 	$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_upload_config\', \'' . $db->escape(serialize($sconf)) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
+	if (! defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
 	}
 
@@ -144,9 +144,9 @@ else if (isset($_POST['update'])) {
 			$g_ext = PLUGIN_EXTS;
 		}
 
-		$g_max = (!isset($g_up_max[$cur_group['g_id']]) || $g_up_max[$cur_group['g_id']] < 0) ? 0 : $g_up_max[$cur_group['g_id']];
-		$g_max = (int) (100 * min($g_max, return_bytes(ini_get('upload_max_filesize')) / 1048576, return_bytes(ini_get('post_max_size')) / 1048576));
-		$g_lim = (!isset($g_up_limit[$cur_group['g_id']]) || $g_up_limit[$cur_group['g_id']] < 0) ? 0 : $g_up_limit[$cur_group['g_id']];
+		$g_max = (! isset($g_up_max[$cur_group['g_id']]) || $g_up_max[$cur_group['g_id']] < 0) ? 0 : $g_up_max[$cur_group['g_id']];
+		$g_max = (int) (100 * min($g_max, $upf_class->size(ini_get('upload_max_filesize')) / 1048576, $upf_class->size(ini_get('post_max_size')) / 1048576));
+		$g_lim = (! isset($g_up_limit[$cur_group['g_id']]) || $g_up_limit[$cur_group['g_id']] < 0) ? 0 : $g_up_limit[$cur_group['g_id']];
 		$g_lim = min($g_lim, 20971520);
 
 		$db->query('UPDATE ' . $db->prefix . 'groups SET g_up_ext=\'' . $db->escape($g_ext) . '\', g_up_limit=' . $g_lim . ', g_up_max=' . $g_max . ' WHERE g_id=' . $cur_group['g_id']) or error('Unable to update user group list', __FILE__, __LINE__, $db->error());
@@ -178,7 +178,7 @@ else if (isset($_POST['update'])) {
 	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_upload_config\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 	$db->query('INSERT INTO ' . $db->prefix . 'config (conf_name, conf_value) VALUES(\'o_upload_config\', \'' . $db->escape(serialize($sconf)) . '\')') or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
+	if (! defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
 	}
 
@@ -196,7 +196,7 @@ else if (isset($_POST['restore'])) {
 
 	$db->query('DELETE FROM ' . $db->prefix . 'config WHERE conf_name=\'o_upload_config\'') or error('Unable to remove config entries', __FILE__, __LINE__, $db->error());;
 
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
+	if (! defined('FORUM_CACHE_FUNCTIONS_LOADED')) {
 		require PUN_ROOT . 'include/cache.php';
 	}
 
@@ -213,8 +213,8 @@ if (isset($pun_config['o_upload_config'])) {
 	define('PLUGIN_OFF', 1);
 }
 
-$mem = 'img/members/';
-$regx = '%^img/members/(\d+)/(.+)\.([0-9a-zA-Z]+)$%i';
+$upf_mem = 'img/members/';
+$upf_regx = '%^img/members/(\d+)/([\w-]+)\.(\w+)$%iD';
 
 // #############################################################################
 
@@ -222,22 +222,20 @@ $regx = '%^img/members/(\d+)/(.+)\.([0-9a-zA-Z]+)$%i';
 if (isset($_POST['delete'], $_POST['delete_f']) && is_array($_POST['delete_f'])) {
 	$error = false;
 
-	if (is_dir(PUN_ROOT . $mem)) {
+	if (is_dir(PUN_ROOT . $upf_mem)) {
 		$au = [];
 		foreach ($_POST['delete_f'] as $file) {
-			if (!preg_match($regx, $file, $fi)) {
-				$error = true;
-				continue;
-			}
-
-			$f = parse_file($fi[2] . '.' . $fi[3]);
-			$fi[1] = (int) $fi[1];
-			$dir = $mem . $fi[1] . '/';
-			if (is_file(PUN_ROOT . $dir . $f)) {
-				if (unlink(PUN_ROOT . $dir . $f)) {
-					$au[$fi[1]] = $fi[1];
-					if (is_file(PUN_ROOT . $dir . 'mini_' . $f)) {
-						unlink(PUN_ROOT . $dir . 'mini_' . $f);
+			if (
+				preg_match($upf_regx, $file, $matches)
+				&& false === $upf_class->inBlackList($matches[3])
+				&& 'mini_' !== substr($matches[2], 0, 5)
+				&& is_file(PUN_ROOT . $file)
+			) {
+				if (unlink(PUN_ROOT . $file)) {
+					$id = (int) $matches[1];
+					$au[$id] = $id;
+					if (is_file(PUN_ROOT . $upf_mem . $matches[1] . '/mini_' . $matches[2] . '.' . $matches[3])) {
+						unlink(PUN_ROOT . $upf_mem . $matches[1] . '/mini_' . $matches[2] . '.' . $matches[3]);
 					}
 				} else {
 					$error = true;
@@ -247,10 +245,10 @@ if (isset($_POST['delete'], $_POST['delete_f']) && is_array($_POST['delete_f']))
 			}
 		}
 
-		if (!defined('PLUGIN_OFF')) {
+		if (! defined('PLUGIN_OFF')) {
 			foreach ($au as $user) {
 				// Считаем общий размер файлов юзера
-				$upload = (int) (dir_size($mem . $user . '/') / 10485.76);
+				$upload = (int) ($upf_class->dirSize(PUN_ROOT . $upf_mem . $user . '/') / 10485.76);
 				$db->query('UPDATE ' . $db->prefix . 'users SET upload_size=\'' . $upload . '\' WHERE id=' . $user) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
 			}
 		}
@@ -259,7 +257,9 @@ if (isset($_POST['delete'], $_POST['delete_f']) && is_array($_POST['delete_f']))
 	$p = empty($_GET['p']) || $_GET['p'] < 1 ? 1 : (int) $_GET['p'];
 
 	if ($error) {
-		$pun_config['o_redirect_delay'] = 5;
+		if ($pun_config['o_redirect_delay'] < 5) {
+			$pun_config['o_redirect_delay'] = 5;
+		}
 		redirect(PLUGIN_URL . ($p > 1 ? '&amp;p=' . $p : ''), $lang_up['Error'] . $lang_up['Error delete']);
 	} else {
 		redirect(PLUGIN_URL . ($p > 1 ? '&amp;p=' . $p : ''), $lang_up['Redirect delete']);
@@ -271,7 +271,6 @@ if (file_exists(PUN_ROOT . 'style/' . $pun_user['style'] . '/upfiles.css')) {
 } else {
 	$s = '<link rel="stylesheet" type="text/css" href="style/imports/upfiles.css" />';
 }
-
 $tpl_main = str_replace('</head>', $s . "\n</head>", $tpl_main);
 
 // Display the admin navigation menu
@@ -291,8 +290,6 @@ $upf_token = function_exists('csrf_hash') ? csrf_hash('AP_Upload.php') : pun_csr
 						<input type="hidden" name="csrf_hash" value="<?= $upf_token ?>" />
 <?php
 
-$stthumb = '" disabled="disabled';
-
 if (defined('PLUGIN_OFF')) {
 
 ?>
@@ -304,17 +301,8 @@ if (defined('PLUGIN_OFF')) {
 <?php
 
 } else {
-	if ($aconf['thumb'] == 1 && $gd) {
-		$stthumb = '';
-	}
-	if ($gd) {
-		$disbl = '';
-		$gd_vers = gd_info();
-		$gd_vers = $gd_vers['GD Version'];
-	} else {
-		$disbl = '" disabled="disabled';
-		$gd_vers = '-';
-	}
+	$disbl = (true === $upf_class->isResize()) ? '' : '" disabled="disabled';
+	$stthumb = ('' === $disbl && 1 == $aconf['thumb']) ? '' : '" disabled="disabled';
 
 ?>
 						<input type="submit" name="update" value="<?= $lang_up['Update'] ?>" />&#160;<?= $lang_up['Update info'] ?><br />
@@ -333,15 +321,14 @@ if (defined('PLUGIN_OFF')) {
 						<div class="infldset">
 						<table>
 							<tr>
-								<th scope="row"><label>GD Version</label></th>
-								<td><?= pun_htmlspecialchars($gd_vers) ?></td>
+								<th scope="row"><label><?= $upf_class->getLibName() ?></label></th>
+								<td><?= pun_htmlspecialchars($upf_class->getLibVersion()) ?></td>
 							</tr>
 							<tr>
 								<th scope="row"><label><?= $lang_up['pictures'] ?></label></th>
 								<td>
 									<?= $lang_up['for pictures'] . "\n" ?>
 									<input type="text" name="pic_mass" size="8" maxlength="8" tabindex="<?= $tabindex++ ?>" value="<?= pun_htmlspecialchars($aconf['pic_mass']) . $disbl ?>" />&#160;<?= $lang_up['kbytes'] . ":\n" ?><br />
-									&#160;*&#160;<?= $lang_up['to jpeg'] ?><br />
 									&#160;*&#160;<?= $lang_up['Install quality'] . "\n" ?>
 									<input type="text" name="pic_perc" size="4" maxlength="3" tabindex="<?= $tabindex++ ?>" value="<?= pun_htmlspecialchars($aconf['pic_perc']) . $disbl ?>" />&#160;%<br />
 									&#160;*&#160;<?= $lang_up['Size not more'] . "\n" ?>
@@ -392,7 +379,7 @@ if (defined('PLUGIN_OFF')) {
 
 	while ($cur_group = $db->fetch_assoc($result)) {
 		if ($cur_group['g_id'] != PUN_GUEST) {
-			if (!isset($cur_group['g_up_ext'])) {
+			if (! isset($cur_group['g_up_ext'])) {
 				$cur_group['g_up_max'] = $cur_group['g_up_limit'] = 0;
 				$cur_group['g_up_ext'] = '';
 			}
@@ -439,27 +426,37 @@ if (defined('PLUGIN_OFF')) {
 // #############################################################################
 
 $files = [];
-if (is_dir(PUN_ROOT . $mem)) {
+if (is_dir(PUN_ROOT . $upf_mem)) {
 	$af = [];
-	$ad = scandir(PUN_ROOT . $mem);
+	$ad = scandir(PUN_ROOT . $upf_mem);
+
 	foreach($ad as $f) {
-		if ($f != '.' && $f != '..' && is_dir(PUN_ROOT . $mem . $f)) {
-			$dir = $mem . $f . '/';
-			$open = opendir(PUN_ROOT . $dir);
-			while(($file = readdir($open)) !== false) {
-				if (is_file(PUN_ROOT . $dir . $file) && $file[0] != '.' && $file[0] != '#' && substr($file, 0, 5) != 'mini_') {
-					$ext = strtolower(substr(strrchr($file, '.'), 1)); // берем расширение файла
-					if (!in_array($ext, $extforno)) {
-						$time = filemtime(PUN_ROOT . $dir . $file) . $file . $f;
-						$af[$time] = $dir . $file;
-					}
-				}
-			}
-			closedir($open);
+		if ('.' === $f[0] || ! is_dir(PUN_ROOT . $upf_mem . $f)) {
+			continue;
 		}
+
+		$dir = $upf_mem . $f . '/';
+		$open = opendir(PUN_ROOT . $dir);
+		while (false !== ($file = readdir($open))) {
+			if (
+				'.' === $file[0]
+				|| '#' === $file[0]
+				|| 'mini_' === substr($file, 0, 5)
+				|| true === $upf_class->inBlackList(substr(strrchr($file, '.'), 1))
+				|| ! is_file(PUN_ROOT . $dir . $file)
+			) {
+				continue;
+			}
+
+			$time = filemtime(PUN_ROOT . $dir . $file) . $file . $f;
+			$af[$time] = $dir . $file;
+		}
+		closedir($open);
 	}
+
 	unset($ad);
-	if (!empty($af)) {
+
+	if (! empty($af)) {
 		$num_pages = ceil(count($af) / PLUGIN_NF);
 		$p = (empty($_GET['p']) || $_GET['p'] < 1) ? 1 : (int) $_GET['p'];
 		if ($p > $num_pages) {
@@ -530,8 +527,15 @@ if (empty($files)) {
 <?php
 
 	// данные по юзерам
+	$au = [];
+	foreach ($files as $file) {
+		if (preg_match($upf_regx, $file, $fi)) {
+			$id = (int) $fi[1];
+			$au[$id] = $id;
+		}
+	}
+	$result = $db->query('SELECT id, username, group_id FROM ' . $db->prefix . 'users WHERE id IN(' . implode(',', $au) . ')') or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 	$au = $ag = [];
-	$result = $db->query('SELECT id, username, group_id FROM ' . $db->prefix . 'users WHERE group_id!=' . PUN_UNVERIFIED) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 	while ($u = $db->fetch_assoc($result)) {
 		$au[$u['id']] = $u['username'];
 		$ag[$u['id']] = $u['group_id'];
@@ -549,17 +553,35 @@ if (empty($files)) {
 	}
 	$db->free_result($result);
 
+	$upf_img_exts = ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'];
 	foreach ($files as $file) {
-		if (!preg_match($regx, $file, $fi)) {
+		if (! preg_match($upf_regx, $file, $fi)) {
 			continue;
 		}
 
-		$fb = in_array(strtolower($fi[3]), ['jpg', 'jpeg', 'gif', 'png', 'bmp']) ? '" class="fancy_zoom" rel="vi001' : '';
-		$dir = $mem . $fi[1] . '/';
+		$fancybox = in_array(strtolower($fi[3]), $upf_img_exts) ? '" class="fancy_zoom" rel="vi001' : '';
+		$dir = $upf_mem . $fi[1] . '/';
 		$size_file = file_size(filesize(PUN_ROOT . $file));
 		$miniature = $dir . 'mini_' . $fi[2] . '.' . $fi[3];
-		if (isset($_POST['update_thumb']) && $aconf['thumb'] == 1 && array_key_exists(strtolower($fi[3]), $extimageGD)) {
-			img_resize(PUN_ROOT . $file, $dir, 'mini_' . $fi[2], $fi[3], 0, $aconf['thumb_size'], $aconf['thumb_perc']);
+
+		if (
+			isset($_POST['update_thumb'])
+			&& 1 == $aconf['thumb']
+			&& true === $upf_class->loadFile(PUN_ROOT . $file)
+			&& true === $upf_class->isImage()
+			&& false !== $upf_class->loadImage()
+		) {
+			$upf_class->setImageQuality($aconf['thumb_perc']);
+			$scaleResize = $upf_class->resizeImage(null, $aconf['thumb_size']);
+
+			if (false !== $scaleResize) {
+				if ($scaleResize < 1) {
+					$upf_class->saveImage(PUN_ROOT . $miniature, true);
+				} else {
+					copy(PUN_ROOT . $file, PUN_ROOT . $miniature);
+					chmod(PUN_ROOT . $miniature, 0644);
+				}
+			}
 		}
 
 ?>
@@ -568,23 +590,23 @@ if (empty($files)) {
 									<td class="upf-c2"><a href="<?= pun_htmlspecialchars($file) ?>"><?= pun_htmlspecialchars($fi[2]) ?></a> [<?= pun_htmlspecialchars($size_file) ?>].[<?= (isset($ag[$fi[1]]) && in_array($fi[3], $extsup[$ag[$fi[1]]]) ? pun_htmlspecialchars($fi[3]) : '<span style="color: #ff0000"><strong>' . pun_htmlspecialchars($fi[3]) . '</strong></span>') ?>]</td>
 <?php
 
-		if (is_file(PUN_ROOT . $miniature) && ($size = getimagesize(PUN_ROOT . $miniature)) !== false) {
+		if (is_file(PUN_ROOT . $miniature)) {
 
 ?>
 									<td class="upf-c3">
-										<a href="<?= pun_htmlspecialchars($file) . $fb ?>">
-											<img style="width:<?= min(150, $size[0]) ?>px" src="<?= pun_htmlspecialchars($miniature) ?>" alt="<?= pun_htmlspecialchars($fi[2]) ?>" />
+										<a href="<?= pun_htmlspecialchars($file) . $fancybox ?>">
+											<img src="<?= pun_htmlspecialchars($miniature) ?>" alt="<?= pun_htmlspecialchars($fi[2]) ?>" />
 										</a>
 									</td>
 <?php
 
-		 } else {
+		} else {
 
 ?>
 									<td class="upf-c3"><?= $lang_up['no_preview'] ?></td>
 <?php
 
-		 }
+		}
 
 ?>
 									<td class="upf-c4"><input type="checkbox" name="delete_f[]" value="<?= pun_htmlspecialchars($file) ?>" tabindex="<?= $tabindex++ ?>" /></td>

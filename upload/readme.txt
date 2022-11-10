@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  2.3.0 beta
+##      Mod version:  3.0.0 beta
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-10-26
+##     Release date:  2019-11-07
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -55,6 +55,11 @@
 ##                      Maximum "Space allocated to members" increased from 2 GiB to 20 TiB. For 32 and 64-bit systems.
 ##                      Maximum "Max size members can upload" remained unchanged and depends on the server/PHP settings and OS bit depth.
 ##
+##                    v 3.0.0 beta
+##                      Added support for ImageMagick graphics library.
+##                      The file mentioned in the forum posts cannot be deleted.
+##                        The search for the mention of the file goes through the search index and further LIKE in the message.
+##                        Admin can delete files without checks in the admin plugin.
 ##
 ##
 ##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name

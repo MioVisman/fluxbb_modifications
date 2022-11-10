@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  1.3.0
+##      Mod version:  1.3.1
 ##  Works on FluxBB:  1.5.0
-##     Release date:  2012-08-03
+##     Release date:  2012-10-01
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -22,6 +22,9 @@
 ##                      For FluxBB v.1.5.0
 ##                      Settings for each group of users.
 ##                      Administration of files is changed.
+##
+##                    v 1.3.1
+##                      Fix bug in create thumbnails for .jpg and .jpe files. Thanks to Ian Stanistreet.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##

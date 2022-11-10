@@ -165,6 +165,8 @@ else if (isset($_FILES['fichier']) && $id == $pun_user['id'] && $_FILES['fichier
 		$ext_ml = img_resize($_FILES['fichier']['tmp_name'], $dir, $name, $ext, $aconf['pic_w'], $aconf['pic_h'], $aconf['pic_perc'], true);
 		if ($ext_ml === false)
 			redirect(PLUGIN_URL, $lang_up['err_image2']);
+
+		list($name, $ext) = $ext_ml;
 	}
 	else
 	{

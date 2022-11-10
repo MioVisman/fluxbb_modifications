@@ -11,7 +11,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.3.0');
+define('PLUGIN_VERSION', '1.3.1');
 define('PLUGIN_NAME', 'Upload');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_LAWS', 'jpg,jpeg,png,gif,mp3,zip,rar,7z');

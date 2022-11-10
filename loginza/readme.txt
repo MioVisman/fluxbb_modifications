@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.2.2
-##  Works on FluxBB:  1.4.6
-##     Release date:  2011-08-29
+##      Mod version:  1.3.0
+##  Works on FluxBB:  1.5.0
+##     Release date:  2012-07-28
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -26,6 +26,10 @@
 ##                    v 1.2.2
 ##                     Добавлен LinkedIn.
 ##
+##                    v 1.3.0
+##                     Добавлен LiveJournal.
+##                     Update for FluxBB 1.5.0
+##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/forums/viewtopic.php?id=5218
 ##                    http://fluxbb.org.ru/forum/viewtopic.php?id=3393
@@ -36,8 +40,7 @@
 ##
 ##            Notes:  Russian/English/French
 ##
-##                    REQUIRES: CURL or allow_url_fopen = ON
-##                    TEST:     only PHP5.
+##                    REQUIRES: CURL or allow_url_fopen = ON, ONLY PHP5.
 ##
 ##                    Should work at an original forum and on my version /
 ##                    / Должен работать на оригинальном форуме и на моей версии

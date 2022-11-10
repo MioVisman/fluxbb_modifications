@@ -5,7 +5,7 @@
  * @version 1.0
  *
  * @модификация для FluxBB - Visman (visman@inbox.ru)
- * @version 1.0.4
+ * @version 1.0.5
  */
 if (!defined('PUN'))
 	exit;
@@ -174,38 +174,40 @@ class LoginzaUserProfile {
 		$arr = parse_url($provider);
 		
 		$providers = array(
-			'openid.yandex.ru'	=> 'yandex',
-			'openid.mail.ru'		=> 'mailru',
-			'yahooapis.com'			=> 'flickr',
-			'facebook.com'			=> 'facebook',
-			'vkontakte.ru'			=> 'vkontakte',
-			'linkedin.com'			=> 'linkedin',
-			'webmoney.com'			=> 'webmoney',	// no test
-			'wmkeeper.com'			=> 'webmoney',	// no test
-			'me.yahoo.com'			=> 'flickr',
-			'myopenid.com'			=> 'myopenid',	// no test
-			'twitter.com'				=> 'twitter',
-			'webmoney.ru'				=> 'webmoney',	// no test
-			'rambler.ru'				=> 'rambler',
-			'google.com'				=> 'google',
-			'my.mail.ru'				=> 'mailruapi',
-			'loginza.ru'				=> 'loginza',
-			'google.ru'					=> 'google',
-			'lastfm.ru'					=> 'lastfm',
-			'mail.ru'						=> 'mailruapi',
-			'last.fm'						=> 'lastfm',
-			'aol.com'						=> 'aol',
-			'vk.com'						=> 'vkontakte',
-			'ya.ru'							=> 'yandex',
-			'verisign'					=> 'verisign',	// no test
-			'rambler'						=> 'rambler',
-			'yandex'						=> 'yandex',
-			'steam'							=> 'steam',			// no test
+			'steamcommunity.com'	=> 'steam',
+			'openid.yandex.ru'		=> 'yandex',
+			'livejournal.com'			=> 'livejournal',
+			'openid.mail.ru'			=> 'mailru',
+			'yahooapis.com'				=> 'flickr',
+			'facebook.com'				=> 'facebook',
+			'vkontakte.ru'				=> 'vkontakte',
+			'linkedin.com'				=> 'linkedin',
+			'webmoney.com'				=> 'webmoney',		// no test
+			'wmkeeper.com'				=> 'webmoney',		// no test
+			'me.yahoo.com'				=> 'flickr',
+			'myopenid.com'				=> 'myopenid',		// no test
+			'twitter.com'					=> 'twitter',
+			'webmoney.ru'					=> 'webmoney',		// no test
+			'rambler.ru'					=> 'rambler',
+			'google.com'					=> 'google',
+			'my.mail.ru'					=> 'mailruapi',
+			'loginza.ru'					=> 'loginza',
+			'google.ru'						=> 'google',
+			'lastfm.ru'						=> 'lastfm',
+			'mail.ru'							=> 'mailruapi',
+			'last.fm'							=> 'lastfm',
+			'aol.com'							=> 'aol',
+			'vk.com'							=> 'vkontakte',
+			'ya.ru'								=> 'yandex',
+			'verisign'						=> 'verisign',		// no test
+			'rambler'							=> 'rambler',
+			'yandex'							=> 'yandex',
+			'steam'								=> 'steam',				// no test
 // TODO
 			);
 
 		foreach ($providers as $key => $dat) {
-			if (strstr($arr['host'], $key) !== false)
+			if (strpos($arr['host'], $key) !== false)
 				return $dat;
 		}
 

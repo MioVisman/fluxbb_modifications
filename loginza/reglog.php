@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2011 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2012 Visman (visman@inbox.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -69,6 +69,10 @@ if ($pun_user['is_guest'])
 
 			$set_fi = 'group_id, email_setting, dst, language, style, registered, registration_ip, last_visit';
 			$set_va = $pun_config['o_default_user_group'].', '.$pun_config['o_default_email_setting'].', '.$pun_config['o_default_dst'].', \''.$db->escape($pun_user['language']).'\', \''.$db->escape($pun_config['o_default_style']).'\', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now;
+
+			$result = $db->query('SELECT g_post_links FROM '.$db->prefix.'groups WHERE g_id='.$pun_config['o_default_user_group']) or error('Unable to fetch groups info', __FILE__, __LINE__, $db->error());
+			if ($db->result($result) != '1')
+				$dUser['url'] = '';
 
 			$arr_numb = array('timezone', 'gender');
 			$arr_add  = array('username', 'password', 'email', 'realname', 'url', 'jabber', 'icq', 'location', 'timezone');
@@ -380,7 +384,7 @@ else
 		}
 	}
 
-	$page_head['rl_css'] = '<style type="text/css">.pun .blocktable .provh {text-align: center; width: 105px;} .pun .blocktable .statush {text-align: center; width: 100%} .pun .blocktable .tdel {text-align: center; width: 80px} .pun .blocktable .prov {background-image: url("img/loginza/provider_bg.png"); background-position: center center; background-repeat: no-repeat; height: 48px; text-align: center; width: 105px;} .pun .blocktable .status {width: 100%} .providers {background-image: url("img/loginza/providers_sprite.png"); background-position: 0 0; background-repeat: no-repeat; display: inline-block; height: 25px; width: 90px;} .google {background-position: 0 0;} .yandex {background-position: 0 -25px;} .mailruapi {background-position: 0 -50px;} .vkontakte {background-position: 0 -75px;} .facebook {background-position: 0 -100px;} .twitter {background-position: 0 -125px;} .loginza {background-position: 0 -150px;} .myopenid {background-position: 0 -175px;} .webmoney {background-position: 0 -200px;} .rambler {background-position: 0 -225px;} .flickr {background-position: 0 -250px;} .lastfm {background-position: 0 -275px;} .openid {background-position: 0 -300px;} .mailru {background-position: 0 -375px;} .verisign {background-position: 0 -325px;} .aol {background-position: 0 -350px;} .steam {background-position: 0 -400px;} .linkedin {background-position: 0 -475px;} .block2col .block .inbox {padding: 0;} </style>';
+	$page_head['rl_css'] = '<style type="text/css">.pun .blocktable .provh {text-align: center; width: 105px;} .pun .blocktable .statush {text-align: center; width: 100%} .pun .blocktable .tdel {text-align: center; width: 80px} .pun .blocktable .prov {background-image: url("img/loginza/provider_bg.png"); background-position: center center; background-repeat: no-repeat; height: 48px; text-align: center; width: 105px;} .pun .blocktable .status {width: 100%} .providers {background-image: url("img/loginza/providers_sprite.png"); background-position: 0 0; background-repeat: no-repeat; display: inline-block; height: 25px; width: 90px;} .google {background-position: 0 0;} .yandex {background-position: 0 -25px;} .mailruapi {background-position: 0 -50px;} .vkontakte {background-position: 0 -75px;} .facebook {background-position: 0 -100px;} .twitter {background-position: 0 -125px;} .loginza {background-position: 0 -150px;} .myopenid {background-position: 0 -175px;} .webmoney {background-position: 0 -200px;} .rambler {background-position: 0 -225px;} .flickr {background-position: 0 -250px;} .lastfm {background-position: 0 -275px;} .openid {background-position: 0 -300px;} .mailru {background-position: 0 -375px;} .verisign {background-position: 0 -325px;} .aol {background-position: 0 -350px;} .steam {background-position: 0 -400px;} .livejournal {background-position: 0 -425px;} .linkedin {background-position: 0 -475px;} .block2col .block .inbox {padding: 0;} </style>';
 
 	$result = $db->query('SELECT provider, identity FROM '.$db->prefix.'reglog WHERE user_id='.$pun_user['id']) or error('Unable to fetch reglog info', __FILE__, __LINE__, $db->error());
 	$ar_iden = array();

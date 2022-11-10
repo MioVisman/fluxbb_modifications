@@ -1,6 +1,6 @@
 <?php
 /**
- * Требуется PHP 5 (Visman - а может уже и нет ;) ), а так же CURL или разрешение работы c ресурсами http:// для file_get_contents.
+ * Требуется PHP 5, а так же CURL или разрешение работы c ресурсами http:// для file_get_contents.
  * 
  * @link http://loginza.ru/api-overview
  * @author Sergey Arsenichev, PRO-Technologies Ltd.

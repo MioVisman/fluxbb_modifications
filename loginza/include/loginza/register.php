@@ -1,0 +1,30 @@
+<?php
+/**
+ * Copyright (C) 2011 Visman (visman@inbox.ru)
+ * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+ */
+
+if (!defined('PUN'))
+	exit;
+
+// Load language file
+if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/reglog.php'))
+	require PUN_ROOT.'lang/'.$pun_user['language'].'/reglog.php';
+else
+	require PUN_ROOT.'lang/English/reglog.php';
+require PUN_ROOT.'include/loginza/LoginzaAPI.class.php';
+
+$LgzAPI = new LoginzaAPI();
+$urlLgz = $LgzAPI->getWidgetUrl(get_base_url(true).'/reglog.php', $pun_config['o_loginza_prov'], $lang_rl['lang']);
+?>
+			<div class="inform">
+				<fieldset>
+					<legend><?php echo $lang_rl['Loginza reglog'] ?></legend>
+					<div class="infldset">
+<?php if (strstr($pun_config['o_loginza_set'], 'java') !== false): ?>
+						<script src="http://s1.loginza.ru/js/widget.js" type="text/javascript"></script>
+<?php endif; ?>
+						<p class="actions"><span><a href="<?php echo pun_htmlspecialchars($urlLgz) ?>" class="loginza"><?php echo $lang_rl['Loginza log'] ?></a></span></p>
+					</div>
+				</fieldset>
+			</div>

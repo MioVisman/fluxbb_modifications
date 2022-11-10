@@ -19,7 +19,7 @@ if (!isset($lang_up))
 
 if (!$pun_user['is_guest'] && isset($pun_config['o_uploadile_exts']))
 {
-  $flag_uplmod = false;
+	$flag_uplmod = false;
 	if ($pun_user['g_id'] == PUN_ADMIN)
 		$flag_uplmod = true;
 	else if ($pun_user['g_moderator'] == 1)
@@ -44,7 +44,7 @@ if (!$pun_user['is_guest'] && isset($pun_config['o_uploadile_exts']))
 		echo 'while (i>-1){';
 		echo 'if(all_ul[i].className=="bblinks"){';
 		echo 'var ul_html=all_ul[i].innerHTML;';
-		echo 'ul_html+="<li><span><a href=\"upfiles.php\" onclick=\"return PopUp(this.href,\'gest\',\'820\',\'430\',\'resizable=yes,location=no,menubar=no,status=no,scrollbars=yes\');\">'.$lang_up['upfiles'].'</a></span></li>";';
+		echo 'ul_html+="<li><span><a href=\"upfiles.php\" onclick=\"return PopUp(this.href,\'gest\',\'820\',\'430\',\'resizable=yes,location=no,menubar=no,status=no,scrollbars=yes\');\"><strong>'.$lang_up['upfiles'].'</strong></a></span></li>";';
 		echo 'all_ul[i].innerHTML=ul_html;';
 		echo 'i=0;';
 		echo '}';

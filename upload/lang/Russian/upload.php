@@ -63,7 +63,8 @@ $lang_up = array(
 
 'info_2'									=> 'Файл по размеру не должен превышать %s и иметь расширение из списка: %s.',
 'info_2_admi'							=> 'Файл должен иметь расширение из списка: %s.',
-'info_4'									=> '<div style="border:1px solid #4E642D; width:12em;"><div style="border-right: 2px solid #4E642D; background-color: #6C8A3F; text-align:right; width:%s%s;">%s%s</div></div><p><strong>Использовано:</strong> %s из %s.</p>',
+'info_4'									=> '<div style="border:1px solid #4E642D; width:12em;"><div style="border-right: 2px solid #4E642D; background-color: #6C8A3F; text-align:right; width:%s%s;">%s%s</div></div>Использовано: %s из %s',
+'info_4b'									=> 'Использовано: %s',
 'legend'									=> 'Выберите и загрузите файл',
 'fichier'									=> 'Выберите файл',
 
@@ -85,7 +86,7 @@ $lang_up = array(
 'insert_thumbnail'				=> 'Вставить превью',
 'update_thumb'						=> 'Пересоздать превьюшки',
 
-'upfiles'									=> '<b>Загрузки</b>',
+'upfiles'									=> 'Загрузки',
 );
 
 ?>

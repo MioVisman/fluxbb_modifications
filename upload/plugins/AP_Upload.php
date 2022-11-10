@@ -11,7 +11,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.1');
+define('PLUGIN_VERSION', '1.2');
 define('PLUGIN_NAME', 'Upload');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));
 define('PLUGIN_LAWS', 'jpg,jpeg,png,gif,mp3,zip,rar,7z');
@@ -307,7 +307,7 @@ if (defined('PLUGIN_OFF'))
 						<label for="ko"><?php echo $lang_up['ko'] ?></label> <input type="text" name="ko" id="ko" size="15" tabindex="<?php echo $tabindex++ ?>" /> <input type="button" value="<?php echo $lang_up['convert'] ?>" tabindex="<?php echo $tabindex++ ?>" onclick="javascript:document.getElementById('mo').value=document.getElementById('ko').value/1024; document.getElementById('o').value=document.getElementById('ko').value*1024;"/>
 						<label for="o"><?php echo $lang_up['o'] ?></label> <input type="text" name="o" id="o" size="15" tabindex="<?php echo $tabindex++ ?>" /> <input type="button" value="<?php echo $lang_up['convert'] ?>" tabindex="<?php echo $tabindex++ ?>" onclick="javascript:document.getElementById('mo').value=document.getElementById('o').value/1048576; document.getElementById('ko').value=(document.getElementById('o').value*1024)/1048576;"/>
 					</fieldset>
-				</div>
+					</div>
 				</div>
 			</form>
 		</div>

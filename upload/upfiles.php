@@ -6,8 +6,6 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-define('PUN_HELP', 1);
-
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
@@ -19,12 +17,39 @@ if ($pun_user['is_guest'] || !isset($pun_config['o_uploadile_exts']))
 
 require PUN_ROOT.'include/upload.php';
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']),$lang_up['popup_title']);
-define('PUN_ACTIVE_PAGE', 'upfiles');
+define('PLUGIN_REF', 'upfiles.php');
+
+if (!isset($_GET['id']))
+{
+	$id = $pun_user['id'];
+
+	define('PUN_HELP', 1);
+	define('PUN_ACTIVE_PAGE', 'upfiles');
+	define('PLUGIN_URL', PLUGIN_REF);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_up['popup_title']);
+	$fpr = false;
+}
+else
+{
+	$id = intval($_GET['id']);
+	if ($id < 2 || ($pun_user['g_id'] != PUN_ADMIN && $id != $pun_user['id']))
+		message($lang_common['Bad request']);
+		
+	$result = $db->query('SELECT username, upload FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
+	if (!$db->num_rows($result))
+		message($lang_common['Bad request']);
+
+	list($usname, $upload) = $db->fetch_row($result);
+
+	define('PUN_ACTIVE_PAGE', 'profile');
+	define('PLUGIN_URL', PLUGIN_REF.'?id='.$id);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_up['popup_title']);
+	$fpr = true;
+}
+
 require PUN_ROOT.'header.php';
 
-define('PLUGIN_URL', 'upfiles.php');
-$dir = 'img/members/'.$pun_user['id'].'/';
+$dir = 'img/members/'.$id.'/';
 $extsup = explode(',', $pun_config['o_uploadile_exts'].','.strtoupper($pun_config['o_uploadile_exts']));
 $aconf = unserialize($pun_config['o_uploadile_other']);
 
@@ -51,20 +76,20 @@ if ($limit == 0 || $maxsize == 0)
 $prcent = ceil($pun_user['upload']*100/$limit);
 
 // Удаление файлов
-if (isset($_POST['supprimer']) && isset($_POST['boucle_id']))
+if (isset($_POST['delete']) && isset($_POST['max_id']))
 {
-	confirm_referrer(PLUGIN_URL);
+	confirm_referrer(PLUGIN_REF);
 
 	$error = 0;
-	$maxidf = intval($_POST['boucle_id']);
+	$maxidf = intval($_POST['max_id']);
 	
 	if (is_dir(PUN_ROOT.$dir))
 	{
 		for ($u = 1 ; $u < $maxidf ; $u++)
 		{
-			if (isset($_POST['supprimer_'.$u]))
+			if (isset($_POST['delete_'.$u]))
 			{
-				$fichier = parse_file(pun_trim($_POST['supprimer_'.$u]));
+				$fichier = parse_file(pun_trim($_POST['delete_'.$u]));
 				$ext = strtolower(substr(strrchr($fichier,  "." ), 1)); // берем расширение файла
 				if ($fichier[0] != '.' && $ext != '' && in_array($ext, $extsup) && is_file(PUN_ROOT.$dir.$fichier))
 				{
@@ -79,7 +104,7 @@ if (isset($_POST['supprimer']) && isset($_POST['boucle_id']))
 
 		// Считаем общий размер файлов юзера
 		$upload = dir_size($dir, $extsup);
-		$db->query('UPDATE '.$db->prefix.'users SET upload=\''.$upload.'\' WHERE id='.$pun_user['id']) or error($lang_up['err_insert'], __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'users SET upload=\''.$upload.'\' WHERE id='.$id) or error($lang_up['err_insert'], __FILE__, __LINE__, $db->error());
 	}
 
 	if ($error == 0)
@@ -92,11 +117,9 @@ if (isset($_POST['supprimer']) && isset($_POST['boucle_id']))
 }
 
 // Загрузка файла
-else if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0 && is_uploaded_file($_FILES['fichier']['tmp_name']))
+else if (isset($_FILES['fichier']) && $id == $pun_user['id'] && $_FILES['fichier']['error'] == 0 && is_uploaded_file($_FILES['fichier']['tmp_name']))
 {
-//$st = get_microtime();
-
-	confirm_referrer(PLUGIN_URL);
+	confirm_referrer(PLUGIN_REF);
 
 	$pun_config['o_redirect_delay'] = 5;
 	// Проверяем кол-во расширений
@@ -125,9 +148,6 @@ else if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0 && is_upl
 		redirect(PLUGIN_URL, $lang_up['err_espace']);
 
 	// Проверяем картинку (флэш) на правильность
-//	$isimg = (strpos($_FILES['fichier']['type'], 'image/') !== false || $_FILES['fichier']['type'] == 'application/x-shockwave-flash');
-//	if (($size === false && $isimg) || ($size !== false && !$isimg) || $isimg != $isimg2)
-//echo '$size = '.var_export($size, true).'$isimg = '.$isimg.'$isimg2 = '.$isimg2.' ** '.$_FILES['fichier']['type'];
 	$isimg2 = (in_array($ext_ml[1], $extimage));
 	$size = @getimagesize($_FILES['fichier']['tmp_name']);
 	if (($size === false && $isimg2) || ($size !== false && !$isimg2))
@@ -158,7 +178,7 @@ else if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0 && is_upl
 	if (!is_dir(PUN_ROOT.'img/members/'))
 		mkdir(PUN_ROOT.'img/members', 0755);
 	if (!is_dir(PUN_ROOT.$dir))
-		mkdir(PUN_ROOT.'img/members/'.$pun_user['id'], 0755);
+		mkdir(PUN_ROOT.'img/members/'.$id, 0755);
 
 	if ($_FILES['fichier']['size'] > $aconf['pic_mass'] && $isimg2 && $gd && array_key_exists($ext_ml[1],$extimageGD))
 	{
@@ -183,9 +203,7 @@ else if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0 && is_upl
 
 	// Считаем общий размер файлов юзера
 	$upload = dir_size($dir, $extsup);
-	$db->query('UPDATE '.$db->prefix.'users SET upload=\''.$upload.'\' WHERE id='.$pun_user['id']) or error($lang_up['err_insert'], __FILE__, __LINE__, $db->error());
-
-//echo sprintf('%.3f', get_microtime() - $st);
+	$db->query('UPDATE '.$db->prefix.'users SET upload=\''.$upload.'\' WHERE id='.$id) or error($lang_up['err_insert'], __FILE__, __LINE__, $db->error());
 
 	redirect(PLUGIN_URL, $lang_up['modif_success']);
 }
@@ -215,6 +233,9 @@ if (function_exists('csrf_hash'))
 	$vcsrf = csrf_hash();
 else
 	$vcsrf = '1';
+
+if (!$fpr)
+{
 
 ?>
 <script type="text/javascript">
@@ -345,8 +366,28 @@ function insert_file(url, mini_url)
 }
 /* ]]> */
 </script>
+<?php
+
+}
+else
+{
+	// Load the profile.php language file
+	require PUN_ROOT.'lang/'.$pun_user['language'].'/profile.php';
+
+	generate_profile_menu('upload');
+}
+
+?>
 	<div id="uploadile" class="blockform">
-		<h2 class="block2"><span><?php echo $lang_up['titre_2'] ?></span></h2>
+<?php
+
+if ($id == $pun_user['id'])
+{
+	$tit = $lang_up['titre_4'];
+	$legend = sprintf($lang_up['info_4'], $prcent, '%', $prcent, '%', file_size($pun_user['upload']),file_size($limit));
+
+?>
+		<h2><span><?php echo $lang_up['titre_2'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="<?php echo PLUGIN_URL ?>" enctype="multipart/form-data">
 				<input type="hidden" name="csrf_hash" value="<?php echo $vcsrf ?>" />
@@ -357,7 +398,7 @@ function insert_file(url, mini_url)
 							<p><?php echo $lang_up['fichier'] ?></p>
 							<input type="file" id="fichier" name="fichier" tabindex="<?php echo $tabi++ ?>" />
 							<p><?php
-if ($pun_user['g_id'] == '1')
+if ($pun_user['g_id'] == PUN_ADMIN)
 	printf($lang_up['info_2_admi'],pun_htmlspecialchars(str_replace(',', ', ', $pun_config['o_uploadile_exts'])));
 else
 	printf($lang_up['info_2'],file_size($maxsize),pun_htmlspecialchars(str_replace(',', ', ', $pun_config['o_uploadile_exts'])));
@@ -368,29 +409,24 @@ else
 				</div>
 			</form>
 		</div>
-		<h2 class="block2"><span><?php echo $lang_up['titre_4'] ?></span></h2>
+<?php
+
+}
+else
+{
+	$tit = pun_htmlspecialchars($usname).' - '.$lang_up['upfiles'];
+	$legend = sprintf($lang_up['info_4b'], file_size($upload));
+}
+
+?>
+		<h2><span><?php echo $tit ?></span></h2>
 		<div class="box">
 			<form method="post" action="<?php echo PLUGIN_URL ?>">
 				<div class="inform">
-					<?php printf($lang_up['info_4']."\n", $prcent, '%', $prcent, '%', file_size($pun_user['upload']),file_size($limit));?>
-					<div class="infldset" style="height:385px; overflow: auto; padding: 0;">
-						<table>
-							<thead>
-								<tr>
-									<th scope="row"><?php echo $lang_up['th'] ?></th>
-									<th scope="row"><?php echo $lang_up['th2'] ?></th>
-									<th><input type="submit" value="<?php echo $lang_up['delete'] ?>" name="supprimer" tabindex="<?php echo $tabi++ ?>" /></th>
-								</tr>
-							</thead>
-							<tfoot>
-								<tr>
-									<th class="tc1" scope="row"><?php echo $lang_up['th'] ?></th>
-									<th class="tc1" scope="row"><?php echo $lang_up['th2'] ?></th>
-									<th><input type="submit" value="<?php echo $lang_up['delete'] ?>" name="supprimer" tabindex="<?php echo $tabi++ ?>" /></th>
-								</tr>
-							</tfoot>
-							<tbody>
+					<fieldset>
+					<legend><?php echo $legend ?></legend>
 <?php
+
 if (is_dir(PUN_ROOT.$dir))
 {
 	$open = opendir(PUN_ROOT.$dir);
@@ -417,7 +453,30 @@ if (is_dir(PUN_ROOT.$dir))
 	}
 	if (isset($files))
 	{
-		$regx = '/^img\/members\/'.$pun_user['id'].'\/(.+)\.('.implode('|', $extsup).')$/i';
+		if ($fpr)
+			echo "\t\t\t\t\t".'<div class="infldset" style="overflow: auto; padding: 0;">'."\n";
+		else
+			echo "\t\t\t\t\t".'<div class="infldset" style="height:385px; overflow: auto; padding: 0;">'."\n";
+
+?>
+						<table>
+							<thead>
+								<tr>
+									<th scope="row"><?php echo $lang_up['th'] ?></th>
+									<th scope="row"><?php echo $lang_up['th2'] ?></th>
+									<th><input type="submit" value="<?php echo $lang_up['delete'] ?>" name="delete" tabindex="<?php echo $tabi++ ?>" /></th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th class="tc1" scope="row"><?php echo $lang_up['th'] ?></th>
+									<th class="tc1" scope="row"><?php echo $lang_up['th2'] ?></th>
+									<th><input type="submit" value="<?php echo $lang_up['delete'] ?>" name="delete" tabindex="<?php echo $tabi++ ?>" /></th>
+								</tr>
+							</tfoot>
+							<tbody>
+<?php
+		$regx = '/^img\/members\/'.$id.'\/(.+)\.('.implode('|', $extsup).')$/i';
 		foreach($files as $fichier)
 		{
 			preg_match($regx, $fichier, $fi);
@@ -431,46 +490,75 @@ if (is_dir(PUN_ROOT.$dir))
 			$fmini = (is_file(PUN_ROOT.$mini));
 ?>
 								<tr>
+<?php
+			if (!$fpr) // вслывающее окно
+			{
+?>
 									<td class="tc1">
 										<input type="text" size="25" tabindex="<?php echo $tabi++ ?>" value="<?php echo pun_htmlspecialchars(get_base_url(true).'/'.$fichier) ?>" />
 										<input type="button" value="<?php echo $lang_up['insert'] ?>" onclick="return insert_file(<?php echo '\''.$f.'\', \''.($fmini ? $f : '').'\'' ?>);" />
 <?php
-			if ($fmini)
-			{
+				if ($fmini)
+				{
 ?>
 										<br />
 										<input type="text" size="25" tabindex="<?php echo $tabi++ ?>" value="<?php echo pun_htmlspecialchars(get_base_url(true).'/'.$mini) ?>" />
 										<input type="button" value="<?php echo $lang_up['insert_thumbnail'] ?>" onclick="return insert_file('<?php echo $f ?>','<?php echo $m ?>');" />
 <?php
-			}
+				}
 ?>
 									</td>
 <?php
-			if ($fmini)
-				echo "\t\t\t\t\t\t\t\t\t".'<td class="tc2" style="text-align:center;"><a href="'.$fichier.'" onclick="return insert_file(\''.$f.'\', \''.$m.'\');" title="'.$fi[1].' - '.$size_fichier.'"><img src="'.$mini.'" alt="'.$fi[1].'" /></a></td>'."\n";
-			else
-				echo "\t\t\t\t\t\t\t\t\t".'<td class="tc2" style="text-align:center;">'.$lang_up['no_preview'].'</td>'."\n";
+			}
+			else // профиль
+			{
 ?>
-									<td style="text-align:center;"><input type="checkbox" name="supprimer_<?php echo $maxidf++ ?>" value="<?php echo $f ?>" tabindex="<?php echo $tabi++ ?>" /></td>
+									<td class="tc1">
+										<p>&nbsp;<a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/'.$fichier) ?>"><?php echo pun_htmlspecialchars($f) ?></a> [<?php echo pun_htmlspecialchars($size_fichier) ?>]</p>
+<?php
+				if ($fmini)
+				{
+?>
+										<p>&nbsp;<a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/'.$mini) ?>"><?php echo pun_htmlspecialchars($m) ?></a></p>
+<?php
+				}
+?>
+									</td>
+<?php
+			}
+				if ($fmini && !$fpr)
+					echo "\t\t\t\t\t\t\t\t\t".'<td class="tc2" style="text-align:center;"><a href="'.$fichier.'" onclick="return insert_file(\''.$f.'\', \''.$m.'\');" title="'.$fi[1].' - '.$size_fichier.'"><img src="'.$mini.'" alt="'.$fi[1].'" /></a></td>'."\n";
+				else if ($fmini)
+					echo "\t\t\t\t\t\t\t\t\t".'<td class="tc2" style="text-align:center;"><a href="'.$fichier.'" title="'.$fi[1].' - '.$size_fichier.'"><img src="'.$mini.'" alt="'.$fi[1].'" /></a></td>'."\n";
+				else
+					echo "\t\t\t\t\t\t\t\t\t".'<td class="tc2" style="text-align:center;">'.$lang_up['no_preview'].'</td>'."\n";
+?>
+									<td style="text-align:center;"><input type="checkbox" name="delete_<?php echo $maxidf++ ?>" value="<?php echo $f ?>" tabindex="<?php echo $tabi++ ?>" /></td>
 								</tr>
 <?php
 		}
-	}
-	else
-		echo "\t\t\t\t\t\t\t\t".'<tr><td colspan="3">'.$lang_up['err_2'].'</td></tr>'."\n";
-}
-else
-	echo "\t\t\t\t\t\t\t\t".'<tr><td colspan="3">'.$lang_up['err_2'].'</td></tr>'."\n";
 ?>
 							</tbody>
 						</table>
-						<input type="hidden" name="boucle_id" value="<?php echo $maxidf ?>" />
+						<input type="hidden" name="max_id" value="<?php echo $maxidf ?>" />
 						<input type="hidden" name="csrf_hash" value="<?php echo $vcsrf ?>" />
+<?php
+	}
+	else
+		echo "\t\t\t\t\t".'<div class="infldset">'."\n\t\t\t\t\t\t".'<p><span>'.$lang_up['err_2']."</span></p>\n";
+}
+else
+	echo "\t\t\t\t\t".'<div class="infldset">'."\n\t\t\t\t\t\t".'<p><span>'.$lang_up['err_2']."</span></p>\n";
+?>
 					</div>
+					</fieldset>
 				</div>
 			</form>
 		</div>
 	</div>
 <?php
+
+if ($fpr)
+	echo "\t".'<div class="clearer"></div>'."\n".'</div>'."\n";
 
 require PUN_ROOT.'footer.php';

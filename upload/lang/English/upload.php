@@ -63,7 +63,8 @@ $lang_up = array(
 
 'info_2'									=> '/!\ Your file must not be bigger than %s and must be a %s file.',
 'info_2_admi'							=> '/!\ Your file must be a %s file.',
-'info_4'									=> '<div style="border:1px solid #4E642D; width:12em;"><div style="border-right: 2px solid #4E642D; background-color: #6C8A3F; text-align:right; width:%s%s;">%s%s</div></div><p><strong>Storage space used:</strong> %s in %s.</p>',
+'info_4'									=> '<div style="border:1px solid #4E642D; width:12em;"><div style="border-right: 2px solid #4E642D; background-color: #6C8A3F; text-align:right; width:%s%s;">%s%s</div></div>Storage space used: %s in %s',
+'info_4b'									=> 'Storage space used: %s',
 'legend'									=> 'Select and send your file',
 'fichier'									=> 'Select a file',
 
@@ -85,7 +86,7 @@ $lang_up = array(
 'insert_thumbnail'				=> 'Insert thumbnail',
 'update_thumb'						=> 'Update thumbs',
 
-'upfiles'									=> '<b>Uploads</b>',
+'upfiles'									=> 'Uploads',
 );
 
 ?>

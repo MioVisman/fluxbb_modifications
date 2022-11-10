@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  1.3.2
-##  Works on FluxBB:  1.5.1
-##     Release date:  2012-11-17
+##      Mod version:  2.0 beta
+##  Works on FluxBB:  1.5.4
+##     Release date:  2013-11-10
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
@@ -30,7 +30,13 @@
 ##                      For FluxBB v.1.5.1
 ##                      Fix AP_Upload.php
 ##
+##                    v 2.0 beta
+##                      For FluxBB v.1.5.4
+##                      Новый вид списка загруженных файлов.
+##                      New type of the list of the uploaded files.
+##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    http://fluxbb.org.ru/forum/viewtopic.php?id=3380
 ##
 ##   Affected files:  footer.php
 ##                    include/functions.php
@@ -59,6 +65,7 @@ img/ to /img/
 include/ to /include/
 lang/ to /lang/
 plugins/ to /plugins/
+style/ to /style/
 
 #
 #---------[ 2. OPEN ]---------------------------------------------------------

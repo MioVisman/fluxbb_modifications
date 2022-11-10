@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.3.2
-##  Works on FluxBB:  1.5.4, 1.5.5
-##     Release date:  2013-12-07
+##      Mod version:  1.3.4
+##  Works on FluxBB:  1.5.6
+##     Release date:  2014-03-26
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -35,6 +35,8 @@
 ##                     Compatibility with "Media.js" (https://fluxbb.org/resources/mods/mediajs/).
 ##                    1.3.2
 ##                     Fix preload images.
+##                    1.3.4
+##                     Fix for itmages.ru.
 ##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
 ##                    http://fluxbb.org/resources/mods/fancybox-for-fluxbb/

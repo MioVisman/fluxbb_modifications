@@ -7,7 +7,7 @@
  * @version 1.0
  *
  * @модификация для FluxBB - Visman (visman@inbox.ru)
- * @version 1.0.3
+ * @version 1.0.4
  */
 if (!defined('PUN'))
 	exit;
@@ -17,7 +17,7 @@ class LoginzaAPI {
 	 * Версия класса
 	 *
 	 */
-	const VERSION = 'FluxBB-1.0.3';
+	const VERSION = 'FluxBB-1.0.4';
 	/**
 	 * URL для взаимодействия с API loginza
 	 *
@@ -61,8 +61,14 @@ class LoginzaAPI {
 				case 'ru':
 					$params[] = 'lang=ru';
 					break;
+				case 'fr':
+					$params[] = 'lang=fr';
+					break;
 				case 'uk':
 					$params[] = 'lang=uk';
+					break;
+				case 'be':
+					$params[] = 'lang=be';
 					break;
 				default:
 					$params[] = 'lang=en';

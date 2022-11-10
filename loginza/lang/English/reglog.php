@@ -2,7 +2,7 @@
 
 $lang_rl = array(
 
-'lang'							=> 'en', // possible importances - ru, uk, en.
+'lang'							=> 'en', // possible importances - ru, uk, be, fr, en.
 
 'Management'				=> 'Management of accounts',
 'Provh'							=> 'Provider',

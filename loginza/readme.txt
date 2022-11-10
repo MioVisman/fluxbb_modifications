@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Loginza
 ##
-##      Mod version:  1.1.1
+##      Mod version:  1.1.2
 ##  Works on FluxBB:  1.4.5
-##     Release date:  2011-03-25
+##     Release date:  2011-05-04
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (visman@inbox.ru)
 ##
@@ -13,13 +13,18 @@
 ##                    Плагин для быстрой регистрации и авторизации новых пользователей, используя учетные записи с других сайтов, через сервис loginza.ru.
 ##                    В данный момент плагин поддерживает много популярных порталов (Yandex, Google, Rambler, Mail.Ru и тп.) и социальные сети (Twitter, Вконтакте и Facebook), а так же OpenID идентификаторы.
 ##
+##                    v 1.1.2
+##                    French is added. Thanks to adaur.
+##
 ##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    http://fluxbb.org/forums/viewtopic.php?id=5218
+##                    http://fluxbb.org.ru/forum/viewtopic.php?id=3393
 ##
 ##   Affected files:  The plugin itself makes changes to forum files.
 ##
 ##       Affects DB:  Yes
 ##
-##            Notes:  Russian/English
+##            Notes:  Russian/English/French
 ##
 ##                    REQUIRES: CURL or allow_url_fopen = ON
 ##                    TEST:     only PHP5.

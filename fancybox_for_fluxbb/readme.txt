@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  Fancybox for FluxBB
 ##
-##      Mod version:  1.0.0
+##      Mod version:  1.0.1
 ##  Works on FluxBB:  1.4.2
 ##     Release date:  2011-01-11
 ##      Review date:  YYYY-MM-DD (Leave unedited)
@@ -52,7 +52,7 @@ if (isset($page_head))
 #
 
 // Fancybox
-if (!$pun_user['is_guest'] && in_array($basenameSelf, array('viewtopic.php', 'search.php')))
+if (!$pun_user['is_guest'] && in_array(basename($_SERVER['PHP_SELF']), array('viewtopic.php', 'search.php')))
 {
 	$page_head['jquery'] = '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
 	$page_head['fancyboxcss'] = '<link rel="stylesheet" type="text/css" href="style/imports/fancybox.css" />';

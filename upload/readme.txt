@@ -2,12 +2,12 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  3.0.1 beta
+##      Mod version:  3.0.3
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2019-11-29
+##     Release date:  2020-07-28
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
-##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
+##                    On a basis "Uploadile" by bagu (https://fluxbb.org/resources/mods/uploadile/)
 ##
 ##      Description:  Users can upload files and pictures on a forum at directly in post.
 ##                    Юзеры могут загружать файлы и картинки на форум непосредственно при постинге сообщений.
@@ -60,9 +60,14 @@
 ##                      The file mentioned in the forum posts cannot be deleted.
 ##                        The search for the mention of the file goes through the search index and further LIKE in the message.
 ##                        Admin can delete files without checks in the admin plugin.
+##
 ##                    v 3.0.1
 ##                      Minor fix: Remove double serialization during automatic reconfiguration of the modification.
 ##                      https://github.com/MioVisman/FluxBB_by_Visman/commit/61fcae2702b5981ecfe277f01792e38d6034214d
+##
+##                    v 3.0.3
+##                      Fix for Opera 12.18
+##                      Fix english language
 ##
 ##
 ##

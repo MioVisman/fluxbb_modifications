@@ -7,7 +7,7 @@
  * @version 1.0
  *
  * @модификация для FluxBB - Visman (visman@inbox.ru)
- * @version 1.0.4
+ * @version 1.0.5
  */
 if (!defined('PUN'))
 	exit;
@@ -17,7 +17,7 @@ class LoginzaAPI {
 	 * Версия класса
 	 *
 	 */
-	const VERSION = 'FluxBB-1.0.4';
+	const VERSION = 'FluxBB-1.0.5';
 	/**
 	 * URL для взаимодействия с API loginza
 	 *
@@ -48,7 +48,7 @@ class LoginzaAPI {
 	 * Получает адрес ссылки виджета Loginza
 	 *
 	 * @param string $return_url Ссылка возврата, куда будет возвращен пользователя после авторизации
-	 * @param string $provider Провайдер по умолчанию из списка: google, yandex, mailru, vkontakte, facebook, twitter, loginza, myopenid, webmoney, rambler, mailruapi:, flickr, verisign, aol
+	 * @param string $provider Провайдер по умолчанию из списка: google, yandex, mailru, vkontakte, facebook, twitter, loginza, myopenid, webmoney, rambler, mailruapi:, flickr, verisign, aol, linkedin
 	 * @param string $overlay Тип встраивания виджета: true, wp_plugin, loginza
 	 * @return string
 	 */

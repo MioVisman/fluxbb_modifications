@@ -5,7 +5,7 @@
  * @version 1.0
  *
  * @модификация для FluxBB - Visman (visman@inbox.ru)
- * @version 1.0.3
+ * @version 1.0.4
  */
 if (!defined('PUN'))
 	exit;
@@ -179,6 +179,7 @@ class LoginzaUserProfile {
 			'yahooapis.com'			=> 'flickr',
 			'facebook.com'			=> 'facebook',
 			'vkontakte.ru'			=> 'vkontakte',
+			'linkedin.com'			=> 'linkedin',
 			'webmoney.com'			=> 'webmoney',	// no test
 			'wmkeeper.com'			=> 'webmoney',	// no test
 			'me.yahoo.com'			=> 'flickr',

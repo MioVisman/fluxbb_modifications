@@ -2,11 +2,11 @@
 ##
 ##        Mod title:  Upload Mod
 ##
-##      Mod version:  2.0.1
-##  Works on FluxBB:  1.5.4, 1.5.5
-##     Release date:  2013-11-26
+##      Mod version:  2.2.0 beta
+##  Works on FluxBB:  1.5.11
+##     Release date:  2019-10-02
 ##      Review date:  YYYY-MM-DD (Leave unedited)
-##           Author:  Visman (visman@inbox.ru)
+##           Author:  Visman (mio.visman@yandex.ru)
 ##                    On a basis "Uploadile" by bagu (http://fluxbb.org/resources/mods/uploadile/)
 ##
 ##      Description:  Users can upload files and pictures on a forum at directly in post.
@@ -38,10 +38,16 @@
 ##                    v 2.0.1
 ##                      Fix AP_Upload.php. Thanks to Quy.
 ##
+##                    v 2.2.0 beta
+##                      New uploader for browsers with FormData support (https://caniuse.com/#search=FormData).
+##                      Extended blacklist of file types for upload.
+##                      New .htaccess for img/members/ folder.
 ##
 ##
-##   Repository URL:  http://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
-##                    http://fluxbb.org.ru/forum/viewtopic.php?id=3380
+##
+##
+##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##                    https://fluxbb.qb7.ru/forum/viewtopic.php?id=3380
 ##
 ##   Affected files:  footer.php
 ##                    include/functions.php
@@ -54,7 +60,7 @@
 ##                    resizing pictures with GD.
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
-##                    FluxBB. Installation of this modification is done at 
+##                    FluxBB. Installation of this modification is done at
 ##                    your own risk. Backup your forum database and any and
 ##                    all applicable files before proceeding.
 ##

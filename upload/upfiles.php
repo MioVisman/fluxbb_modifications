@@ -1,29 +1,99 @@
 <?php
 
 /**
- * Copyright (C) 2011-2013 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2019 Visman (mio.visman@yandex.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-if (isset($_GET['delete']))
-	define('PUN_QUIET_VISIT', 1);
+function upf_return_json($data)
+{
+	global $db;
 
-define('PUN_ROOT', dirname(__FILE__).'/');
-require PUN_ROOT.'include/common.php';
+	$db->end_transaction();
+	$db->close();
 
-if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view'], false, '403 Forbidden');
+	if (function_exists('forum_http_headers')) {
+		forum_http_headers('application/json');
+	} else {
+		header('Content-type: application/json; charset=utf-8');
+		header('Cache-Control: no-cache, no-store, must-revalidate');
+	}
 
-if ($pun_user['is_guest'] || !isset($pun_user['g_up_ext']) || empty($pun_config['o_uploadile_other']))
-	message($lang_common['Bad request'], false, '404 Not Found');
+	exit(json_encode($data));
+}
 
-require PUN_ROOT.'include/upload.php';
+function upf_get_pg($key, $default = null)
+{
+	if (isset($_POST[$key])) {
+		return $_POST[$key];
+	} else if (isset($_GET[$key])) {
+		return $_GET[$key];
+	} else {
+		return $default;
+	}
+}
+
+function upf_message($message, $no_back_link = false, $http_status = null)
+{
+	global $upf_ajax;
+
+	if ($upf_ajax) {
+		upf_return_json(['error' => $message]);
+	} else {
+		message($message, $no_back_link, $http_status);
+	}
+}
+
+function upf_redirect($destination_url, $message)
+{
+	global $upf_ajax, $lang_up;
+
+	if ($upf_ajax) {
+		upf_return_json(['error' => $message]);
+	} else {
+		redirect($destination_url, $lang_up['Error'] . $message);
+	}
+}
+
+define('PUN_ROOT', dirname(__FILE__) . '/');
+require PUN_ROOT . 'include/common.php';
 
 define('PLUGIN_REF', pun_htmlspecialchars('upfiles.php'));
 define('PLUGIN_NF', 25);
 
-if (!isset($_GET['id']))
-{
+$upf_ajax = !empty(upf_get_pg('ajx'));
+$upf_action = upf_get_pg('action');
+$upf_page = (int) upf_get_pg('p', 1);
+
+if ($pun_user['g_read_board'] == '0') {
+	upf_message($lang_common['No view'], false, '403 Forbidden');
+}
+
+if ($pun_user['is_guest'] || !isset($pun_user['g_up_ext']) || empty($pun_config['o_uploadile_other']) || $upf_page < 1) {
+	upf_message($lang_common['Bad request'], false, '404 Not Found');
+}
+
+// Any action must be confirmed by token
+if (null !== $upf_action) {
+	if (function_exists('csrf_hash')) {
+		if ($upf_ajax) {
+			$errors = [];
+		}
+		confirm_referrer(PLUGIN_REF);
+		if ($upf_ajax) {
+			if (!empty($errors)) {
+				upf_return_json(['error' => array_pop($errors)]);
+			}
+			unset($errors);
+		}
+	} else {
+		check_csrf(upf_get_pg('csrf_hash'));
+	}
+}
+
+require PUN_ROOT . 'include/upload.php';
+
+if (!isset($_GET['id'])) {
 	$id = $pun_user['id'];
 
 	define('PUN_HELP', 1);
@@ -31,344 +101,362 @@ if (!isset($_GET['id']))
 	define('PLUGIN_URLD', PLUGIN_URL.'?');
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_up['popup_title']);
 	$fpr = false;
-	$extsup = $pun_user['g_up_ext'];
-	$limit = $pun_user['g_up_limit'];
-	$maxsize = $pun_user['g_up_max'];
-	$upload = $pun_user['upload'];
-}
-else
-{
+	$upf_exts = $pun_user['g_up_ext'];
+	$upf_limit = $pun_user['g_up_limit'];
+	$upf_max_size = $pun_user['g_up_max'];
+	$upf_dir_size = $pun_user['upload'];
+} else {
 	$id = intval($_GET['id']);
-	if ($id < 2 || ($pun_user['g_id'] != PUN_ADMIN && $id != $pun_user['id']))
-		message($lang_common['Bad request'], false, '404 Not Found');
-		
-	$result = $db->query('SELECT u.username, u.upload, g.g_up_ext, g.g_up_max, g.g_up_limit FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE u.id='.$id) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
-		message($lang_common['Bad request'], false, '404 Not Found');
+	if ($id < 2 || ($pun_user['g_id'] != PUN_ADMIN && $id != $pun_user['id'])) {
+		upf_message($lang_common['Bad request'], false, '404 Not Found');
+	}
 
-	list($usname, $upload, $extsup, $maxsize, $limit) = $db->fetch_row($result);
+	$result = $db->query('SELECT u.username, u.upload, g.g_up_ext, g.g_up_max, g.g_up_limit FROM ' . $db->prefix . 'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE u.id=' . $id) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
+	$user_info = $db->fetch_row($result);
 
-	define('PLUGIN_URL', PLUGIN_REF.'?id='.$id);
-	define('PLUGIN_URLD', PLUGIN_URL.'&amp;');
+	if (!$user_info) {
+		upf_message($lang_common['Bad request'], false, '404 Not Found');
+	}
+
+	list($usname, $upf_dir_size, $upf_exts, $upf_max_size, $upf_limit) = $user_info;
+
+	define('PLUGIN_URL', PLUGIN_REF . '?id=' . $id);
+	define('PLUGIN_URLD', PLUGIN_URL . '&amp;');
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_up['popup_title']);
 	$fpr = true;
 }
 
-if ($pun_user['g_id'] != PUN_ADMIN && $limit*$maxsize == 0)
-	message($lang_common['Bad request'], false, '404 Not Found');
+$upf_max_size = min($upf_max_size, return_bytes(ini_get('upload_max_filesize')), return_bytes(ini_get('post_max_size')));
 
-$prcent = ($limit == 0) ? 100 : ceil($upload*100/$limit);
-$prcent = ($prcent > 100) ? 100 : $prcent;
+if ($pun_user['g_id'] != PUN_ADMIN && $upf_limit * $upf_max_size == 0) {
+	upf_message($lang_common['Bad request'], false, '404 Not Found');
+}
 
-$dir = 'img/members/'.$id.'/';
-$aconf = unserialize($pun_config['o_uploadile_other']);
-$extsup = explode(',', $extsup.','.strtoupper($extsup));
+$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
+
+$upf_dir = 'img/members/' . $id . '/';
+$upf_conf = unserialize($pun_config['o_uploadile_other']);
+$upf_exts = explode(',', $upf_exts . ',' . strtoupper($upf_exts));
+$upf_new_files = [];
 
 // #############################################################################
 
-// Удаление файлов
-if (isset($_GET['delete']))
-{
-	confirm_referrer(PLUGIN_REF);
+// Удаление файла
+if ('delete' === $upf_action) {
+	$error = false;
 
-	$error = 0;
-
-	if (is_dir(PUN_ROOT.$dir))
-	{
-		$file = parse_file(pun_trim($_GET['delete']));
-		$ext = strtolower(substr(strrchr($file,  "." ), 1)); // берем расширение файла
-		if ($file[0] != '.' && $ext != '' && !in_array($ext, $extforno) && is_file(PUN_ROOT.$dir.$file))
-		{
-			if (unlink(PUN_ROOT.$dir.$file))
-			{
-				if (is_file(PUN_ROOT.$dir.'mini_'.$file))
-					unlink(PUN_ROOT.$dir.'mini_'.$file);
+	if (is_dir(PUN_ROOT . $upf_dir)) {
+		$filename = parse_file(pun_trim(upf_get_pg('file')));
+		$ext = strtolower(substr(strrchr($filename, '.'), 1)); // берем расширение файла
+		if ($filename[0] != '.' && $ext != '' && !in_array($ext, $extforno) && is_file(PUN_ROOT . $upf_dir . $filename)) {
+			if (unlink(PUN_ROOT . $upf_dir . $filename)) {
+				if (is_file(PUN_ROOT . $upf_dir . 'mini_' . $filename)) {
+					unlink(PUN_ROOT . $upf_dir . 'mini_' . $filename);
+				}
+			} else {
+				$error = true;
 			}
-			else
-				$error++;
+		} else {
+			$error = true;
 		}
-		else
-			$error++;
 
-		// Считаем общий размер файлов юзера
-		$upload = dir_size($dir);
-		$db->query('UPDATE '.$db->prefix.'users SET upload='.$upload.' WHERE id='.$id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+		$upf_dir_size = dir_size($upf_dir);
+		$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
+
+		$db->query('UPDATE ' . $db->prefix . 'users SET upload=' . $upf_dir_size . ' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+	} else {
+		$error = true;
 	}
-	else
-		$error++;
 
-	if (isset($_GET['ajx']))
-	{
-		$db->end_transaction();
-		$db->close();
-
-		header('Content-type: text/html; charset=utf-8');
-		
-	  if ($error) exit('not ok');
-	  exit('ok');
-	}
-	
-	$s = $lang_up['Redirect delete'];
-	if ($error)
-	{
+	if ($error) {
 		$pun_config['o_redirect_delay'] = 5;
-		$s = $lang_up['Error'].$lang_up['Error delete'];
+		upf_redirect(($upf_page < 2 ? PLUGIN_URL : PLUGIN_URLD . 'p=' . $upf_page ) . '#gofile', $lang_up['Error delete']);
+	} else if (! $upf_ajax) {
+		redirect(($upf_page < 2 ? PLUGIN_URL : PLUGIN_URLD . 'p=' . $upf_page ) . '#gofile', $lang_up['Redirect delete']);
 	}
-	redirect(empty($_GET['p']) || $_GET['p'] < 2 ? PLUGIN_URL : PLUGIN_URLD.'p='.intval($_GET['p']).'#gofile', $s);
 }
 
 // Загрузка файла
-else if (isset($_FILES['upfile']) && $id == $pun_user['id'])
-{
+else if ('upload' === $upf_action && isset($_FILES['upfile']) && $id == $pun_user['id']) {
 	$pun_config['o_redirect_delay'] = 5;
 
 	// Ошибка при загрузке
-	if (!empty($_FILES['upfile']['error']))
-	{
-		switch($_FILES['upfile']['error'])
-		{
-			case 1: // UPLOAD_ERR_INI_SIZE
-			case 2: // UPLOAD_ERR_FORM_SIZE
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Too large ini']);
+	if (!empty($_FILES['upfile']['error'])) {
+		switch($_FILES['upfile']['error']) {
+			case UPLOAD_ERR_INI_SIZE:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_INI_SIZE']);
 				break;
-
-			case 3: // UPLOAD_ERR_PARTIAL
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Partial upload']);
+			case UPLOAD_ERR_FORM_SIZE:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_FORM_SIZE']);
 				break;
-
-			case 4: // UPLOAD_ERR_NO_FILE
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['No file']);
+			case UPLOAD_ERR_PARTIAL:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_PARTIAL']);
 				break;
-
-			case 6: // UPLOAD_ERR_NO_TMP_DIR
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['No tmp directory']);
+			case UPLOAD_ERR_NO_FILE:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_NO_FILE']);
 				break;
-
+			case UPLOAD_ERR_NO_TMP_DIR:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_NO_TMP_DIR']);
+				break;
+			case UPLOAD_ERR_CANT_WRITE:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_CANT_WRITE']);
+				break;
+			case UPLOAD_ERR_EXTENSION:
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_EXTENSION']);
+				break;
 			default:
-				// No error occured, but was something actually uploaded?
-				if ($uploaded_file['size'] == 0)
-					redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['No file']);
+				upf_redirect(PLUGIN_URL, $lang_up['UPLOAD_ERR_UNKNOWN']);
 				break;
 		}
 	}
 
-	if (is_uploaded_file($_FILES['upfile']['tmp_name']))
-	{
-		confirm_referrer(PLUGIN_REF);
+	if (!is_uploaded_file($_FILES['upfile']['tmp_name'])) {
+		upf_redirect(PLUGIN_URL, $lang_up['Unknown failure']);
+	}
 
-		$f = pathinfo(parse_file($_FILES['upfile']['name']));
-		if (empty($f['extension']))
-			redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Bad type']);
+	$f = pathinfo(parse_file($_FILES['upfile']['name']));
+	if (empty($f['extension'])) {
+		upf_redirect(PLUGIN_URL, $lang_up['Bad type']);
+	}
 
-		// Проверяем расширение
-		$ext = strtolower($f['extension']);
-		if (in_array($ext, $extforno) || !in_array($ext, $extsup))
-			redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Bad type']);
+	// Проверяем расширение
+	$ext = strtolower($f['extension']);
+	if (in_array($ext, $extforno) || !in_array($ext, $upf_exts)) {
+		upf_redirect(PLUGIN_URL, $lang_up['Bad type']);
+	}
 
-		// Проверяется максимальный размер файла
-		if ($_FILES['upfile']['size'] > $maxsize)
-			redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Too large'].' '.pun_htmlspecialchars(file_size($maxsize)).'.');
+	// Проверяется максимальный размер файла
+	if ($_FILES['upfile']['size'] > $upf_max_size) {
+		upf_redirect(PLUGIN_URL, $lang_up['Too large'] . ' (' . pun_htmlspecialchars(file_size($upf_max_size)) . ').');
+	}
 
-		// Проверяем допустимое пространство
-		if ($_FILES['upfile']['size'] + $upload > $limit)
-			redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Error space']);
+	// Проверяем допустимое пространство
+	if ($_FILES['upfile']['size'] + $upf_dir_size > $upf_limit) {
+		upf_redirect(PLUGIN_URL, $lang_up['Error space']);
+	}
 
-		// Проверяем картинку (флэш) на правильность
-		$isimg2 = (in_array($ext, $extimage));
-		$size = @getimagesize($_FILES['upfile']['tmp_name']);
-		if (($size === false && $isimg2) || ($size !== false && !$isimg2))
-			redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Error img']);
-		if ($isimg2)
-		{
-			$isimge = false;
-		
-			if (empty($size[0]) || empty($size[1]) || empty($size[2]))
-				$isimge = true;
-			else if (!isset($extimage2[$size[2]]) || !in_array($ext, $extimage2[$size[2]]))
-				$isimge = true;
-			if ($isimge)
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Error img']);
+	// Проверяем картинку (флэш) на правильность
+	$isimg2 = in_array($ext, $extimage);
+	$size = @getimagesize($_FILES['upfile']['tmp_name']);
+	if (($size === false && $isimg2) || ($size !== false && !$isimg2)) {
+		upf_redirect(PLUGIN_URL, $lang_up['Error img']);
+	}
+	if ($isimg2) {
+		$isimge = false;
+
+		if (empty($size[0]) || empty($size[1]) || empty($size[2])) {
+			$isimge = true;
+		} else if (!isset($extimage2[$size[2]]) || !in_array($ext, $extimage2[$size[2]])) {
+			$isimge = true;
+		}
+		if ($isimge) {
+			upf_redirect(PLUGIN_URL, $lang_up['Error img']);
+		}
+	}
+
+	// обрабатываем имя
+	$name = str_replace('.', '_', $f['filename']);
+	if (substr($name, 0, 5) == 'mini_') {
+		$name = substr($name, 5);
+	}
+	if ($name == '') {
+		$name = 'none';
+	}
+	if (strlen($name) > 100) {
+		$name = substr($name, 0, 100);
+	}
+	if (is_file(PUN_ROOT . $upf_dir . $name . '.' . $ext) || is_file(PUN_ROOT . $upf_dir . $name . '.jpeg')) { // если уже есть, переименуем
+		$name = $name . '_' . parse_file(date('Ymd\-Hi', time()));
+	}
+
+	if (!is_dir(PUN_ROOT . 'img/members/')) {
+		mkdir(PUN_ROOT . 'img/members', 0755);
+	}
+	if (!is_dir(PUN_ROOT . $upf_dir)) {
+		mkdir(PUN_ROOT . 'img/members/' . $id, 0755);
+	}
+
+	if ($_FILES['upfile']['size'] > $upf_conf['pic_mass'] && $isimg2 && $gd && isset($extimageGD[$ext])) {
+		$ext_ml = img_resize($_FILES['upfile']['tmp_name'], $upf_dir, $name, $ext, $upf_conf['pic_w'], $upf_conf['pic_h'], $upf_conf['pic_perc'], true);
+		if (!is_array($ext_ml)) {
+			upf_redirect(PLUGIN_URL, sprintf($lang_up['Error no mod img'], $ext_ml));
 		}
 
-		// обрабатываем имя
-		$name = str_replace('.', '_', $f['filename']);
-		if (substr($name, 0, 5) == 'mini_')
-			$name = substr($name, 5);
-		if ($name == '')
-			$name = 'none';
-		if (strlen($name) > 100)
-			$name = substr($name, 0, 100);
-		if (is_file(PUN_ROOT.$dir.$name.'.'.$ext) || is_file(PUN_ROOT.$dir.$name.'.jpeg')) // если уже есть, переименуем
-			$name = $name.'_'.parse_file(date('Ymd\-Hi', time()));
-
-		if (!is_dir(PUN_ROOT.'img/members/'))
-			mkdir(PUN_ROOT.'img/members', 0755);
-		if (!is_dir(PUN_ROOT.$dir))
-			mkdir(PUN_ROOT.'img/members/'.$id, 0755);
-
-		if ($_FILES['upfile']['size'] > $aconf['pic_mass'] && $isimg2 && $gd && array_key_exists($ext,$extimageGD))
-		{
-			$ext_ml = img_resize($_FILES['upfile']['tmp_name'], $dir, $name, $ext, $aconf['pic_w'], $aconf['pic_h'], $aconf['pic_perc'], true);
-			if ($ext_ml === false)
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Error no mod img']);
-
-			list($name, $ext) = $ext_ml;
-		}
-		else
-		{
-			$error = isXSSattack($_FILES['upfile']['tmp_name']);
-			if ($error !== false)
-				redirect(PLUGIN_URL, $lang_up['Error'].$error);
-
-			if (!@move_uploaded_file($_FILES['upfile']['tmp_name'], PUN_ROOT.$dir.$name.'.'.$ext))
-				redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Move failed']);
-			@chmod(PUN_ROOT.$dir.$name.'.'.$ext, 0644);
+		list($name, $ext) = $ext_ml;
+	} else {
+		$error = isXSSattack($_FILES['upfile']['tmp_name']);
+		if ($error !== false) {
+			upf_redirect(PLUGIN_URL, $error);
 		}
 
-		// Создание привьюшки (только для поддерживаемых GD форматов)
-		if ($aconf['thumb'] == 1 && $isimg2 && $gd && array_key_exists($ext,$extimageGD))
-			img_resize(PUN_ROOT.$dir.$name.'.'.$ext, $dir, 'mini_'.$name, $ext, 0, $aconf['thumb_size'], $aconf['thumb_perc']);
+		if (!@move_uploaded_file($_FILES['upfile']['tmp_name'], PUN_ROOT . $upf_dir . $name . '.' . $ext)) {
+			upf_redirect(PLUGIN_URL, $lang_up['Move failed']);
+		}
+		@chmod(PUN_ROOT . $upf_dir . $name . '.' . $ext, 0644);
+	}
 
-		// Считаем общий размер файлов юзера
-		$upload = dir_size($dir);
-		$db->query('UPDATE '.$db->prefix.'users SET upload=\''.$upload.'\' WHERE id='.$id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+	// Создание привьюшки (только для поддерживаемых GD форматов)
+	if ($upf_conf['thumb'] == 1 && $isimg2 && $gd && isset($extimageGD[$ext])) {
+		img_resize(PUN_ROOT . $upf_dir . $name . '.' . $ext, $upf_dir, 'mini_' . $name, $ext, 0, $upf_conf['thumb_size'], $upf_conf['thumb_perc']);
+	}
 
+	$upf_dir_size = dir_size($upf_dir);
+	$upf_percent = min(100, empty($upf_limit) ? 100 : ceil($upf_dir_size * 100 / $upf_limit));
+
+	$db->query('UPDATE ' . $db->prefix . 'users SET upload=\'' . $upf_dir_size . '\' WHERE id=' . $id) or error($lang_up['Error DB ins-up'], __FILE__, __LINE__, $db->error());
+
+	if ($upf_ajax) {
+		$upf_page = 1;
+		$upf_new_files[$name . '.' . $ext] = true;
+	} else {
 		$pun_config['o_redirect_delay'] = '1';
 		redirect(PLUGIN_URL, $lang_up['Redirect upload']);
 	}
-	else
-		redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Unknown failure']);
 }
 
 // Unknown failure
-else if (!empty($_POST))
-	redirect(PLUGIN_URL, $lang_up['Error'].$lang_up['Unknown failure']);
+else if (($upf_ajax && 'view' !== $upf_action) || (!$upf_ajax && !empty($_POST))) {
+	upf_redirect(PLUGIN_URL, $lang_up['Unknown failure']);
+}
 
 // #############################################################################
 
-if (!isset($page_head))
-	$page_head = array();
+$files = [];
+$count = 0;
+$num_pages = 1;
+if (is_dir(PUN_ROOT . $upf_dir)) {
+	$tmp = get_base_url(true) . '/' . $upf_dir;
+	foreach (new DirectoryIterator(PUN_ROOT . $upf_dir) as $file) {
+		if (!$file->isFile() || in_array($file->getExtension(), $extforno)) {
+			continue;
+		}
 
-if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/upfiles.css'))
-	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/upfiles.css" />';
-else
+		$filename = $file->getFilename();
+		if ('#' == $filename[0] || 'mini_' == substr($filename, 0, 5)) {
+			continue;
+		}
+
+		++$count;
+		if (empty($upf_new_files) || isset($upf_new_files[$filename])) {
+			$files[$file->getMTime() . $filename] = [
+				'filename' => $filename,
+				'ext' => $file->getExtension(),
+				'alt' => pun_strlen($filename) > 18 ? utf8_substr($filename, 0, 16) . '…' : $filename,
+				'size' => file_size($file->getSize()),
+				'url' => $tmp . $filename,
+				'mini' => is_file(PUN_ROOT . $upf_dir . 'mini_' . $filename) ? $tmp . 'mini_' . $filename : null,
+			];
+		}
+	}
+	if (!empty($files)) {
+		$num_pages = ceil($count / PLUGIN_NF);
+		if ($upf_page > $num_pages && !$upf_ajax) {
+			header('Location: ' . str_replace('&amp;', '&', PLUGIN_URLD) . 'p=' . $num_pages . '#gofile');
+			exit;
+		}
+
+		krsort($files);
+
+		if (empty($upf_new_files)) {
+			$start_from = PLUGIN_NF * ($upf_page - 1);
+			$files = array_slice($files, $start_from, PLUGIN_NF);
+		}
+	}
+}
+
+if ($upf_ajax) {
+	upf_return_json([
+		'size' => file_size($upf_dir_size),
+		'percent' => $upf_percent,
+		'pages' => $num_pages,
+		'files' => $files,
+	]);
+}
+
+if (!isset($page_head)) {
+	$page_head = [];
+}
+
+if (file_exists(PUN_ROOT . 'style/' . $pun_user['style'] . '/upfiles.css')) {
+	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/' . $pun_user['style'] . '/upfiles.css" />';
+} else {
 	$page_head['pmsnewstyle'] = '<link rel="stylesheet" type="text/css" href="style/imports/upfiles.css" />';
+}
 
 define('PUN_ACTIVE_PAGE', 'profile');
-require PUN_ROOT.'header.php';
+require PUN_ROOT . 'header.php';
 $tpl_main = str_replace('id="punhelp"', 'id="punupfiles"', $tpl_main);
 
-$tabi = 0;
+$tabindex = 1;
 
-$vcsrf = (function_exists('csrf_hash')) ? csrf_hash() : '1';
+$upf_token = function_exists('csrf_hash') ? csrf_hash() : pun_csrf_token();
 
-if ($fpr)
-{
+if ($fpr) {
 	// Load the profile.php language file
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/profile.php';
+	require PUN_ROOT . 'lang/' . $pun_user['language'] . '/profile.php';
 
 	generate_profile_menu('upload');
 }
 
-?>
-<?php
-
-if ($id == $pun_user['id'])
-{
+if ($id == $pun_user['id']) {
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_up['titre_2'] ?></span></h2>
+		<h2><span><?= $lang_up['titre_2'] ?></span></h2>
 		<div class="box">
-			<form method="post" action="<?php echo PLUGIN_URL ?>" enctype="multipart/form-data">
-				<input type="hidden" name="csrf_hash" value="<?php echo $vcsrf ?>" />
-				<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $maxsize; ?>" />
+			<form method="post" action="<?= PLUGIN_URL ?>" enctype="multipart/form-data">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_up['legend'] ?></legend>
+						<legend><?= $lang_up['legend'] ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_up['fichier'] ?></p>
-							<input type="file" id="upfile" name="upfile" tabindex="<?php echo $tabi++ ?>" />
-							<p><?php	printf($lang_up['info_2'], pun_htmlspecialchars(file_size($maxsize)), pun_htmlspecialchars(str_replace(',', ', ', $pun_user['g_up_ext']))) ?></p>
+							<input type="hidden" name="csrf_hash" value="<?= $upf_token ?>" />
+							<input type="hidden" name="action" value="upload" />
+							<input type="hidden" name="MAX_FILE_SIZE" value="<?= $upf_max_size ?>" />
+							<p><?= $lang_up['fichier'] ?></p>
+							<input type="file" id="upfile" name="upfile" tabindex="<?= $tabindex++ ?>" />
+							<p><?= sprintf($lang_up['info_2'], pun_htmlspecialchars(str_replace([' ', ','], ['', ', '], $pun_user['g_up_ext'])), pun_htmlspecialchars(file_size($upf_max_size))) ?></p>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_up['Upload'] ?>" tabindex="<?php echo $tabi++ ?>" /></p>
+				<p class="buttons"><input type="submit" name="submit" value="<?= $lang_up['Upload'] ?>" tabindex="<?= $tabindex++ ?>" /></p>
 			</form>
 		</div>
 	</div>
 <?php
 
 	$tit = $lang_up['titre_4'];
-}
-else
-{
-	$tit = pun_htmlspecialchars($usname).' - '.$lang_up['upfiles'];
-}
-
-$files = $filesvar = array();
-if (is_dir(PUN_ROOT.$dir))
-{
-	$open = opendir(PUN_ROOT.$dir);
-	while (($file = readdir($open)) !== false)
-	{
-		if (is_file(PUN_ROOT.$dir.$file))
-		{
-			$ext = strtolower(substr(strrchr($file, '.'), 1));
-			if (!in_array($ext, $extforno) && $file[0] != '#'  && substr($file, 0, 5) != 'mini_')
-			{
-				$time = filemtime(PUN_ROOT.$dir.$file).$file;
-				$filesvar[$time] = $dir.$file;
-			}
-		}
-	}
-	closedir($open);
-	if (!empty($filesvar))
-	{
-		$num_pages = ceil(sizeof($filesvar) / PLUGIN_NF);
-		$p = (!isset($_GET['p']) || $_GET['p'] <= 1) ? 1 : intval($_GET['p']);
-		if ($p > $num_pages)
-		{
-			header('Location: '.str_replace('&amp;', '&', PLUGIN_URLD).'p='.$num_pages.'#gofile');
-			exit;
-		}
-
-		$start_from = PLUGIN_NF * ($p - 1);
-
-		// Generate paging links
-		$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, PLUGIN_URL);
-		$paging_links = str_replace(PLUGIN_REF.'&amp;', PLUGIN_REF.'?', $paging_links);
-		$paging_links = preg_replace('%href="([^">]+)"%', 'href="$1#gofile"', $paging_links);
-
-		krsort($filesvar);
-		$files = array_slice($filesvar, $start_from, PLUGIN_NF);
-		unset($filesvar);
-	}
+} else {
+	$tit = pun_htmlspecialchars($usname) . ' - ' . $lang_up['upfiles'];
 }
 
 ?>
 	<div id="upf-block" class="block">
-		<h2 id="gofile" class="block2"><span><?php echo $tit ?></span></h2>
+		<h2 id="gofile" class="block2"><span><?= $tit ?></span></h2>
 		<div class="box">
 <?php
 
-if (empty($files))
-{
-	echo "\t\t\t".'<div class="inbox"><p><span>'.$lang_up['No upfiles'].'</span></p></div>'."\n";
-}
-else
-{
+if (empty($files)) {
+
+?>
+			<div class="inbox"><p><span><?= $lang_up['No upfiles'] ?></span></p></div>
+<?php
+
+} else {
+	// Generate paging links
+	$paging_links = '<span class="pages-label">' . $lang_common['Pages'] . ' </span>' . paginate($num_pages, $upf_page, PLUGIN_URL);
+	$paging_links = str_replace(PLUGIN_REF . '&amp;', PLUGIN_REF . '?', $paging_links);
+	$paging_links = preg_replace('%href="([^">]+)"%', 'href="$1#gofile"', $paging_links);
 
 ?>
 			<div class="inbox">
 				<div id="upf-legend">
-					<div style="<?php echo 'background-color: rgb('.ceil(($prcent > 50 ? 50 : $prcent)*255/50).', '.ceil(($prcent < 50 ? 50 : 100 - $prcent)*255/50).', 0); width:'.$prcent.'%;' ?>"><?php echo $prcent.'%' ?></div>
+					<div style="<?= 'background-color: rgb(' . ceil(($upf_percent > 50 ? 50 : $upf_percent) * 255 / 50) . ', ' . ceil(($upf_percent < 50 ? 50 : 100 - $upf_percent) * 255 / 50) . ', 0); width:' . $upf_percent . '%;' ?>"><span><?= $upf_percent ?>%</span></div>
 				</div>
-				<p id="upf-legend-p"><?php echo sprintf($lang_up['info_4'], pun_htmlspecialchars(file_size($upload)),pun_htmlspecialchars(file_size($limit))) ?></p>
+				<p id="upf-legend-p"><?= sprintf($lang_up['info_4'], pun_htmlspecialchars(file_size($upf_dir_size)), pun_htmlspecialchars(file_size($upf_limit))) ?></p>
 			</div>
 			<div class="inbox">
 				<div class="pagepost">
-					<p class="pagelink conl"><?php echo $paging_links ?></p>
+					<p class="pagelink conl"><?= $paging_links ?></p>
 				</div>
 			</div>
 			<div class="inbox">
@@ -376,33 +464,21 @@ else
 					<ul id="upf-list">
 <?php
 
-	$height = $aconf['thumb_size'] > 100 ? intval($aconf['thumb_size']) : 100;
-	$regx = '%^img/members/'.$id.'/(.+)\.([0-9a-zA-Z]+)$%i';
-	foreach($files as $file)
-	{
-		preg_match($regx, $file, $fi);
-		if (!isset($fi[1]) || !isset($fi[2]) || in_array(strtolower($fi[2]), $extforno))
-			continue;
-
-		$fb = in_array(strtolower($fi[2]), array('jpg', 'jpeg', 'gif', 'png', 'bmp')) ? '" class="fancy_zoom" rel="vi001' : '';
-		$size_file = file_size(filesize(PUN_ROOT.$file));
-		$f = $fi[1].'.'.$fi[2];
-		$m = 'mini_'.$f;
-		$mini = $dir.$m;
-		$fmini = (is_file(PUN_ROOT.$mini));
+	foreach($files as $file) {
+		$fb = in_array($file['ext'], array('jpg', 'jpeg', 'gif', 'png', 'bmp')) ? '" class="fancy_zoom" rel="vi001' : '';
 
 ?>
 						<li>
-							<div class="upf-name" title="<?php echo pun_htmlspecialchars($f) ?>"><span><?php echo pun_htmlspecialchars(pun_strlen($f) > 20 ? utf8_substr($f, 0, 18).'…' : $f) ?></span></div>
-							<div class="upf-file" style="height:<?php echo $height ?>px;">
-								<a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/'.$file).$fb ?>">
-<?php if ($fmini || $fb): ?>									<img src="<?php echo pun_htmlspecialchars($fmini ? get_base_url(true).'/'.$mini : get_base_url(true).'/'.$file) ?>" alt="<?php echo pun_htmlspecialchars((pun_strlen($fi[1]) > 15 ? utf8_substr($fi[1], 0, 10).'… ' : $fi[1]).'.'.$fi[2]) ?>" />
-<?php else: ?>									<span><?php echo pun_htmlspecialchars((pun_strlen($fi[1]) > 15 ? utf8_substr($fi[1], 0, 10).'… ' : $fi[1]).'.'.$fi[2]) ?></span>
+							<div class="upf-name" title="<?= pun_htmlspecialchars($file['filename']) ?>"><span><?= pun_htmlspecialchars($file['alt']) ?></span></div>
+							<div class="upf-file" style="height:<?= max(intval($upf_conf['thumb_size']), 100) ?>px;">
+								<a href="<?= pun_htmlspecialchars($file['url']) . $fb ?>">
+<?php if (isset($file['mini'])): ?>									<img src="<?= pun_htmlspecialchars($file['mini']) ?>" alt="<?= pun_htmlspecialchars($file['alt']) ?>" />
+<?php else: ?>									<span><?= pun_htmlspecialchars($file['alt']) ?></span>
 <?php endif; ?>
 								</a>
 							</div>
-							<div class="upf-size"><span><?php echo pun_htmlspecialchars($size_file) ?></span></div>
-							<div class="upf-but upf-delete"><a title="<?php echo $lang_up['delete'] ?>" href="<?php echo PLUGIN_URLD.'csrf_hash='.$vcsrf.(empty($_GET['p']) || $_GET['p'] < 2 ? '' : '&amp;p='.intval($_GET['p'])).'&amp;delete='.$f ?>" onclick="return FluxBB.upfile.del(this);"><span></span></a></div>
+							<div class="upf-size"><span><?= pun_htmlspecialchars($file['size']) ?></span></div>
+							<div class="upf-but upf-delete"><a title="<?= $lang_up['delete'] ?>" href="<?= PLUGIN_URLD . 'csrf_hash=' . $upf_token . ($upf_page < 2 ? '' : '&amp;p=' . $upf_page) . '&amp;action=delete&amp;file=' . pun_htmlspecialchars($file['filename']) ?>" onclick="return FluxBB.upfile.del(this);"><span></span></a></div>
 						</li>
 <?php
 
@@ -414,7 +490,7 @@ else
 			</div>
 			<div class="inbox">
 				<div class="pagepost">
-					<p class="pagelink conl"><?php echo $paging_links ?></p>
+					<p class="pagelink conl"><?= $paging_links ?></p>
 				</div>
 			</div>
 <?php
@@ -426,8 +502,14 @@ else
 	</div>
 <?php
 
-if ($fpr)
-	echo "\t".'<div class="clearer"></div>'."\n".'</div>'."\n";
+if ($fpr) {
+
+?>
+	<div class="clearer"></div>
+</div>
+<?php
+
+}
 
 ?>
 <script type="text/javascript">
@@ -437,7 +519,7 @@ if (typeof FluxBB === 'undefined' || !FluxBB) {var FluxBB = {};}
 FluxBB.upfile = (function (doc, win) {
 	'use strict';
 
-	var url, src;
+	var url, src, par, area;
 
 	function get(elem) {
 		return doc.getElementById(elem);
@@ -446,7 +528,7 @@ FluxBB.upfile = (function (doc, win) {
 	function createElement(elem) {
 		return (doc.createElementNS) ? doc.createElementNS('http://www.w3.org/1999/xhtml', elem) : doc.createElement(elem);
 	}
-	
+
 	function is_img(a) {
 		return /.+\.(jpg|jpeg|png|gif|bmp)$/.test(a);
 	}
@@ -454,12 +536,12 @@ FluxBB.upfile = (function (doc, win) {
 	function get_us(li) {
 		url = '';
 		src = '';
-	  var div = li.getElementsByTagName("div")[1];
+		var div = li.getElementsByTagName('div')[1];
 		if (!!div) {
-			var a = div.getElementsByTagName("a")[0];
+			var a = div.getElementsByTagName('a')[0];
 			if (!!a) {
 				url = a.href;
-				var	img = a.getElementsByTagName("img")[0];
+				var	img = a.getElementsByTagName('img')[0];
 				if (!!img) src = img.src;
 			}
 		}
@@ -467,17 +549,17 @@ FluxBB.upfile = (function (doc, win) {
 
 	function set_button(li) {
 		get_us(li);
-		
+
 		if (!!url) {
-			var div = createElement("div");
-			div.className = "upf-but upf-insert";
-			div.innerHTML = "<a title=\"<?php echo $lang_up['insert'] ?>\" href=\"#\" onclick=\"return FluxBB.upfile.ins(this);\"><span></span></a>";
+			var div = createElement('div');
+			div.className = 'upf-but upf-insert';
+			div.innerHTML = '<a title="<?= $lang_up['insert'] ?>" href="#" onclick="return FluxBB.upfile.ins(this);"><span></span></a>';
 			li.appendChild(div);
 
 			if (is_img(src) && src != url) {
-				div = createElement("div");
-				div.className = "upf-but upf-insert-t";
-				div.innerHTML = "<a title=\"<?php echo $lang_up['insert_thumb'] ?>\" href=\"#\" onclick=\"return FluxBB.upfile.ins(this, 1);\"><span></span></a>";
+				div = createElement('div');
+				div.className = 'upf-but upf-insert-t';
+				div.innerHTML = '<a title="<?= $lang_up['insert_thumb'] ?>" href="#" onclick="return FluxBB.upfile.ins(this, 1);"><span></span></a>';
 				li.appendChild(div);
 			}
 		}
@@ -485,27 +567,22 @@ FluxBB.upfile = (function (doc, win) {
 
 	function insr(s, e, t)
 	{
-		var par = win.opener.document,
-				area = par.getElementsByName("req_message")[0];
-		if (!area) return;
-
 		area.focus();
-		if (par.selection && par.selection.createRange) { // IE
-			var sel = par.selection.createRange();
-			sel.text = s + (!sel.text ? t : sel.text) + e;
-			sel.select();
-		} else if ("selectionStart" in area) { // all new
-			var sp = area.selectionStart,
-					ep = area.selectionEnd;
+		if ('selectionStart' in area) { // all new
+			var len = area.value.length,
+				sp = Math.min(area.selectionStart, len), // IE bug
+				ep = Math.min(area.selectionEnd, len); // IE bug
 			area.value = area.value.substring(0, sp) + s + (sp == ep ? t : area.value.substring(sp, ep)) + e + area.value.substring(ep);
 			area.selectionStart = ep + e.length + s.length + (sp == ep ? t.length : 0);
 			area.selectionEnd = area.selectionStart;
-		} else { // other
-			area.value += s + t + e;
+		} else if (par.selection && par.selection.createRange) { // IE
+			var sel = par.selection.createRange();
+			sel.text = s + (!sel.text ? t : sel.text) + e;
+			sel.select();
 		}
 		win.focus();
 	}
-	
+
 	function cr_req() {
 		if (win.XMLHttpRequest) {
 			return new XMLHttpRequest();
@@ -516,16 +593,27 @@ FluxBB.upfile = (function (doc, win) {
 		}
 		return !1;
 	}
-	
+
 	function orsc(req, ref) {
-		if (req.readyState == 4)
-		{
-			ref.className = "";
-			
-		  if (req.status == 200 && req.responseText == "ok") {
+		if (req.readyState == 4) {
+			ref.className = '';
+			var error = true;
+
+			if (req.status == 200) {
+				var data = req.responseText;
+				if (typeof data === 'string') {
+					if (!/"error"/.test(data)) {
+						error = false;
+					}
+				} else if (!('error' in data)) {
+					error = false;
+				}
+			}
+
+			if (!error) {
 				ref.parentNode.parentNode.parentNode.removeChild(ref.parentNode.parentNode);
-				if (get("upf-list").getElementsByTagName("li").length == 0) {
-				  win.location.reload(true);
+				if (get('upf-list').getElementsByTagName('li').length == 0) {
+					win.location.reload(true);
 				}
 			}
 		}
@@ -534,13 +622,17 @@ FluxBB.upfile = (function (doc, win) {
 	return {
 
 		del : function (ref) {
-		  if (ref.className) return !1;
-			ref.className = "upf-loading";
-			
-		  var req = cr_req();
-		  if (req) {
-				req.onreadystatechange=function(){orsc(req, ref);};
-				req.open("GET", ref.href + "&ajx=1", true);
+			if (ref.className) return !1;
+			if (!confirm('<?= addslashes($lang_up['delete file']) ?>')) return !1;
+
+			ref.className = 'upf-loading';
+
+			var req = cr_req();
+			if (req) {
+				req.onreadystatechange = function() {
+					orsc(req, ref);
+				};
+				req.open('GET', ref.href + '&ajx=1', true);
 				req.send();
 
 				return !1;
@@ -554,30 +646,35 @@ FluxBB.upfile = (function (doc, win) {
 			get_us(ref.parentNode.parentNode);
 
 			if (f && is_img(src) && src != url) {
-			  insr("", "[url=" + url + "][img]" + src + "[/img][/url]", "");
+				insr('', '[url=' + url + '][img]' + src + '[/img][/url]', '');
 			} else if (is_img(url)) {
-			  insr("", "[img]" + url + "[/img]", "");
+				insr('', '[img]' + url + '[/img]', '');
 			} else {
 				if (f = url.match(/.*\/img\/members\/\d+\/(.+)$/)) f = f[1];
-				else f = "<?php echo $lang_up['texte'] ?>";
+				else f = '<?= $lang_up['texte'] ?>';
 
-			  insr("[url=" + url + "]", "[/url]", f);
+				insr('[url=' + url + ']', '[/url]', f);
 			}
 			return !1;
 		},
 
 		run : function () {
-		  if (!win.opener) return;
-			var li = get("upf-list").getElementsByTagName("li");
+			if (!win.opener) return;
+
+			par = win.opener.document;
+			area = par.getElementsByName('req_message')[0];
+			if (!area) return;
+
+			var li = get('upf-list').getElementsByTagName('li');
 			for (var i in li) {
 				if (!!li[i].getElementsByTagName) set_button(li[i]);
 			}
 		},
 
 		init : function () {
-		  if (!doc.addEventListener) {
+			if (!doc.addEventListener) {
 				/in/.test(doc.readyState) ? setTimeout(FluxBB.upfile.init, 100) : FluxBB.upfile.run();
-			} else doc.addEventListener("DOMContentLoaded", FluxBB.upfile.run(), false);
+			} else doc.addEventListener('DOMContentLoaded', FluxBB.upfile.run, false);
 		}
 	};
 }(document, window));
@@ -587,4 +684,4 @@ FluxBB.upfile.init();
 </script>
 <?php
 
-require PUN_ROOT.'footer.php';
+require PUN_ROOT . 'footer.php';

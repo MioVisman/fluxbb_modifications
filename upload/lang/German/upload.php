@@ -8,7 +8,7 @@ $lang_up = array(
 'Error space'				=> 'Der dir zugewiesene Speicherplatz ist überfüllt. Lösche ein paar Dateien und versuch es dann noch einmal.',
 'Error delete'			=> 'Fehler während des Löschens der Datei.',
 'Error img'					=> 'Ungültiges Bildformat. Oder der Server unterstützt keine Bildverarbeitung.',
-'Error no mod img'	=> 'Das Bild wurde während der Aktualisierung zerstört.',
+'Error no mod img'	=> 'Das Bild wurde während der Aktualisierung zerstört (%d).',
 'Error open'				=> 'Die hochgeladene Datei konnte nicht geöffnet werden.',
 'Error inject'			=> 'Uploaded file contains the forbidden string. Archiviere diese Datei und versuch es noch einmal. Oder sprich mit dem Administrator.',
 
@@ -45,8 +45,8 @@ $lang_up = array(
 'titre_4'						=> 'Meine hochgeladenen Dateien',
 'popup_title'				=> 'Dateiverwaltung',
 
-'info_2'						=> 'Achtung! Die Datei darf nicht größer als %s und muss eine Datei in den Formaten %s sein.',
-'info_4'						=> 'Aktuell belegter Speicherplatz: %s in %s',
+'info_2'						=> '%1$s (max %2$s)',
+'info_4'						=> 'Aktuell belegter Speicherplatz: <span>%s</span> in %s',
 'legend'						=> 'Datei',
 'fichier'						=> 'Eine Datei auswählen',
 
@@ -63,6 +63,7 @@ $lang_up = array(
 'o'									=> 'Wert in B',
 'texte'							=> 'Dein Text hier',
 'delete'						=> 'Löschen',
+'delete file'					=> 'Möchten Sie diese Datei löschen?',
 'insert'						=> 'Einfügen',
 'insert_thumb'			=> 'Vorschaubild einfügen',
 'update_thumb'			=> 'Vorschaubild aktualisieren',
@@ -73,13 +74,18 @@ $lang_up = array(
 'group'							=> 'Gruppen',
 
 // Avatar
-'Too large ini'			=>	'Die ausgewählte Datei war zum Hochladen zu groß.',
-'Partial upload'		=>	'Die ausgewählte Datei wurde nur teilweise hochgeladen. Bitte versuche es noch einmal.',
-'No tmp directory'	=>	'PHP konnte die hochgeladene Datei nicht speichern.',
-'No file'						=>	'Du hast keine Datei zum Hochladen ausgewählt.',
 'Bad type'					=>	'Die ausgewählte Datei hat ein falsches Format.',
 'Too large'					=>	'Die ausgewählte Datei ist größer als maximal erlaubt',
 'Move failed'				=>	'Der Server konnte die hochgeladene Datei nicht speichern. Bitte kontaktiere den Administrator unter',
 'Unknown failure'		=>	'Ein unbekannter Fehler ist aufgetreten. Bitte versuche es noch einmal.',
 'Upload'						=>	'Hochladen',
+
+'UPLOAD_ERR_INI_SIZE' => 'Die hochgeladene Datei überschreitet die in der Anweisung upload_max_filesize in php.ini festgelegte Größe.',
+'UPLOAD_ERR_FORM_SIZE' => 'Die hochgeladene Datei überschreitet die in dem HTML Formular mittels der Anweisung MAX_FILE_SIZE angegebene maximale Dateigröße.',
+'UPLOAD_ERR_PARTIAL' => 'Die Datei wurde nur teilweise hochgeladen.',
+'UPLOAD_ERR_NO_FILE' => 'Es wurde keine Datei hochgeladen.',
+'UPLOAD_ERR_NO_TMP_DIR' => 'Fehlender temporärer Ordner.',
+'UPLOAD_ERR_CANT_WRITE' => 'Speichern der Datei auf die Festplatte ist fehlgeschlagen.',
+'UPLOAD_ERR_EXTENSION' => 'Eine PHP Erweiterung hat den Upload der Datei gestoppt.',
+'UPLOAD_ERR_UNKNOWN' => 'Unbekannter Upload-Fehler.',
 );

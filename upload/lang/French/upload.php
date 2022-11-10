@@ -8,7 +8,7 @@ $lang_up = array(
 'Error space'				=> 'Vous avez dépassé votre espace de stockage autorisé. Supprimez des fichiers et essayez à nouveau.',
 'Error delete'			=> 'Erreur pendant lors de la supression du fichier, essayez à nouveau.',
 'Error img'					=> 'Format invalide d\'image. Ou le serveur ne supporte pas le traitement d\'images.',
-'Error no mod img'	=> 'L\'image a été endommagée pendant la mise à jour.',
+'Error no mod img'	=> 'L\'image a été endommagée pendant la mise à jour (%d).',
 'Error open'				=> 'Le fichier téléchargé ne s\'ouvre pas.',
 'Error inject'			=> 'Le fichier envoyé contient la ficelle défendue. Compressez ce fichier et essayez à nouveau ou contacter à l\'administrateur.',
 
@@ -45,8 +45,8 @@ $lang_up = array(
 'titre_4'						=> 'Mes téléchargements',
 'popup_title'				=> 'Gestion des fichiers',
 
-'info_2'						=> 'Votre fichier ne doit dépasser la taille %s et doit faire %s.',
-'info_4'						=> 'Espace de stockage utilisé : %s en %s',
+'info_2'						=> '%1$s (max %2$s)',
+'info_4'						=> 'Espace de stockage utilisé : <span>%s</span> en %s',
 'legend'						=> 'Fichier',
 'fichier'						=> 'Sélectionner un fichier',
 
@@ -63,6 +63,7 @@ $lang_up = array(
 'o'									=> 'Valeur en B',
 'texte'							=> 'Placer votre texte ici',
 'delete'						=> 'Supprimer',
+'delete file'					=> 'Voulez-vous supprimer ce fichier?',
 'insert'						=> 'Insérer',
 'insert_thumb'			=> 'Insérer une miniature',
 'update_thumb'			=> 'Mettre à jour les miniatures',
@@ -73,13 +74,18 @@ $lang_up = array(
 'group'							=> 'Groupe',
 
 // Avatar upload stuff
-'Too large ini'			=>	'Fichier trop volumineux. Le serveur refuse son envoi.',
-'Partial upload'		=>	'Fichier partiellement envoyé. Merci de réessayer.',
-'No tmp directory'	=>	'Le serveur n\'a pas pu enregistrer temporairement le fichier envoyé.',
-'No file'						=>	'Vous n\'avez pas sélectionné de fichier à envoyer.',
 'Bad type'					=>	'Ce type de fichier n\'est pas autorisé.',
 'Too large'					=>	'La taille du fichier dépasse le maximum autorisé',
 'Move failed'				=>	'Le serveur n\'a pas pu enregistrer le fichier envoyé. Contactez l\'administrateur',
 'Unknown failure'		=>	'Erreur inconnue. Merci de réessayer.',
 'Upload'						=>	'Envoyer',
+
+'UPLOAD_ERR_INI_SIZE' => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini.',
+'UPLOAD_ERR_FORM_SIZE' => 'La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.',
+'UPLOAD_ERR_PARTIAL' => 'Le fichier n\'a été que partiellement téléchargé.',
+'UPLOAD_ERR_NO_FILE' => 'Aucun fichier n\'a été téléchargé.',
+'UPLOAD_ERR_NO_TMP_DIR' => 'Un dossier temporaire est manquant.',
+'UPLOAD_ERR_CANT_WRITE' => 'Échec de l\'écriture du fichier sur le disque.',
+'UPLOAD_ERR_EXTENSION' => 'Une extension PHP a arrêté l\'envoi de fichier.',
+'UPLOAD_ERR_UNKNOWN' => 'Erreur de téléchargement inconnue.',
 );

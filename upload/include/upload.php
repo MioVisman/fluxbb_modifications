@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2011-2013 Visman (visman@inbox.ru)
+ * Copyright (C) 2011-2019 Visman (mio.visman@yandex.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -18,7 +19,7 @@ $gd  = extension_loaded('gd');
 $gd2 = ($gd && function_exists('imagecreatetruecolor'));
 
 $extimage = array('gif', 'jpeg', 'jpg', 'jpe', 'png', 'bmp', 'tiff', 'tif', 'swf', 'psd', 'iff', 'wbmp', 'wbm', 'xbm');
-$extforno = array('phtml','php','php3','php4','php5','php6','phps','cgi','exe','pl','asp','aspx','shtml','shtm','fcgi','fpl','jsp','htm','html','wml','htaccess');
+$extforno = array('asmx', 'asp', 'aspx', 'cgi', 'dll', 'exe', 'fcgi', 'fpl', 'htaccess', 'htm', 'html', 'js', 'jsp', 'php', 'php3', 'php4', 'php5', 'php6', 'php7', 'phar', 'phps', 'phtm', 'phtml', 'pl', 'py', 'rb', 'shtm', 'shtml', 'wml', 'xml');
 
 $extimage2 = array(
 	1 => array('gif'),
@@ -235,19 +236,19 @@ if ($gd && !function_exists('ImageCreateFromBMP'))
 function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $quality = 75, $flag = false)
 {
 	global $gd, $gd2, $extimage2, $extimageGD;
-	
-	if (!$gd) return false;
-	if (!file_exists($file)) return false;
+
+	if (!$gd) return 1;
+	if (!file_exists($file)) return 2;
 
 	$size = getimagesize($file);
-	if ($size === false) return false;
+	if ($size === false) return 3;
 
 	$type2 = strtolower($type);
 	$type1 = (($flag && in_array($type2, array('jpeg','jpg','jpe','gif','png','bmp'))) || ($type2 == 'bmp')) ? 'jpeg' : $extimageGD[$type2];
-	
+
 	$icfunc = 'imagecreatefrom'.$extimageGD[$extimage2[$size[2]][0]]; //  $type;
-	if (!function_exists($icfunc)) return false;
-	
+	if (!function_exists($icfunc)) return 4;
+
 	$xr = ($width == 0) ? 1 : $width / $size[0];
 	$yr = ($height == 0) ? 1 : $height / $size[1];
 	$r = min($xr, $yr, 1);
@@ -255,8 +256,8 @@ function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $qualit
 	$height = round($size[1] * $r);
 
 	$image = @$icfunc($file);
-	if (!isset($image) || empty($image)) return false;
-  
+	if (!isset($image) || empty($image)) return 5;
+
 	if ($gd2)
 	{
 		$idest = imagecreatetruecolor($width, $height);
@@ -281,9 +282,9 @@ function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $qualit
 	{
 		$type1 = 'jpeg';
 		$icfunc = 'image'.$type1;
-		if (!function_exists($icfunc)) return false;
+		if (!function_exists($icfunc)) return 6;
 	}
-	
+
 	if ($flag) $type = $type1;
 
 	if ($type1 == 'png' && version_compare(PHP_VERSION, '5.1.2', '>='))
@@ -298,11 +299,11 @@ function img_resize ($file, $dir, $name, $type, $width = 0, $height = 0, $qualit
 
 	imagedestroy($image);
 	imagedestroy($idest);
-	
-  if (!file_exists(PUN_ROOT.$dir.$name.'.'.$type)) return false;
+
+	if (!file_exists(PUN_ROOT.$dir.$name.'.'.$type)) return 7;
 	@chmod(PUN_ROOT.$dir.$name.'.'.$type, 0644);
 
-  return array($name, $type);
+	return array($name, $type);
 }
 
 function isXSSattack ($file)
@@ -329,17 +330,34 @@ function isXSSattack ($file)
 
 function return_bytes ($val)
 {
-    $val = trim($val);
-    $last = strtolower($val{strlen($val)-1});
-    switch($last) {
-        // The 'G' modifier is available since PHP 5.1.0
-        case 'g':
-            $val *= 1024;
-        case 'm':
-            $val *= 1024;
-        case 'k':
-            $val *= 1024;
-    }
+// Author: Ivo Mandalski
+	if(empty($val))return 0;
 
-    return $val;
+	$val = trim($val);
+
+	preg_match('#([0-9]+)[\s]*([a-z]+)#i', $val, $matches);
+
+	$last = '';
+	if(isset($matches[2])){
+		$last = $matches[2];
+	}
+
+	if(isset($matches[1])){
+		$val = (int)$matches[1];
+	}
+
+	switch (strtolower($last))
+	{
+		case 'g':
+		case 'gb':
+			$val *= 1024;
+		case 'm':
+		case 'mb':
+			$val *= 1024;
+		case 'k':
+		case 'kb':
+			$val *= 1024;
+	}
+
+	return (int)$val;
 }

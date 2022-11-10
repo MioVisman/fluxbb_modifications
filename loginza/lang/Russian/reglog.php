@@ -41,7 +41,7 @@ $lang_rl = array(
 'rejim'							=> 'Режим виджета',
 'rejim info'				=> 'Скрипт виджета загружается на страницу входа/регистрации',
 
-'Loginza reglog'		=> 'Вход с помощью виджита Loginza',
+'Loginza reglog'		=> 'Вход с помощью виджета Loginza',
 'Loginza log'				=> 'Войти через социальные сети или OpenID',
 
 'Error open file'		=>  ' - файл не может быть открыт.',

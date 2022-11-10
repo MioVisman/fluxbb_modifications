@@ -10,7 +10,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.3.3');
+define('PLUGIN_VERSION', '1.3.4');
 define('PLUGIN_REVISION', 5);
 define('PLUGIN_NAME', 'Loginza');
 define('PLUGIN_URL', pun_htmlspecialchars(get_base_url(true).'/admin_loader.php?plugin='.$_GET['plugin']));

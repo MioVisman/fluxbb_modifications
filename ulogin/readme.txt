@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  uLogin
 ##
-##      Mod version:  1.1.0
-##  Works on FluxBB:  1.5.8
-##     Release date:  2015-05-25
+##      Mod version:  1.2.0
+##  Works on FluxBB:  1.5.11
+##     Release date:  2021-01-16
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
@@ -27,7 +27,7 @@
 ##                    / Должен работать на оригинальном форуме и на моей версии
 ##
 ##       DISCLAIMER:  Please note that "mods" are not officially supported by
-##                    FluxBB. Installation of this modification is done at 
+##                    FluxBB. Installation of this modification is done at
 ##                    your own risk. Backup your forum database and any and
 ##                    all applicable files before proceeding.
 ##

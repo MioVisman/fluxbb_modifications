@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2015 Visman (mio.visman@yandex.ru)
+ * Copyright (C) 2015-2021 Visman (mio.visman@yandex.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -20,12 +20,12 @@ class uLoginClass
 		$this->db = $db;
 		$this->pun_config = $pun_config;
 	}
-		
-		
+
+
 	private function _Request($url, $timeout = 10, $max_redirects = 10)
 	{
 		$allow_url_fopen = strtolower(ini_get('allow_url_fopen'));
-		$ua = 'Mozilla/5.0 (Windows NT 6.1; rv:43.0) Gecko/20100101 Firefox/43.0';
+		$ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0';
 
 		// 1
 		if (extension_loaded('curl'))
@@ -128,7 +128,7 @@ class uLoginClass
 			$this->_error = ulogin_lang('Error no ident'); // ошибка: В возвращаемых данных отсутствует переменная "identity"
 			return false;
 		}
-		
+
 		if (!in_array($profile['network'], explode(',', $this->pun_config['o_ulogin_net'])))
 		{
 			$this->_error = ulogin_lang('Error network'); // ошибка: данная соцсеть запрещена
@@ -138,7 +138,7 @@ class uLoginClass
 		return true;
 	}
 
-	
+
 	// отдаем текст ошибки
 	public function GetError()
 	{
@@ -155,28 +155,28 @@ class uLoginClass
 			return false;
 		}
 
-		$response = $this->_Request('http://ulogin.ru/token.php?token='.$token.'&host='.$_SERVER['HTTP_HOST']); // получаем ответ от uLogin
-		
+		$response = $this->_Request('https://ulogin.ru/token.php?token='.$token.'&host='.$_SERVER['HTTP_HOST']); // получаем ответ от uLogin
+
 		if (!$response)
 		{
 			$this->_error = ulogin_lang('Error utrd'); // ошибка: Невозможно получить данные
 			return false;
 		}
-		
+
 		$profile = json_decode($response, true); // преобразуем ответ в массив
-		
+
 		if ($this->_CheckError($profile)) return $profile; // проверка на ошибки
-		
+
 		return false;
 	}
-	
-	
+
+
 	// получение email из пришедшего профиля
 	public function GetEmail($profile)
 	{
 		if (!empty($profile['email']) && !empty($profile['verified_email']) && $profile['verified_email'] == 1)
 		  return $profile['email'];
-		  
+
 		return '';
 	}
 
@@ -186,22 +186,16 @@ class uLoginClass
 	{
 		$result = $this->db->query('SELECT user_id FROM '.$this->db->prefix.'ulogin WHERE identity=\''.$this->db->escape($identity).'\'') or error('Unable to fetch ulogin info', __FILE__, __LINE__, $this->db->error());
 
-		if ($this->db->num_rows($result))
-			return $this->db->result($result);
-			
-		return false;
+		return $this->db->result($result) ?: false;
 	}
 
-	
+
 	// получение id юзера на основе email
 	public function GetUserIdByEmail($email)
 	{
-		$result = $this->db->query('SELECT id FROM '.$this->db->prefix.'users WHERE email=\''.$this->db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $this->db->error());
+		$result = $this->db->query('SELECT id FROM '.$this->db->prefix.'users WHERE email=\''.$this->db->escape($email).'\' LIMIT 1') or error('Unable to fetch user info', __FILE__, __LINE__, $this->db->error());
 
-		if ($this->db->num_rows($result))
-			return $this->db->result($result);
-
-		return false;
+		return $this->db->result($result) ?: false;
 	}
 
 
@@ -223,10 +217,7 @@ class uLoginClass
 	{
 		$result = $this->db->query('SELECT id FROM '.$this->db->prefix.'users WHERE id='.(int)$id) or error('Unable to fetch user info', __FILE__, __LINE__, $this->db->error());
 
-		if ($this->db->num_rows($result))
-			return true;
-
-		return false;
+		return $this->db->result($result) ? true : false;
 	}
 
 
@@ -285,13 +276,13 @@ class uLoginClass
 			'username'				=> $username,
 			'password'				=> pun_hash($password),
 			'group_id'				=> $this->pun_config['o_default_user_group'],
-			'email_setting'		=> $this->pun_config['o_default_email_setting'],
-			'dst'							=> $this->pun_config['o_default_dst'],
+			'email_setting'			=> $this->pun_config['o_default_email_setting'],
+			'dst'					=> $this->pun_config['o_default_dst'],
 			'language'				=> $pun_user['language'],
-			'style'						=> $this->pun_config['o_default_style'],
-			'registration_ip'	=> get_remote_address(),
+			'style'					=> $this->pun_config['o_default_style'],
+			'registration_ip'		=> get_remote_address(),
 			'last_visit'			=> $now,
-			'email'						=> $this->GetEmail($profile),
+			'email'					=> $this->GetEmail($profile),
 			'realname'				=> '',
 		);
 		// числовые поля
@@ -300,7 +291,7 @@ class uLoginClass
 		// если есть пол, заполняем
 		if (isset($pun_user['gender']) && !empty($profile['sex']))
 		  $arr['gender'] = ($profile['sex'] == 1) ? 2 : 1;
-		  
+
 		// заполняем реальное имя
 		if (!empty($profile['first_name']))
 		  $arr['realname'] = $profile['first_name'];
@@ -325,7 +316,7 @@ class uLoginClass
 		// добавляем нового юзера в базу
 		$this->db->query('INSERT INTO '.$this->db->prefix.'users ('.$fields.') VALUES('.$value.')') or error('Unable to create user', __FILE__, __LINE__, $this->db->error());
 		$new_uid = $this->db->insert_id();
-		
+
 		$this->SaveProfile($new_uid, $profile);
 
 		// ставим куки на 2 недели
@@ -394,7 +385,7 @@ class uLoginClass
 	public function GenUserNames($profile)
 	{
 		$usernames = array();
-		
+
 		if (!empty($profile['first_name']))
 		{
 			if (!empty($profile['last_name']))
@@ -438,7 +429,7 @@ class uLoginClass
 			return false;
 
 		$url = empty($profile['photo_big']) ? (empty($profile['photo']) ? '' : $profile['photo']) : $profile['photo_big'];
-		
+
 		if (empty($url) || strpos($url, 'ulogin.ru/') !== false)
 		  return false;
 
@@ -451,7 +442,7 @@ class uLoginClass
 			return false;
 
 		$this->_ImgResize($filename, $this->pun_config['o_avatars_dir'], $id, $this->pun_config['o_avatars_width'], $this->pun_config['o_avatars_height']);
-		
+
 		@unlink($file);
 	}
 

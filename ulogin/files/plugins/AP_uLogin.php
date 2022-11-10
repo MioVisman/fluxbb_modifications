@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2015 Visman (mio.visman@yandex.ru)
+ * Copyright (C) 2015-2021 Visman (mio.visman@yandex.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -10,7 +10,7 @@ if (!defined('PUN'))
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
-define('PLUGIN_VERSION', '1.1.0');
+define('PLUGIN_VERSION', '1.2.0');
 define('PLUGIN_REVISION', 2);
 define('PLUGIN_NAME', 'uLogin');
 define('PLUGIN_URL', pun_htmlspecialchars('admin_loader.php?plugin='.$_GET['plugin']));
@@ -55,7 +55,7 @@ $arr_new = array(
 function InstallModInFiles ()
 {
 	global $arr_files, $arr_search, $arr_new, $lang_ulogin;
-	
+
 	$max = count($arr_files);
 	$errors = array();
 
@@ -87,7 +87,7 @@ function InstallModInFiles ()
 		fwrite ($fp, $file_content);
 		fclose ($fp);
 	}
-	
+
 	return $errors;
 }
 
@@ -176,7 +176,7 @@ if (isset($_POST['installation']))
 		require PUN_ROOT.'include/cache.php';
 
 	generate_config_cache();
-	
+
 	$err = InstallModInFiles();
 	if (empty($err))
 		redirect(PLUGIN_URL, $lang_ulogin['Red installation']);
@@ -227,7 +227,7 @@ else if (isset($_POST['delete']))
 		require PUN_ROOT.'include/cache.php';
 
 	generate_config_cache();
-	
+
 	$err = DeleteModInFiles();
 	if (empty($err))
 		redirect(PLUGIN_URL, $lang_ulogin['Red delete']);

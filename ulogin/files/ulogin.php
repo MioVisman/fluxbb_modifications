@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2015 Visman (mio.visman@yandex.ru)
+ * Copyright (C) 2015-21 Visman (mio.visman@yandex.ru)
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
@@ -37,7 +37,7 @@ if ($pun_user['is_guest'])
 
 		if ($dataHash != pun_hash($pun_config['o_ulogin_set'].pun_hash($dataUser.$hash_ip)))
 			message($lang_common['Bad request']);
-			
+
 		$username = isset($_POST['req_user']) ? pun_trim($_POST['req_user']) : '';
 
 		$errors  = array();
@@ -47,7 +47,7 @@ if ($pun_user['is_guest'])
 		if (empty($errors))
 		{
 			$profile = unserialize(base64_decode($dataUser));
-			
+
 			$uLogin = new uLoginClass($db, $pun_config);
 			$new_uid = $uLogin->RegistrationUser($profile, $username, $pun_user);
 
@@ -65,15 +65,15 @@ if ($pun_user['is_guest'])
 			$redirect_url .= '#p'.$matches[1];
 
 		$uLogin = new uLoginClass($db, $pun_config);
-  
+
 		// запрос профиля пользователя от uLogin
 		$profile = $uLogin->GetUserFromToken($_POST['token']);
-		
+
 		if ($profile === false)
 			message(ulogin_lang('Error ulogin').$uLogin->GetError()); // ошибка
 
 		$user_id = $uLogin->GetUserIdByIdentity($profile['identity']);
-		
+
 		if ($user_id !== false) // есть юзер с таким идентификатором
 		{
 		  if ($user_id > 1 && $uLogin->IsUserById($user_id)) // и он существует в таблице users
@@ -92,7 +92,7 @@ if ($pun_user['is_guest'])
 		{
 			$user_id = $uLogin->GetUserIdByEmail($email);
 			$user_ids = $uLogin->GetUserIdsByEmail($email);
-			
+
 			if (count($user_ids) > 1)
 				message(ulogin_lang('Duble email2').pun_htmlspecialchars($email)); // ошибка: у нескольких юзеров одинаковый email
 
@@ -102,7 +102,7 @@ if ($pun_user['is_guest'])
 			if ($user_id !== false || count($user_ids) == 1) // есть юзер с таким email
 			{
 				$user_id = ($user_id !== false) ? $user_id : $user_ids[0];
-				
+
 				if ($user_id > 1 && $uLogin->IsUserById($user_id))
 				{
 					$uLogin->SaveProfile($user_id, $profile); // сохраняем новый профиль юзера
@@ -121,7 +121,8 @@ if ($pun_user['is_guest'])
 
 		// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.get_remote_address().'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result))
+
+		if ($db->result($result))
 			message($lang_register['Registration flood']);
 
 		// проверка на запрет данного email
@@ -286,32 +287,32 @@ else
 
 	$arr_nets = array(
 		'vkontakte'			=> -19,
-		'odnoklassniki'	=> -42,
-		'mailru'				=> -65,
+		'odnoklassniki'		=> -42,
+		'mailru'			=> -65,
 		'facebook'			=> -88,
-		'twitter'				=> -111,
-		'google'				=> -134,
-		'yandex'				=> -157,
+		'twitter'			=> -111,
+		'google'			=> -134,
+		'yandex'			=> -157,
 		'livejournal'		=> -180,
-		'openid'				=> -203,
-		'lastfm'				=> -272,
+		'openid'			=> -203,
+		'lastfm'			=> -272,
 		'linkedin'			=> -295,
-		'liveid'				=> -318,
+		'liveid'			=> -318,
 		'soundcloud'		=> -341,
-		'steam'					=> -364,
-		'flickr'				=> -249,
-		'uid'						=> -387,
-		'youtube'				=> -433,
+		'steam'				=> -364,
+		'flickr'			=> -249,
+		'uid'				=> -387,
+		'youtube'			=> -433,
 		'webmoney'			=> -410,
 		'foursquare'		=> -456,
-		'tumblr'				=> -479,
+		'tumblr'			=> -479,
 		'googleplus'		=> -502,
-		'dudu'					=> -525,
-		'vimeo'					=> -548,
+		'dudu'				=> -525,
+		'vimeo'				=> -548,
 		'instagram'			=> -571,
 		'wargaming'			=> -594,
 	);
-	
+
 	foreach ($arr_nets as $key => $val)
 		$page_head['ulogin_css'].= ' .'.$key.' {background-position: 0 '.$val.'px;}';
 
@@ -335,16 +336,16 @@ else
 <?php
 
 	$result = $db->query('SELECT network, identity FROM '.$db->prefix.'ulogin WHERE user_id='.$pun_user['id']) or error('Unable to fetch ulogin info', __FILE__, __LINE__, $db->error());
+	$i = 0;
 
-	if (!$db->num_rows($result))
+	while ($cur = $db->fetch_assoc($result))
 	{
+		echo "\t\t\t\t\t\t".'<div class="ulogin-line"><img class="ulogin-img-sm '.pun_htmlspecialchars($cur['network']).'" alt="'.pun_htmlspecialchars($cur['network']).'" src="img/ulogin/blank.gif">'.pun_htmlspecialchars($cur['identity']).'&#160;<a title="'.ulogin_lang('Delete').'" href="ulogin.php?csrf_token='.pun_htmlspecialchars(pun_hash($pun_user['id'].$cur['identity'].$hash_ip)).'&amp;delete='.urlencode($cur['identity']).'"><span>&#160;X&#160;</span></a></div>'."\n";
+		++$i;
+	}
+
+	if ($i < 1)
 		echo "\t\t\t\t\t\t<p><span>".ulogin_lang('No accounts')."</span></p>\n";
-	}
-	else
-	{
-		while ($cur = $db->fetch_assoc($result))
-			echo "\t\t\t\t\t\t".'<div class="ulogin-line"><img class="ulogin-img-sm '.pun_htmlspecialchars($cur['network']).'" alt="'.pun_htmlspecialchars($cur['network']).'" src="img/ulogin/blank.gif">'.pun_htmlspecialchars($cur['identity']).'&#160;<a title="'.ulogin_lang('Delete').'" href="ulogin.php?csrf_token='.pun_htmlspecialchars(pun_hash($pun_user['id'].$cur['identity'].$hash_ip)).'&amp;delete='.urlencode($cur['identity']).'"><span>&#160;X&#160;</span></a></div>'."\n";
-	}
 
 ?>
 					</div>

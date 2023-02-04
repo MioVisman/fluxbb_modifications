@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  2.4.0
+##      Mod version:  2.6.0
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2021-10-15
+##     Release date:  2022-05-21
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
@@ -12,11 +12,12 @@
 ##                    Modification on the party of the user replaces links to a media content.
 ##
 ##                    Поддерживает / It is supported
-##                    видео / video: YouTube, Vimeo, Rutube, Dailymotion, Sibnet, Facebook, Coub, Vine, VK, IGN, Gamespot, OK.ru, www.aparat.com, izlesene.com, vlipsy.com и прямые ссылки на / and direct urls for mp4, m4v, ogv, webm, webmv;
-##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Mixcloud, Hulkshare, audiomack.com, hearthis.at и прямые ссылки на / and direct urls for mp3, m4a, ogg, oga, webma, wav, flac;
+##                    видео / video: YouTube, Vimeo, Rutube, Dailymotion, Sibnet, Facebook, Coub, Vine, VK, IGN, Gamespot, OK.ru, www.aparat.com, izlesene.com, vlipsy.com, iz.ru и прямые ссылки на / and direct urls for mp4, m4v, ogv, webm, webmv;
+##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Mixcloud, Hulkshare, audiomack.com, hearthis.at, music.yandex.ru и прямые ссылки на / and direct urls for mp3, m4a, ogg, oga, webma, wav, flac;
+##                    медиа / media: t.me;
 ##                    карты / maps Google Maps, Yandex карты.
 ##
-##   Repository URL:  https://fluxbb.org/resources/mods/?s=author&t=Visman&v=all&o=name
+##   Repository URL:  https://github.com/MioVisman/fluxbb_modifications
 ##                    https://fluxbb.qb7.ru/forum/viewtopic.php?id=3801
 ##
 ##   Affected files:  /include/parser.php

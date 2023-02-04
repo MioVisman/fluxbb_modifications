@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Media.js
 ##
-##      Mod version:  2.6.0
+##      Mod version:  2.7.6
 ##  Works on FluxBB:  1.5.11
-##     Release date:  2022-05-21
+##     Release date:  2023-02-04
 ##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  Visman (mio.visman@yandex.ru)
 ##
@@ -14,7 +14,7 @@
 ##                    Поддерживает / It is supported
 ##                    видео / video: YouTube, Vimeo, Rutube, Dailymotion, Sibnet, Facebook, Coub, Vine, VK, IGN, Gamespot, OK.ru, www.aparat.com, izlesene.com, vlipsy.com, iz.ru и прямые ссылки на / and direct urls for mp4, m4v, ogv, webm, webmv;
 ##                    аудио / audio: SoundCloud, ZippyShare, PromoDJ, Mixcloud, Hulkshare, audiomack.com, hearthis.at, music.yandex.ru и прямые ссылки на / and direct urls for mp3, m4a, ogg, oga, webma, wav, flac;
-##                    медиа / media: t.me;
+##                    медиа / media: t.me, Facebook (beta test);
 ##                    карты / maps Google Maps, Yandex карты.
 ##
 ##   Repository URL:  https://github.com/MioVisman/fluxbb_modifications
